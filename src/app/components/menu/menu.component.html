@@ -1,0 +1,63 @@
+<ion-menu side="start" menuId="first" contentId="content" mode="md">
+
+  <ion-content>
+
+    <ion-thumbnail>
+
+      <img [src]="company?.photo">
+
+    </ion-thumbnail>
+
+    <h6>{{ company?.name }}</h6>
+
+    <ion-list class="ion-padding" lines="full">
+
+      <ion-menu-toggle auto-hide="true">
+
+        <ion-item routerLink="/profile" button="true" detail="true">
+
+          <ion-icon slot="start" name="person-outline" color="dark"></ion-icon>
+
+          <ion-label>Perfil</ion-label>
+
+        </ion-item>
+
+        <ion-item button="true" detail="true" (click)="location()">
+
+          <ion-icon slot="start" name="location-outline" color="dark"></ion-icon>
+
+          <ion-label>Localização</ion-label>
+
+        </ion-item>
+
+        <ion-item button="true" detail="true" (click)="delivers()">
+
+          <ion-icon slot="start" src="../../../assets/icon/delivery-man.svg" color="dark"></ion-icon>
+
+          <ion-label>Entregadores</ion-label>
+
+        </ion-item>
+
+        <ion-item button="true" detail="true">
+
+          <ion-icon slot="start" name="card-outline" color="dark"></ion-icon>
+
+          <ion-label>Conta Bancária</ion-label>
+
+        </ion-item>
+
+        <ion-item (click)="logout()" button="true" detail="true">
+
+          <ion-icon slot="start" name="log-out-outline" color="dark"></ion-icon>
+
+          <ion-label>Sair</ion-label>
+
+        </ion-item>
+
+      </ion-menu-toggle>
+
+    </ion-list>
+
+  </ion-content>
+
+</ion-menu>

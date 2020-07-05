@@ -1,0 +1,75 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-button class="help" fill="clear" color="medium" (click)="help($event)">
+
+        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+
+        <ion-label>Ajuda</ion-label>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()" color="dark">
+
+        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      Sessões
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding-vertical">
+
+  <ion-reorder-group (ionItemReorder)="reorder($event)" disabled="false" mode="md">
+
+    <div *ngFor="let s of sessions">
+
+      <ion-item-sliding>
+
+        <ion-item lines="full" button="true" detail="false" (click)="change(s)">
+
+          <ion-reorder slot="start"></ion-reorder>
+    
+          <ion-label>
+    
+            {{ s.name }}
+    
+          </ion-label>
+    
+        </ion-item>
+
+        <ion-item-options side="end">
+        
+          <ion-item-option color="danger" expandable (click)="remove(s.id)">
+
+            <span [hidden]="loading">Remover</span>
+
+            <ion-spinner mode="md" name="crescent" [hidden]="!loading"></ion-spinner>
+
+          </ion-item-option>
+
+        </ion-item-options>
+
+      </ion-item-sliding>
+
+    </div>
+
+  </ion-reorder-group>
+
+</ion-content>

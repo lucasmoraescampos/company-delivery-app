@@ -1,0 +1,57 @@
+<ion-header mode="ios" class="ion-no-border ion-padding-vertical">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-back-button text=""></ion-back-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      <ion-label>
+
+        <h6>{{ title }}</h6>
+
+        <p>{{ subtitle }}</p>
+
+      </ion-label>
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-searchbar mode="ios" placeholder="Endereço e número" [(ngModel)]="search" (ionChange)="searchChanged()"
+    [hidden]="loading"></ion-searchbar>
+
+  <ion-list class="ion-padding-start" [hidden]="searchResults.length == 0">
+
+    <ion-item (click)="selectLocation(location)" lines="full" class="ion-padding-end" detail="false" button="true"
+      *ngFor="let location of searchResults">
+
+      <ion-label>
+
+        <p class="ion-text-wrap">{{ location }}</p>
+
+      </ion-label>
+
+    </ion-item>
+
+  </ion-list>
+
+  <div class="map" #map></div>
+
+  <ion-button class="ion-no-margin" expand="full" mode="ios" (click)="continue()">
+
+    Continuar
+
+  </ion-button>
+
+</ion-content>
+
+<ngx-loading [show]="loading"></ngx-loading>

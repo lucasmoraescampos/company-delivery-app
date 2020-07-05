@@ -1,0 +1,70 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar class="ion-padding-vertical">
+
+    <ion-buttons slot="start">
+
+      <ion-button class="help" fill="clear" color="medium" (click)="help()">
+
+        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+
+        <ion-label>Ajuda</ion-label>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()" color="dark">
+
+        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      Editar<br>Complemento
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="formGroupComplement" mode="ios" *ngIf="!info">
+
+    <div class="ion-padding-horizontal">
+
+      <ion-label class="label-custom">Título</ion-label>
+
+      <ion-input class="input-custom" type="text" formControlName="title" placeholder="Escreva o título do complemento">
+      </ion-input>
+
+      <ion-label class="label-custom">Quantidade Mínima</ion-label>
+
+      <ion-input class="input-custom" type="number" formControlName="qty_min" placeholder="Qtd. mínima de itens">
+      </ion-input>
+
+      <ion-label class="label-custom">Quantidade Máxima</ion-label>
+
+      <ion-input class="input-custom" type="number" formControlName="qty_max" placeholder="Qtd. máxima de itens">
+      </ion-input>
+
+    </div>
+
+    <ion-button class="add" expand="full" (click)="update()">
+
+      <ion-spinner mode="md" name="crescent" [hidden]="loading == false"></ion-spinner>
+
+      <span [hidden]="loading">Atualizar</span>
+
+    </ion-button>
+
+  </form>
+
+</ion-content>

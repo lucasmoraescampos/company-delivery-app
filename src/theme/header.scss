@@ -1,0 +1,16 @@
+ion-header {
+    ion-back-button {
+        margin-left: 10px;
+    }
+
+    ion-title {
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    ion-segment-button {
+        text-transform: capitalize;
+        letter-spacing: normal;
+        font-weight: normal;
+    }
+}

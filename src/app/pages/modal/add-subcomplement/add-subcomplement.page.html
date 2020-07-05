@@ -1,0 +1,73 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-button class="help" fill="clear" color="medium" (click)="help()">
+
+        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
+
+        <ion-label>Ajuda</ion-label>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()" color="dark">
+
+        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      Adicionar Item
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <form [formGroup]="formGroupSubcomplement" mode="ios" *ngIf="!info">
+
+    <div class="ion-padding-horizontal">
+
+      <ion-label class="label-custom">Descrição</ion-label>
+
+      <ion-textarea class="input-custom" formControlName="description" placeholder="Descreva o produto"></ion-textarea>
+
+      <ion-label class="label-custom" [hidden]="isNoPrice">Preço</ion-label>
+
+      <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="price"
+        [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }" [hidden]="isNoPrice">
+      </ion-input>
+
+      <ion-item class="ion-no-padding" lines="none" mode="md">
+
+        <ion-checkbox color="primary" (ionChange)="checkPrice($event)"></ion-checkbox>
+
+        <ion-label class="ion-padding-start">Sem preço (Grátis)</ion-label>
+
+      </ion-item>
+
+    </div>
+
+    <ion-button class="add" expand="full" (click)="add()">
+
+      <ion-spinner mode="md" name="crescent" [hidden]="loading == false"></ion-spinner>
+
+      <span [hidden]="loading">Adicionar</span>
+
+    </ion-button>
+
+  </form>
+
+</ion-content>

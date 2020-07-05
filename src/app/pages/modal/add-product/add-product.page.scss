@@ -1,0 +1,33 @@
+ion-content {
+  ion-thumbnail {
+    --border-radius: 5px;
+    --size: 100%;
+    background: #fff;
+    margin-top: 20px;
+
+    img {
+      background: #fff;
+      object-fit: cover;
+      height: 200px;
+    }
+  }
+
+  ion-item {
+    --padding-start: 15px;
+    --inner-padding-end: 15px;
+  }
+
+  ion-checkbox {
+    margin: 0;
+  }
+
+  ion-col.header {
+    text-align: center;
+    background: var(--ion-color-light-tint);
+
+    h6 {
+      font-size: 12pt;
+      margin: 15px;
+    }
+  }
+}

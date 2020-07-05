@@ -1,0 +1,114 @@
+<ion-header class="ion-no-border" mode="ios">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-back-button text=""></ion-back-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      <img src="../../../assets/images/logo.png">
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content mode="ios">
+
+  <ion-grid class="ion-padding" [formGroup]="formGroupRegister">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <h4>Informe os dados do empresa</h4>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-label class="label-custom">Categoria</ion-label>
+
+        <ion-select class="select-custom" formControlName="category_id" placeholder="Selecione uma categoria" mode="md"
+          interface="action-sheet" cancelText="Cancelar">
+
+          <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}
+          </ion-select-option>
+
+        </ion-select>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-label class="label-custom">Nome</ion-label>
+
+        <ion-input class="input-custom" type="text" formControlName="name" placeholder="Nome da empresa"
+          autocapitalize="on"></ion-input>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-label class="label-custom">Telefone</ion-label>
+
+        <ion-input class="input-custom" type="text" formControlName="phone" placeholder="Telefone da empresa"
+          autocapitalize="on" [brmasker]="{ phone: true }"></ion-input>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-label class="label-custom">E-mail</ion-label>
+
+        <ion-input class="input-custom" type="email" formControlName="email" placeholder="E-mail para contato">
+        </ion-input>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-label class="label-custom">Senha</ion-label>
+
+        <ion-input class="input-custom passwd" [type]="eye ? 'text' : 'password'" maxlength="8"
+          formControlName="password" placeholder="Crie uma senha para sua conta" #passwd>
+
+          <ion-buttons>
+
+            <ion-button buttonType="reset" (click)="changeEye(passwd)">
+
+              <ion-icon slot="icon-only" name="eye-outline" [hidden]="eye"></ion-icon>
+
+              <ion-icon slot="icon-only" name="eye-off-outline" [hidden]="!eye"></ion-icon>
+
+            </ion-button>
+
+          </ion-buttons>
+
+        </ion-input>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-button class="send" expand="block" (click)="send()" [disabled]="formGroupRegister.invalid"
+          [color]="formGroupRegister.valid ? 'primary' : 'light'">
+
+          <ion-spinner mode="md" name="crescent" [hidden]="!spinner"></ion-spinner>
+
+          <span [hidden]="spinner">Continuar</span>
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>

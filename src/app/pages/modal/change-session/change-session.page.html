@@ -1,0 +1,44 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()" color="dark">
+
+        <ion-icon src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      Alterar Sessão
+
+    </ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <form [formGroup]="formGroupSession" mode="ios">
+
+    <ion-label class="label-custom">Nome</ion-label>
+
+    <ion-input class="input-custom" type="text" formControlName="name" autocapitalize="on"></ion-input>
+
+    <ion-button class="update" expand="block" (click)="update()" [disabled]="formGroupSession.invalid || spinner"
+      [color]="formGroupSession.valid ? 'primary' : 'dark'">
+
+      <ion-spinner mode="md" name="crescent" [hidden]="!spinner"></ion-spinner>
+
+      <span [hidden]="spinner">Atualizar</span>
+
+    </ion-button>
+
+  </form>
+
+</ion-content>

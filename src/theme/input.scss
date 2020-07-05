@@ -1,0 +1,107 @@
+ion-textarea.input-custom.sc-ion-textarea-md-h.sc-ion-textarea-md-s.md.hydrated {
+  border-radius: 4px;
+  font-size: 16px;
+  padding: 0 4px !important;
+  margin-top: -1px;
+  border: 1px solid var(--ion-color-medium-tint);
+  background: var(--ion-background-color);
+}
+
+ion-input.input-custom.sc-ion-input-md-h.sc-ion-input-md-s.hydrated.md {
+  border-radius: 4px;
+  font-size: 16px;
+  height: 46px;
+  padding: 0 4px !important;
+  border: 1px solid var(--ion-color-medium-tint);
+  background: var(--ion-background-color);
+}
+
+ion-textarea.input-custom.sc-ion-textarea-ios-h.sc-ion-textarea-ios-s.ios.hydrated {
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 0 15px !important;
+  margin-top: -1px;
+  border: 1px solid var(--ion-color-medium-tint);
+  background: var(--ion-background-color);
+
+  input.native-input.sc-ion-input-ios.cloned-input {
+    padding: 4% !important;
+  }
+}
+
+ion-input.input-custom.sc-ion-input-ios-h.sc-ion-input-ios-s.hydrated.ios {
+  border-radius: 10px;
+  font-size: 16px;
+  height: 46px;
+  padding: 0 15px !important;
+  border: 1px solid var(--ion-color-medium-tint);
+  background: var(--ion-background-color);
+
+  input.native-input.sc-ion-input-ios.cloned-input {
+    padding: 4% !important;
+  }
+}
+
+ion-textarea.input-custom.sc-ion-textarea-md-h.sc-ion-textarea-md-s.md.hydrated.has-focus,
+ion-textarea.input-custom.sc-ion-textarea-ios-h.sc-ion-textarea-ios-s.ios.hydrated.has-focus,
+ion-input.input-custom.sc-ion-input-md-h.sc-ion-input-md-s.hydrated.md.has-focus,
+ion-input.input-custom.sc-ion-input-ios-h.sc-ion-input-ios-s.hydrated.ios.has-focus {
+  transform: none !important;
+  border: 1px solid var(--ion-color-primary);
+}
+
+ion-select.select-custom {
+  border: 1px solid var(--ion-color-medium-tint);
+  border-radius: 10px;
+  font-size: 16px;
+  height: 46px;
+  padding-right: 10px;
+
+  &[aria-expanded="true"] {
+    border: 1px solid var(--ion-color-primary);
+  }
+}
+
+ion-datetime.datetime-custom.ng-untouched.ng-pristine.ng-valid.ion-untouched.ion-pristine.ion-valid.md.hydrated,
+ion-datetime.datetime-custom.ng-valid.md.hydrated.ng-touched.ng-dirty.ion-valid.ion-touched.ion-dirty {
+  border: 1px solid var(--ion-color-medium-tint);
+  border-radius: 10px;
+  font-size: 16px;
+  height: 36px;
+  padding: 5px 15px !important;
+
+  &[aria-expanded="true"] {
+    border: 1px solid var(--ion-color-primary);
+  }
+}
+
+ion-datetime.datetime-custom.ng-pristine.ng-valid.ios.hydrated.ng-touched.ion-pristine.ion-valid.ion-touched,
+ion-datetime.datetime-custom.ng-valid.ios.hydrated.ng-touched.ng-dirty.ion-valid.ion-touched.ion-dirty,
+ion-datetime.datetime-custom.ng-untouched.ng-pristine.ng-valid.ion-untouched.ion-pristine.ion-valid.ios.hydrated {
+  border: 1px solid var(--ion-color-medium-tint);
+  border-radius: 10px;
+  font-size: 16px;
+  height: 44px;
+
+  &[aria-expanded="true"] {
+    border: 1px solid var(--ion-color-primary);
+  }
+}
+
+ion-input.input-money {
+  font-size: 36px;
+  font-weight: 600;
+  padding: 0;
+  margin: 0;
+}
+
+ion-label.label-custom {
+  color: var(--ion-color-dark);
+  font-size: 11pt;
+  background: var(--ion-background-color);
+  padding: 0 5px;
+  position: relative;
+  top: 12px;
+  left: 12px;
+  z-index: 99999999999999;
+}

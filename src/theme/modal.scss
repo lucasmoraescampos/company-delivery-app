@@ -1,0 +1,18 @@
+.modal-custom .modal-wrapper {
+  position: absolute;
+  width: 100% !important;
+  height: 93% !important;
+  bottom: 0 !important;
+  border-radius: 0 !important;
+  border-top-left-radius: 5px !important;
+  border-top-right-radius: 5px !important;
+
+  .header-md:after {
+    background-image: none !important;
+  }
+
+  .icon-close {
+    font-size: 14pt;
+    z-index: 9999999;
+  }
+}

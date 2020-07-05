@@ -1,0 +1,7 @@
+{
+  "name": "meupedido.company",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

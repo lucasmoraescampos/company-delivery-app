@@ -1,0 +1,13 @@
+ion-content {
+    ion-item {
+        p {
+            font-size: 11pt;
+            color: var(--ion-color-medium);
+        }
+
+        p:last-child {
+            font-size: 8pt;
+            text-align: right;
+        } 
+    }
+}

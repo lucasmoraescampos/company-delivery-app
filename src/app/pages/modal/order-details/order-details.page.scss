@@ -1,0 +1,98 @@
+ion-content {
+    --background: var(--ion-color-light-tint);
+
+    ion-item {
+        --padding-start: 15px;
+        --inner-padding-end: 15px;
+    }
+
+    ion-label {
+        margin: 15px 0;
+    }
+
+    ion-list {
+        ion-item {
+            h6,
+            p {
+                font-size: 12pt;
+                line-height: 14pt;
+            }
+
+            h6.id,
+            h6.total,
+            h6.time {
+                font-size: 14pt;
+                line-height: 20pt;
+            }
+
+            h6.cashback {
+                font-size: 10pt;
+                line-height: 12pt;
+            }
+
+            p.complement {
+                color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.4);
+            }
+
+            p.free {
+                color: var(--ion-color-success);
+            }
+
+            p.date {
+                text-transform: lowercase;
+            }
+
+            ion-progress-bar {
+                margin: 10px 0;
+            }
+
+            ion-icon[name="ellipse"] {
+                font-size: 6pt;
+                padding-bottom: 0.75px;
+                color: var(--ion-color-primary);
+            }
+
+            ion-icon[name="star"] {
+                color: var(--ion-color-light);
+                font-size: 20pt;
+            }
+
+            ion-icon[name="star"].active {
+                color: var(--ion-color-warning);
+            }
+
+            ion-badge {
+                font-size: 11pt;
+                font-weight: normal;
+            }
+
+            ion-label.delivered {
+                margin-bottom: 20px;
+                background: var(--ion-color-light-tint);
+                border-radius: 5px;
+                padding: 20px;
+
+                p {
+                    color: var(--ion-color-dark);
+                }
+
+                ion-icon {
+                    color: var(--ion-color-success);
+                    font-size: 20pt;
+                }
+            }
+        }
+    }
+
+    ion-list.call {
+        margin-top: 10px;
+    }
+}
+
+ion-footer {
+    background: var(--ion-color-light-tint);
+
+    ion-grid {
+        background: #fff;
+    }
+}

@@ -1,0 +1,21 @@
+ion-content {
+    --ion-background-color: #ffffff;
+
+    ion-thumbnail {
+        --size: 128px;
+        --border-radius: 50%;
+        margin: 20px auto 10px auto;
+    }
+
+    h6 {
+        display: block;
+        text-align: center;
+        width: 80%;
+        margin: 0 auto 20px auto;
+        font-size: 14pt;
+    }
+
+    ion-item {
+        color: var(--ion-color-dark);
+    }
+}

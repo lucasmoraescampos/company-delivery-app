@@ -1,0 +1,72 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button color="dark" (click)="options($event)">
+
+        <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>Produtos</ion-title>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="ion-no-padding">
+
+    <ion-segment scrollable mode="md" [value]="sessions[0]?.id">
+
+      <ion-segment-button class="animated bounceInRight" [id]="'session' + s.id" [value]="s.id"
+        (click)="changeSession(s.id)" *ngFor="let s of sessions">
+
+        <ion-label>{{ s.name }}</ion-label>
+
+      </ion-segment-button>
+
+    </ion-segment>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+
+    <div *ngFor="let p of products">
+
+      <ion-item class="animated bounceInUp" lines="full" button="true" detail="false" (click)="details(p.id)">
+
+        <ion-avatar slot="start">
+
+          <img [src]="p.photo">
+
+        </ion-avatar>
+
+        <ion-label>
+
+          <h6 class="ion-text-wrap">{{ p.name }}</h6>
+
+          <p class="ion-text-wrap">{{ p.description }}</p>
+
+        </ion-label>
+
+      </ion-item>
+
+    </div>
+
+    <div class="no-product animated fadeIn" *ngIf="products?.length == 0">
+
+      <ion-icon class="order" src="../../../assets/icon/product.svg"></ion-icon>
+
+      <p>Nenhum produto cadastrado</p>
+
+    </div>
+
+  </ion-list>
+
+</ion-content>

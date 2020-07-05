@@ -1,0 +1,387 @@
+<ion-header mode="ios" class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()" color="dark">
+
+        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>
+
+      Detalhes
+
+    </ion-title>
+
+  </ion-toolbar>
+
+  <ion-toolbar>
+
+    <ion-segment scrollable mode="md" value="info">
+
+      <ion-segment-button class="animated bounceInRight" id="segment-info" value="info" (click)="changeSegment('info')">
+
+        <ion-label>Informações Gerais</ion-label>
+
+      </ion-segment-button>
+
+      <ion-segment-button class="animated bounceInRight" id="segment-complements" value="complements"
+        (click)="changeSegment('complements')">
+
+        <ion-label>Complementos</ion-label>
+
+      </ion-segment-button>
+
+      <ion-segment-button class="animated bounceInRight" id="segment-promotion" value="promotion"
+        (click)="changeSegment('promotion')">
+
+        <ion-label>Promoção</ion-label>
+
+      </ion-segment-button>
+
+    </ion-segment>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="ion-padding" [hidden]="segment != 'complements'">
+
+    <ion-button color="primary" fill="outline" expand="block" (click)="addComplement()">
+
+      <ion-label>Adicionar Complemento</ion-label>
+
+    </ion-button>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-no-padding">
+
+  <div id="info" [hidden]="segment != 'info'">
+
+    <form mode="ios" [formGroup]="formGroupProduct">
+
+      <div class="ion-padding-horizontal">
+
+        <ion-thumbnail *ngIf="photo" (click)="choosePhoto()">
+
+          <img [src]="photo">
+
+        </ion-thumbnail>
+
+        <ion-button class="no-photo" fill="outline" color="medium" (click)="choosePhoto()" [hidden]="photo != null">
+
+          <ion-icon src="../../../../assets/icon/add-image.svg"></ion-icon>
+
+        </ion-button>
+
+        <ion-label class="label-custom">Sessão</ion-label>
+
+        <ion-select class="select-custom" formControlName="menu_session_id" placeholder="Selecione a sessão do produto"
+          mode="md" interface="action-sheet" cancelText="Cancelar">
+
+          <ion-select-option [value]="s.id" *ngFor="let s of sessions">{{ s.name }}</ion-select-option>
+
+        </ion-select>
+
+        <ion-label class="label-custom">Nome</ion-label>
+
+        <ion-input class="input-custom" type="text" formControlName="name" placeholder="Escreva o nome do produto"
+          autocapitalize="on">
+        </ion-input>
+
+        <ion-label class="label-custom">Descrição</ion-label>
+
+        <ion-textarea class="input-custom" formControlName="description" rows="4" placeholder="Descreva o produto">
+        </ion-textarea>
+
+        <ion-label class="label-custom">Categoria</ion-label>
+
+        <ion-select class="select-custom" formControlName="subcategory_id"
+          placeholder="Selecione a categoria do produto" mode="md" interface="action-sheet" cancelText="Cancelar">
+
+          <ion-select-option [value]="s.id" *ngFor="let s of subcategories">{{ s.name }}</ion-select-option>
+
+        </ion-select>
+
+        <ion-label class="label-custom">Preço</ion-label>
+
+        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="price"
+          [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }">
+        </ion-input>
+
+      </div>
+
+      <ion-list mode="ios">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row class="ion-padding">
+
+            <ion-col size="12" class="ion-padding-horizontal">
+
+              <h6 class="ion-no-margin ion-text-center">Dias disponíveis:</h6>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+        <ion-radio-group>
+
+          <ion-item lines="full">
+
+            <ion-label>Domingo</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_sunday"
+              [checked]="product.is_available_sunday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full">
+
+            <ion-label>Segunda</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_monday"
+              [checked]="product.is_available_monday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full">
+
+            <ion-label>Terça</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_tuesday"
+              [checked]="product.is_available_tuesday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full">
+
+            <ion-label>Quarta</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_wednesday"
+              [checked]="product.is_available_wednesday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full">
+
+            <ion-label>Quinta</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_thursday"
+              [checked]="product.is_available_thursday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full">
+
+            <ion-label>Sexta</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_friday"
+              [checked]="product.is_available_friday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="none">
+
+            <ion-label>Sábado</ion-label>
+
+            <ion-checkbox color="primary" (ionChange)="changeDays($event)" value="is_available_saturday"
+              [checked]="product.is_available_saturday"></ion-checkbox>
+
+          </ion-item>
+
+        </ion-radio-group>
+
+      </ion-list>
+
+      <ion-list mode="ios">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row class="ion-padding">
+
+            <ion-col size="12" class="ion-padding-horizontal">
+
+              <h6 class="ion-no-margin ion-text-center">Horários disponíveis:</h6>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-item lines="full" [hidden]="isAlwaysAvailable">
+
+            <ion-label>À partir de</ion-label>
+
+            <ion-datetime formControlName="start_time" displayFormat="HH:mm" cancelText="Voltar" doneText="Confirmar">
+            </ion-datetime>
+
+          </ion-item>
+
+          <ion-item lines="none" [hidden]="isAlwaysAvailable">
+
+            <ion-label>Até</ion-label>
+
+            <ion-datetime formControlName="end_time" displayFormat="HH:mm" cancelText="Voltar" doneText="Confirmar">
+            </ion-datetime>
+
+          </ion-item>
+
+          <ion-item lines="none" mode="md">
+
+            <ion-checkbox color="primary" [checked]="isAlwaysAvailable" (ionChange)="changeAlwaysAvailable($event)">
+            </ion-checkbox>
+
+            <ion-label class="ion-padding-start">Disponível em todos os horários</ion-label>
+
+          </ion-item>
+
+        </ion-grid>
+
+      </ion-list>
+
+      <ion-button class="add" expand="full" (click)="update()" [disabled]="formGroupProduct.invalid"
+        [color]="formGroupProduct.valid ? 'primary' : 'dark'">
+
+        <ion-spinner mode="md" name="crescent" [hidden]="loading == false"></ion-spinner>
+
+        <span [hidden]="loading">Atualizar</span>
+
+      </ion-button>
+
+    </form>
+
+  </div>
+
+  <div id="complements" [hidden]="segment != 'complements'">
+
+    <ion-list mode="ios">
+
+      <div *ngFor="let c of product.complements">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row class="ion-padding">
+
+            <ion-col size="11" class="ion-padding-horizontal">
+
+              <h6>{{ c.title }}</h6>
+
+              <p>{{ c.qty_min }} até {{ c.qty_max }} escolhas</p>
+
+            </ion-col>
+
+            <ion-col size="1" class="ion-padding-horizontal">
+
+              <ion-button fill="clear" (click)="options(c, $event)">
+
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+
+              </ion-button>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+        <ion-item-sliding *ngFor="let s of c.subcomplements">
+
+          <ion-item lines="full" button="true" detail="false" (click)="changeSubcomplement(s)">
+
+            <ion-label class="ion-margin-vertical">{{ s.description }}</ion-label>
+
+          </ion-item>
+
+          <ion-item-options side="end">
+
+            <ion-item-option color="danger" expandable (click)="deleteSubcomplement(s)">
+
+              Remover
+
+            </ion-item-option>
+
+          </ion-item-options>
+
+        </ion-item-sliding>
+
+        <ion-item lines="none" detail="false" *ngIf="c.subcomplements == null || c.subcomplements?.length == 0">
+
+          <ion-label class="ion-text-center" color="medium">Nenhum item cadastrado!</ion-label>
+
+        </ion-item>
+
+      </div>
+
+      <div class="no-data" *ngIf="product.complements?.length == 0">
+
+        Nenhum complemento cadastrado!
+
+      </div>
+
+    </ion-list>
+
+  </div>
+
+  <div id="promotion" [hidden]="segment != 'promotion'">
+
+    <form mode="ios" [formGroup]="formGroupPromotion">
+
+      <h6 class="ion-text-center">Atenção!</h6>
+
+      <ul>
+
+        <li>
+
+          O valor de desconto deve ser no mínimo 10% do valor do produto.
+
+        </li>
+
+        <li>
+
+          O valor de desconto deve ser no mínimo R$ 2,00.
+
+        </li>
+
+      </ul>
+
+      <div class="ion-margin animated fadeIn" *ngIf="!isNoPromotion">
+
+        <ion-label class="label-custom">Valor de desconto</ion-label>
+
+        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="value"
+          [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }">
+        </ion-input>
+        
+      </div>
+
+      <ion-item class="animated fadeIn" lines="none" mode="md">
+
+        <ion-checkbox color="primary" [checked]="product.promotional_price == null" (ionChange)="checkNoPromotion($event)">
+        </ion-checkbox>
+
+        <ion-label class="ion-padding-start">Produto sem desconto</ion-label>
+
+      </ion-item>
+
+      <ion-button class="update" expand="full" [disabled]="formGroupProduct.invalid"
+        [color]="formGroupProduct.valid ? 'primary' : 'dark'" (click)="updatePromotion()">
+
+        <ion-spinner mode="md" name="crescent" [hidden]="loading == false"></ion-spinner>
+
+        <span [hidden]="loading">Atualizar</span>
+
+      </ion-button>
+
+    </form>
+
+  </div>
+
+</ion-content>

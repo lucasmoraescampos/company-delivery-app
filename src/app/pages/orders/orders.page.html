@@ -1,0 +1,405 @@
+<ion-header class="ion-no-border" mode="ios">
+
+  <ion-toolbar>
+
+    <ion-title>Pedidos</ion-title>
+
+  </ion-toolbar>
+
+  <ion-toolbar mode="md">
+
+    <ion-segment scrollable value="requests">
+
+      <ion-segment-button class="animated bounceInRight" id="requests" value="requests"
+        (click)="changeSegment('requests')">
+
+        <ion-label>Solicitações</ion-label>
+
+      </ion-segment-button>
+
+      <ion-segment-button class="animated bounceInRight" id="running" value="running"
+        (click)="changeSegment('running')">
+
+        <ion-label>Em Andamento</ion-label>
+
+      </ion-segment-button>
+
+      <ion-segment-button class="animated bounceInRight" id="delivering" value="delivering"
+        (click)="changeSegment('delivering')">
+
+        <ion-label>Entregando</ion-label>
+
+      </ion-segment-button>
+
+      <ion-segment-button class="animated bounceInRight" id="completed" value="completed"
+        (click)="changeSegment('completed')">
+
+        <ion-label>Finalizados</ion-label>
+
+      </ion-segment-button>
+
+    </ion-segment>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content mode="ios">
+
+  <ion-refresher mode="md" slot="fixed" (ionRefresh)="refresh($event)">
+
+    <ion-refresher-content></ion-refresher-content>
+
+  </ion-refresher>
+
+  <ion-grid class="ion-no-padding ion-margin-top">
+
+    <ion-row *ngIf="segment == 'requests' && requests?.length > 0">
+
+      <ion-col size="12">
+
+        <ion-card class="ion-padding animated bounceInUp" button="true" *ngFor="let r of requests; let i=index">
+
+          <ion-row (click)="details(r.id)">
+
+            <ion-col class="ion-margin-bottom" size="12">
+
+              <p class="sm">Realizado em</p>
+
+              <h6>{{ r.created_at | date:'d MMM yyyy' }} às {{ r.created_at | date:'HH:mm' }}</h6>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <img src="../../../assets/icon/order.svg" height="62px">
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <h6>Pedido Nº {{ r.id | orderCode }}</h6>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ r.name }} {{ r.surname }}</span>
+
+              </p>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info" *ngIf="r.is_withdrawal_local">Retirar no local</span>
+
+                <span class="info" *ngIf="!r.is_withdrawal_local">{{ distance(r.latitude, r.longitude) | distance }}</span>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ r.delivery_forecast | date:'HH:mm' }}</span>
+
+              </p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row class="ion-margin-top">
+
+            <ion-col size="6">
+
+              <ion-button size="small" expand="block" (click)="accept(i)">
+
+                Aceitar
+
+              </ion-button>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-button size="small" expand="block" color="danger" (click)="refuse(i)">
+
+                Recusar
+
+              </ion-button>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="no-orders animated fadeIn" *ngIf="segment == 'requests' && requests?.length == 0">
+
+      <ion-col size="12">
+
+        <ion-icon class="order" src="../../../assets/icon/order.svg"></ion-icon>
+
+        <p>Nenhuma solicitação</p>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row *ngIf="segment == 'running' && running?.length > 0">
+
+      <ion-col size="12">
+
+        <ion-card class="ion-padding animated bounceInUp" button="true" *ngFor="let r of running; let i=index">
+
+          <ion-row (click)="details(r.id)">
+
+            <ion-col class="ion-margin-bottom" size="12">
+
+              <p class="sm">Realizado em</p>
+
+              <h6>{{ r.created_at | date:'d MMM yyyy' }} às {{ r.created_at | date:'HH:mm' }}</h6>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <img src="../../../assets/icon/order.svg" height="62px">
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <h6>Pedido Nº {{ r.id | orderCode }}</h6>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ r.name }} {{ r.surname }}</span>
+
+              </p>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info" *ngIf="r.is_withdrawal_local">Retirar no local</span>
+
+                <span class="info" *ngIf="!r.is_withdrawal_local">{{ distance(r.latitude, r.longitude) | distance }}</span>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ r.delivery_forecast | date:'HH:mm' }}</span>
+
+              </p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row *ngIf="r.status == 1" (click)="release(i)">
+
+            <ion-col class="ion-margin-top" size="12">
+
+              <ion-button size="small" expand="block">
+
+                Liberar Entrega
+
+              </ion-button>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row (click)="details(r.id)" *ngIf="r.status == 2">
+
+            <ion-col size="12">
+
+              <ion-progress-bar class="ion-margin-vertical" type="indeterminate"></ion-progress-bar>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info" *ngIf="r.is_withdrawal_local">Aguardando Retirada</span>
+
+                <span class="info" *ngIf="!r.is_withdrawal_local">Aguardando Entregador</span>
+
+              </p>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="no-orders animated fadeIn" *ngIf="segment == 'running' && running?.length == 0">
+
+      <ion-col size="12">
+
+        <ion-icon class="order" src="../../../assets/icon/order.svg"></ion-icon>
+
+        <p>Nenhum pedido em andamento</p>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row *ngIf="segment == 'delivering' && delivering?.length > 0">
+
+      <ion-col size="12">
+
+        <ion-card class="ion-padding animated bounceInUp" button="true" *ngFor="let d of delivering" (click)="details(d.id)">
+
+          <ion-row>
+
+            <ion-col class="ion-margin-bottom" size="12">
+
+              <p class="sm">Realizado em</p>
+
+              <h6>{{ d.created_at | date:'d MMM yyyy' }} às {{ d.created_at | date:'HH:mm' }}</h6>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <img src="../../../assets/icon/order.svg" height="62px">
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <h6>Pedido Nº {{ d.id | orderCode }}</h6>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ d.name }} {{ d.surname }}</span>
+
+              </p>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info" *ngIf="d.is_withdrawal_local">Retirar no local</span>
+
+                <span class="info" *ngIf="!d.is_withdrawal_local">{{ distance(d.latitude, d.longitude) | distance }}</span>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ d.delivery_forecast | date:'HH:mm' }}</span>
+
+              </p>
+
+            </ion-col>
+
+            <ion-col class="ion-margin-top" size="12">
+
+              <ion-progress-bar type="indeterminate"></ion-progress-bar>
+
+              <p class="ion-padding-top">
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">Em entrega</span>
+
+              </p>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="no-orders animated fadeIn" *ngIf="segment == 'delivering' && delivering?.length == 0">
+
+      <ion-col size="12">
+
+        <ion-icon class="order" src="../../../assets/icon/order.svg"></ion-icon>
+
+        <p>Nenhum pedido em entrega</p>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row *ngIf="segment == 'completed' && completed?.length > 0">
+
+      <ion-col size="12">
+
+        <ion-card class="ion-padding animated bounceInUp" button="true" *ngFor="let c of completed" (click)="details(c.id)">
+
+          <ion-row>
+
+            <ion-col class="ion-margin-bottom" size="12">
+
+              <p class="sm">Realizado em</p>
+
+              <h6>{{ c.created_at | date:'d MMM yyyy' }} às {{ c.created_at | date:'HH:mm' }}</h6>
+
+            </ion-col>
+
+            <ion-col size="3">
+
+              <img src="../../../assets/icon/order.svg" height="62px">
+
+            </ion-col>
+
+            <ion-col size="9">
+
+              <h6>Pedido Nº {{ c.id | orderCode }}</h6>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">{{ c.name }} {{ c.surname }}</span>
+
+              </p>
+
+              <p>
+
+                <ion-icon name="ellipse"></ion-icon>
+
+                <span class="info">Entregue às {{ c.delivered_at | date:'HH:mm' }}</span>
+
+              </p>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="no-orders animated fadeIn" *ngIf="segment == 'completed' && completed?.length == 0">
+
+      <ion-col size="12">
+
+        <ion-icon class="order" src="../../../assets/icon/order.svg"></ion-icon>
+
+        <p>Nenhum pedido finalizado</p>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>

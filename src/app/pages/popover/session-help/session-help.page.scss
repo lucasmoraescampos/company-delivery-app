@@ -1,0 +1,16 @@
+ion-content {
+    font-size: 12pt;
+
+    ion-icon.help {
+        font-size: 60pt;
+    }
+
+    ion-icon[name="ellipse"] {
+        font-size: 7pt;
+        color: var(--ion-color-primary);
+    }
+
+    ion-grid {
+        padding: 20px;
+    }
+}
