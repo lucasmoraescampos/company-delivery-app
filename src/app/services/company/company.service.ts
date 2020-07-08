@@ -51,7 +51,7 @@ export class CompanyService {
 
     const id = this.currentUserSubject.value.id;
 
-    return this.http.post<HttpResult>(`${this.url}/company/auth/update/${id}`, data)
+    return this.http.post<HttpResult>(`${this.url}/company/auth/${id}`, data)
       .pipe(
         map(res => {
           if (res.success) {
@@ -64,7 +64,7 @@ export class CompanyService {
   }
 
   public authenticate(email: string, password: string) {
-    return this.http.put<HttpResult>(`${this.url}/company/auth/login`, { email, password })
+    return this.http.post<HttpResult>(`${this.url}/company/auth/login`, { email, password })
       .pipe(
         map(res => {
           if (res.success) {

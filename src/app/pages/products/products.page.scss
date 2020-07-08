@@ -1,9 +1,9 @@
 ion-content {
     ion-list {
-        height: 100%;
+        margin-bottom: 76px;
 
         ion-item {
-            ion-avatar {
+            ion-thumbnail {
                 width: 75px;
                 height: 75px;
                 margin: 10px 10px 10px 0;
@@ -11,7 +11,9 @@ ion-content {
             }
 
             h6 {
-                font-size: 11pt;
+                font-size: 12pt;
+                line-height: 14pt;
+                margin-bottom: 5px;
                 overflow: hidden;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
@@ -19,13 +21,17 @@ ion-content {
             }
 
             p {
-                font-size: 9pt;
+                font-size: 11pt;
+                line-height: 13pt;
                 overflow: hidden;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                color: var(--ion-color-medium);
             }
+        }
+
+        ion-item:last-child {
+            --border-width: 0;
         }
 
         div.no-product {

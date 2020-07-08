@@ -45,17 +45,11 @@ export class ProductService {
       );
   }
 
-  public update(id: number, data: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/product/${id}`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
+  public update(id: number, data: FormData) {
 
-  public updatePhoto(data: FormData) {
-    return this.http.post<HttpResult>(`${this.url}/company/product/photo`, data)
+    data.append('_method', 'put');
+
+    return this.http.post<HttpResult>(`${this.url}/company/product/${id}`, data)
       .pipe(
         map(res => {
           return res;
@@ -71,55 +65,6 @@ export class ProductService {
         })
       );
   }
-
-
-  /* Sessions */
-
-  public getSessions() {
-    return this.http.get<HttpResult>(`${this.url}/company/menusession`)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public createSession(data: any) {
-    return this.http.post<HttpResult>(`${this.url}/company/menusession`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public updateSession(id: number, data: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/menusession/${id}`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public sessionsReorder(sessions: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/menusession`, { sessions })
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public deleteSession(id: number) {
-    return this.http.delete<HttpResult>(`${this.url}/company/menusession/${id}`)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
 
   /* Subcategories */
 

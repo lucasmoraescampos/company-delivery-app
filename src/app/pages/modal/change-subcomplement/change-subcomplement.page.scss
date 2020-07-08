@@ -1,16 +1,10 @@
-ion-header {
-    ion-title {
-        font-size: 12pt;
-        text-transform: uppercase;
-        font-weight: 400;
-    }
-}
-
 ion-content {
-    ion-button.add {
-        margin: 0;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
+    ion-item {
+        --background-activated: none;
+    }
+
+    ion-checkbox {
+        margin-left: 5px;
+        margin-right: 15px;
     }
 }

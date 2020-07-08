@@ -4,19 +4,15 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()" color="dark">
+      <ion-button class="close" (click)="dismiss()" color="dark">
 
-        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+        <ion-icon src="../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
     </ion-buttons>
 
-    <ion-title>
-
-      Adicionar Sessão
-
-    </ion-title>
+    <ion-title>Sessão</ion-title>
 
   </ion-toolbar>
 
@@ -24,7 +20,7 @@
 
 <ion-content mode="ios">
 
-  <ion-grid class="ion-padding" [formGroup]="formGroupSession">
+  <ion-grid class="ion-padding animated bounceInUp" [formGroup]="formGroupSession">
 
     <ion-row>
 
@@ -36,14 +32,24 @@
 
       </ion-col>
 
-      <ion-col class="ion-margin-top" size="12">
+    </ion-row>
 
-        <ion-button expand="block" (click)="add()" [disabled]="formGroupSession.invalid || spinner"
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer mode="ios">
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" (click)="add()" [disabled]="formGroupSession.invalid"
           [color]="formGroupSession.valid ? 'primary' : 'light'">
 
-          <ion-spinner mode="md" name="crescent" [hidden]="!spinner"></ion-spinner>
-
-          <span [hidden]="spinner">Adicionar</span>
+          Adicionar
 
         </ion-button>
 
@@ -53,4 +59,6 @@
 
   </ion-grid>
 
-</ion-content>
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

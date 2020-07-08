@@ -1,8 +1,39 @@
 ion-header {
-    ion-title {
-        font-size: 12pt;
-        text-transform: capitalize;
-        font-weight: 400;
-        text-transform: uppercase;
+    ion-buttons[slot="start"] {
+        ion-button {
+            font-size: 12pt !important;
+        }
+    }
+}
+
+ion-content {
+    ion-label {
+        margin: 0;
+        padding: 10px 15px;
+    }
+
+    ion-item {
+        --padding-start: 0;
+        --inner-padding-end: 0;
+
+        ion-button {
+            margin: 0;
+            height: 100%;
+            width: 50px;
+        }
+    }
+
+    ion-reorder {
+        width: 100%;
+
+        ion-label {
+            margin-left: 10px;
+        }
+
+        ion-icon[name="swap-vertical"] {
+            font-size: 18pt;
+            margin-top: 7pt;
+            margin-left: 15px;
+        }
     }
 }

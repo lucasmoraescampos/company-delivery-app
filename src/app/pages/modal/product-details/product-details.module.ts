@@ -9,6 +9,7 @@ import { ComplementOptionsPageModule } from '../../popover/complement-options/co
 import { AddSubcomplementPageModule } from '../add-subcomplement/add-subcomplement.module';
 import { ChangeComplementPageModule } from '../change-complement/change-complement.module';
 import { ChangeSubcomplementPageModule } from '../change-subcomplement/change-subcomplement.module';
+import { MoneyModule } from 'src/app/pipes/money/money.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { ChangeSubcomplementPageModule } from '../change-subcomplement/change-su
     ComplementOptionsPageModule,
     AddSubcomplementPageModule,
     ChangeComplementPageModule,
-    ChangeSubcomplementPageModule
+    ChangeSubcomplementPageModule,
+    MoneyModule
   ],
   declarations: [ProductDetailsPage],
   entryComponents: [ProductDetailsPage]

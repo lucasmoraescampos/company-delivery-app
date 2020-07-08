@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoadingService } from '../../../services/loading/loading.service';
 import { ToastService } from '../../../services/toast/toast.service';
-import { ProductService } from '../../../services/product/product.service';
+import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
 
 @Component({
   selector: 'app-change-session',
@@ -14,7 +13,7 @@ export class ChangeSessionPage implements OnInit {
 
   public session: any;
 
-  public spinner: boolean = false;
+  public loading: boolean = false;
 
   public formGroupSession: FormGroup;
 
@@ -22,7 +21,7 @@ export class ChangeSessionPage implements OnInit {
     private modalCtrl: ModalController,
     private formBuilder: FormBuilder,
     private toastSrv: ToastService,
-    private productSrv: ProductService,
+    private menuSessionSrv: MenuSessionService,
     private navParams: NavParams
   ) { }
 
@@ -40,12 +39,12 @@ export class ChangeSessionPage implements OnInit {
 
     if (this.formGroupSession.valid) {
 
-      this.spinner = true;
+      this.loading = true;
 
-      this.productSrv.updateSession(this.session.id, this.formGroupSession.value)
+      this.menuSessionSrv.update(this.session.id, this.formGroupSession.value)
         .subscribe(res => {
 
-          this.spinner = false;
+          this.loading = false;
 
           if (res.success) {
 

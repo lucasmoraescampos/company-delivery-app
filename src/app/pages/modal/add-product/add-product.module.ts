@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { AddProductPage } from './add-product.page';
 import { BrMaskerModule } from 'br-mask';
+import { SelectSessionPageModule } from '../select-session/select-session.module';
 
 @NgModule({
   imports: [
@@ -11,7 +12,8 @@ import { BrMaskerModule } from 'br-mask';
     FormsModule,
     IonicModule,
     BrMaskerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SelectSessionPageModule
   ],
   declarations: [AddProductPage],
   entryComponents: [AddProductPage]

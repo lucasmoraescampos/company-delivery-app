@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { MenuSessionsPage } from './menu-sessions.page';
 import { ChangeSessionPageModule } from '../change-session/change-session.module';
 import { SessionHelpPageModule } from '../../popover/session-help/session-help.module';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { SessionHelpPageModule } from '../../popover/session-help/session-help.m
     FormsModule,
     IonicModule,
     ChangeSessionPageModule,
-    SessionHelpPageModule
+    SessionHelpPageModule,
+    NgxLoadingModule
   ],
   declarations: [MenuSessionsPage],
   entryComponents: [MenuSessionsPage]

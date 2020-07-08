@@ -1,10 +1,8 @@
 export class NumberHelper {
 
     public static parse(number: string): number {
-        if (number) {
-            number = number.replace('.', '');
-            number = number.replace(',', '.');
-        }
+        number = String(number).replace('.', '');
+        number = number.replace(',', '.');
         return parseFloat(number);
     }
 

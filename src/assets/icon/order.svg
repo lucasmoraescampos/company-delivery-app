@@ -1,1 +1,53 @@
-<svg id="Layer_3" enable-background="new 0 0 64 64" height="512" viewBox="0 0 64 64" width="512" xmlns="http://www.w3.org/2000/svg"><g><path d="m51 62v-60l-5 5-5-5-5 5-4.5-4.5-4.5 4.5-5-5-5 5-5-5-5 5-5-5v51c0 4.971 4.029 9 9 9z" fill="#c7e2fc"/><path d="m37 15.917c0-3.09-.372-6.091-1.056-8.972l-4.444-4.445-4.5 4.5-5-5-5 5-5-5-5 5-5-5v51c0 .503.052.992.131 1.473 19.578-1.947 34.869-18.465 34.869-38.556z" fill="#ebf7fe"/><path d="m51 53v9h2c4.971 0 9-4.029 9-9z" fill="#4d5d7a"/><path d="m10 12h32v4h-32z" fill="#4d5d7a"/><path d="m37 54h8v4h-8z" fill="#243242"/><g><path d="m7 21h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m30 21h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m7 27h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m30 27h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m7 33h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m30 33h16v2h-16z" fill="#4d5d7a"/></g><g><path d="m7 39h39v2h-39z" fill="#4d5d7a"/></g><g><path d="m7 45h39v2h-39z" fill="#4d5d7a"/></g></g></svg>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+<path style="fill:#F1F1F2;" d="M413.721,32.828L356.747,0l-56.973,32.828L242.801,0l-56.973,32.828L128.855,0v512H426.92
+	c24.176,0,43.774-19.598,43.774-43.774V0L413.721,32.828z"/>
+<g>
+	<path style="fill:#E6E6E6;" d="M413.721,32.828L356.747,0l-56.973,32.828V512H426.92c24.176,0,43.774-19.598,43.774-43.774V0
+		L413.721,32.828z"/>
+	<path style="fill:#E6E6E6;" d="M426.92,512c-24.176,0-43.774-19.598-43.774-43.774v-42.501H41.306v42.501
+		C41.306,492.402,60.904,512,85.08,512H426.92"/>
+</g>
+<path style="fill:#CCCCCC;" d="M426.92,512c-24.176,0-43.774-19.598-43.774-43.774v-42.501h-83.371V512H426.92"/>
+<g>
+	<rect x="177.81" y="120.36" style="fill:#999999;" width="243.94" height="30"/>
+	<rect x="177.81" y="182.6" style="fill:#999999;" width="243.94" height="30"/>
+</g>
+<g>
+	<rect x="299.77" y="120.36" style="fill:#808080;" width="121.97" height="30"/>
+	<rect x="299.77" y="182.6" style="fill:#808080;" width="121.97" height="30"/>
+</g>
+<rect x="177.81" y="244.83" style="fill:#999999;" width="121.97" height="30"/>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>

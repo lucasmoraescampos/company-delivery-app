@@ -6,6 +6,9 @@ import { ProductsPageRoutingModule } from './products-routing.module';
 import { ProductsPage } from './products.page';
 import { AddSessionPageModule } from '../modal/add-session/add-session.module';
 import { AddProductPageModule } from '../modal/add-product/add-product.module';
+import { MenuSessionsPageModule } from '../modal/menu-sessions/menu-sessions.module';
+import { ProductDetailsPageModule } from '../modal/product-details/product-details.module';
+import { SearchProductPageModule } from '../modal/search-product/search-product.module';
 
 @NgModule({
   imports: [
@@ -14,7 +17,10 @@ import { AddProductPageModule } from '../modal/add-product/add-product.module';
     IonicModule,
     AddSessionPageModule,
     AddProductPageModule,
-    ProductsPageRoutingModule
+    MenuSessionsPageModule,
+    ProductDetailsPageModule,
+    ProductsPageRoutingModule,
+    SearchProductPageModule
   ],
   declarations: [ProductsPage]
 })

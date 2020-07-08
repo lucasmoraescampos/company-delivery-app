@@ -1,71 +1,31 @@
 <ion-content>
 
-  <ion-grid class="ion-padding">
+  <ion-list>
 
-    <ion-row>
+    <ion-item lines="none" button="true" (click)="addSession()">
 
-      <ion-col size="4">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
 
-        <ion-card class="ion-no-margin" color="primary" button="true" (click)="addProduct()">
+      <ion-label>Adicionar Sessão</ion-label>
 
-          <ion-card-header>
+    </ion-item>
 
-            <ion-icon name="add-circle-outline"></ion-icon>
+    <ion-item lines="none" button="true" (click)="editSessions()">
 
-          </ion-card-header>
+      <ion-icon slot="start" name="create-outline"></ion-icon>
 
-          <ion-card-content>
+      <ion-label>Editar Sessões</ion-label>
 
-            <h6>Adicionar Produto</h6>
+    </ion-item>
 
-          </ion-card-content>
+    <ion-item lines="none" button="true" (click)="searchProduct()">
 
-        </ion-card>
+      <ion-icon slot="start" name="search-outline"></ion-icon>
 
-      </ion-col>
+      <ion-label>Buscar Produto</ion-label>
 
-      <ion-col size="4">
+    </ion-item>
 
-        <ion-card class="ion-no-margin" color="primary" button="true" (click)="addSession()">
-
-          <ion-card-header>
-
-            <ion-icon name="add-circle-outline"></ion-icon>
-
-          </ion-card-header>
-
-          <ion-card-content>
-
-            <h6>Adicionar Sessão</h6>
-
-          </ion-card-content>
-
-        </ion-card>
-
-      </ion-col>
-
-      <ion-col size="4">
-
-        <ion-card class="ion-no-margin" color="primary" button="true" (click)="sessions()">
-
-          <ion-card-header>
-
-            <ion-icon name="grid-outline"></ion-icon>
-
-          </ion-card-header>
-
-          <ion-card-content>
-
-            <h6>Editar<br>Sessões</h6>
-
-          </ion-card-content>
-
-        </ion-card>
-
-      </ion-col>
-
-    </ion-row>
-
-  </ion-grid>
+  </ion-list>
 
 </ion-content>

@@ -15,15 +15,15 @@ export class ProductOptionsPage implements OnInit {
   ngOnInit() {
   }
 
-  public async sessions() {
-    this.popoverCtrl.dismiss('sessions');
+  public async editSessions() {
+    this.popoverCtrl.dismiss('edit_sessions');
   }
 
   public async addSession() {
     this.popoverCtrl.dismiss('add_session');
   }
 
-  public async addProduct() {
-    this.popoverCtrl.dismiss('add_product');
+  public async searchProduct() {
+    this.popoverCtrl.dismiss('search_product');
   }
 }

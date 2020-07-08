@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ActionSheetController } from '@ionic/angular';
+import { ModalController, ActionSheetController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from '../../../services/product/product.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { NumberHelper } from '../../../helpers/NumberHelper';
 import { Base64Helper } from '../../../helpers/Base64Helper';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
-import { ConfigHelper } from 'src/app/helpers/ConfigHelper';
+import { SelectSessionPage } from '../select-session/select-session.page';
 
 const { Camera } = Plugins;
 
@@ -21,7 +21,7 @@ export class AddProductPage implements OnInit {
 
   public isAlwaysAvailable: boolean = false;
 
-  public sessions: Array<any>;
+  public session: any;
 
   public subcategories: Array<any>;
 
@@ -31,18 +31,20 @@ export class AddProductPage implements OnInit {
 
   public loading: boolean = false;
 
+  customActionSheetOptions: any = {
+    header: 'Colors',
+    buttons: 'Adicionar sessão',
+  };
+
   constructor(
     private modalCtrl: ModalController,
     private formbuilder: FormBuilder,
-    private navParams: NavParams,
     private productSrv: ProductService,
     private toastSrv: ToastService,
-    public actionSheetController: ActionSheetController
+    public actionSheetCtrl: ActionSheetController
   ) { }
 
   ngOnInit() {
-
-    this.sessions = this.navParams.get('sessions');
 
     this.formGroupProduct = this.formbuilder.group({
       menu_session_id: [null, Validators.required],
@@ -62,6 +64,33 @@ export class AddProductPage implements OnInit {
     });
 
     this.prepareSubcategories();
+
+  }
+
+  public async selectSession() {
+
+    const modal = await this.modalCtrl.create({
+      component: SelectSessionPage,
+      cssClass: 'modal-custom',
+      backdropDismiss: false
+    });
+
+    modal.onWillDismiss()
+      .then(res => {
+
+        if (res.data != undefined) {
+
+          this.session = res.data
+
+          this.formGroupProduct.patchValue({
+            menu_session_id: this.session.id
+          });
+
+        }
+
+      });
+
+    return await modal.present();
 
   }
 
@@ -95,8 +124,11 @@ export class AddProductPage implements OnInit {
         formData.append('is_available_thursday', product.is_available_thursday);
         formData.append('is_available_friday', product.is_available_friday);
         formData.append('is_available_saturday', product.is_available_saturday);
-        formData.append('start_time', product.start_time);
-        formData.append('end_time', product.end_time);
+
+        if (product.start_time && product.end_time) {
+          formData.append('start_time', product.start_time);
+          formData.append('end_time', product.end_time);
+        }
 
         if (this.blob != null) {
           formData.append('photo', this.blob);
@@ -127,7 +159,9 @@ export class AddProductPage implements OnInit {
     }
 
     else {
+
       this.toastSrv.error('Informe todos os dados!');
+      
     }
 
   }
@@ -203,7 +237,7 @@ export class AddProductPage implements OnInit {
 
   public async choosePhoto() {
 
-    const actionSheet = await this.actionSheetController.create({
+    const actionSheet = await this.actionSheetCtrl.create({
       mode: 'md',
       header: 'Escolha uma opção',
       buttons: [{
@@ -220,9 +254,6 @@ export class AddProductPage implements OnInit {
         }
       }]
     });
-
-    actionSheet.onWillDismiss()
-      .then(() => { });
 
     await actionSheet.present();
 

@@ -1,24 +1,18 @@
-<ion-header mode="ios" class="ion-no-border">
+<ion-header mode="ios">
 
   <ion-toolbar>
 
     <ion-buttons slot="start">
 
-      <ion-button class="help" fill="clear" color="medium" (click)="help($event)">
+      <ion-button (click)="enableReorder()" *ngIf="!enable_reorder">
 
-        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
-
-        <ion-label>Ajuda</ion-label>
+        Ordenar
 
       </ion-button>
 
-    </ion-buttons>
+      <ion-button (click)="disableReorder()" *ngIf="enable_reorder">
 
-    <ion-buttons slot="end">
-
-      <ion-button (click)="dismiss()" color="dark">
-
-        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+        Cancelar
 
       </ion-button>
 
@@ -30,46 +24,100 @@
 
     </ion-title>
 
+    <ion-buttons slot="end">
+
+      <ion-button class="close" color="dark" (click)="dismiss()">
+
+        <ion-icon src="../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
   </ion-toolbar>
 
 </ion-header>
 
-<ion-content class="ion-padding-vertical">
+<ion-content mode="ios">
 
-  <ion-reorder-group (ionItemReorder)="reorder($event)" disabled="false" mode="md">
+  <ion-list class="ion-no-padding animated bounceInUp" *ngIf="!enable_reorder">
 
-    <div *ngFor="let s of sessions">
+    <ion-item lines="full" button="true" detail="false" *ngFor="let s of sessions">
 
-      <ion-item-sliding>
+      <ion-label (click)="change(s)">{{ s.name }}</ion-label>
 
-        <ion-item lines="full" button="true" detail="false" (click)="change(s)">
+      <ion-button fill="clear" (click)="remove(s.id)">
 
-          <ion-reorder slot="start"></ion-reorder>
-    
-          <ion-label>
-    
-            {{ s.name }}
-    
-          </ion-label>
-    
-        </ion-item>
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
 
-        <ion-item-options side="end">
-        
-          <ion-item-option color="danger" expandable (click)="remove(s.id)">
+      </ion-button>
 
-            <span [hidden]="loading">Remover</span>
+    </ion-item>
 
-            <ion-spinner mode="md" name="crescent" [hidden]="!loading"></ion-spinner>
+  </ion-list>
 
-          </ion-item-option>
+  <ion-list class="ion-no-padding animated fadeIn" *ngIf="enable_reorder">
 
-        </ion-item-options>
+    <ion-reorder-group mode="md" disabled="false" (ionItemReorder)="reorder($event)">
 
-      </ion-item-sliding>
+      <ion-item lines="full" *ngFor="let s of sessions" button="true" detail="false">
 
-    </div>
+        <ion-reorder>
 
-  </ion-reorder-group>
+          <ion-grid class="ion-no-padding">
+
+            <ion-row>
+
+              <ion-col class="ion-no-padding" size="1">
+
+                <ion-icon name="swap-vertical"></ion-icon>
+
+              </ion-col>
+
+              <ion-col class="ion-no-padding" size="11">
+
+                <ion-label>
+
+                  {{ s.name }}
+
+                </ion-label>
+
+              </ion-col>
+
+            </ion-row>
+
+          </ion-grid>
+
+        </ion-reorder>
+
+      </ion-item>
+
+    </ion-reorder-group>
+
+  </ion-list>
 
 </ion-content>
+
+<ion-footer mode="ios">
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col class="ion-no-padding animated fadeIn" *ngIf="enable_reorder" size="12">
+
+        <ion-button expand="block" (click)="save()">
+
+          Salvar
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
-import { AlertService } from '../../../services/alert/alert.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HtmlHelper } from '../../../helpers/HtmlHelper';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ProductService } from '../../../services/product/product.service';
-
 
 @Component({
   selector: 'app-add-complement',
@@ -14,16 +11,13 @@ import { ProductService } from '../../../services/product/product.service';
 })
 export class AddComplementPage implements OnInit {
 
-  public loading: boolean = false;
-
-  public info: boolean = false;
+  public loading: boolean = true;
 
   public formGroupComplement: FormGroup;
 
   constructor(
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private alertSrv: AlertService,
     private toastSrv: ToastService,
     private formBuilder: FormBuilder,
     private productSrv: ProductService
@@ -75,13 +69,5 @@ export class AddComplementPage implements OnInit {
 
   public dismiss() {
     this.modalCtrl.dismiss();
-  }
-
-  public help() {
-
-    this.info = true;
-
-    this.alertSrv.info(HtmlHelper.AddComplementInfo, () => this.info = false);
-
   }
 }

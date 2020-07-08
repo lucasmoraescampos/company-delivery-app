@@ -1,71 +1,83 @@
-<ion-header mode="ios" class="ion-no-border">
+<ion-header class="ion-no-border" mode="ios">
 
-  <ion-toolbar class="ion-padding-vertical">
-
-    <ion-buttons slot="start">
-
-      <ion-button class="help" fill="clear" color="medium" (click)="help()">
-
-        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
-
-        <ion-label>Ajuda</ion-label>
-
-      </ion-button>
-
-    </ion-buttons>
+  <ion-toolbar>
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()" color="dark">
+      <ion-button class="close" (click)="dismiss()">
 
-        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+        <ion-icon src="../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
     </ion-buttons>
 
-    <ion-title>
-
-      Adicionar<br>Complemento
-
-    </ion-title>
+    <ion-title>Complemento</ion-title>
 
   </ion-toolbar>
 
 </ion-header>
 
-<ion-content>
+<ion-content mode="ios">
 
-  <form [formGroup]="formGroupComplement" mode="ios" *ngIf="!info">
+  <ion-grid class="ion-padding" [formGroup]="formGroupComplement">
 
-    <div class="ion-padding-horizontal">
+    <ion-row>
 
-      <ion-label class="label-custom">Título</ion-label>
+      <ion-col size="12">
 
-      <ion-input class="input-custom" type="text" formControlName="title" placeholder="Escreva o título do complemento">
-      </ion-input>
+        <ion-label class="label-custom">Título</ion-label>
 
-      <ion-label class="label-custom">Quantidade Mínima</ion-label>
+        <ion-input class="input-custom" type="text" formControlName="title"
+          placeholder="Escreva o título do complemento"></ion-input>
 
-      <ion-input class="input-custom" type="number" formControlName="qty_min" placeholder="Qtd. mínima de itens">
-      </ion-input>
+      </ion-col>
 
-      <ion-label class="label-custom">Quantidade Máxima</ion-label>
+      <ion-col size="12">
 
-      <ion-input class="input-custom" type="number" formControlName="qty_max" placeholder="Qtd. máxima de itens">
-      </ion-input>
+        <ion-label class="label-custom">Quantidade Mínima</ion-label>
 
-    </div>
+        <ion-input class="input-custom" type="number" formControlName="qty_min" placeholder="Qtd. mínima de itens">
+        </ion-input>
 
-    <ion-button class="add" mode="ios" expand="full" [color]="formGroupComplement.valid ? 'primary' : 'dark'"
-      [disabled]="formGroupComplement.invalid ? true : false" (click)="add()">
+      </ion-col>
 
-      <ion-spinner mode="md" name="crescent" [hidden]="!loading"></ion-spinner>
+      <ion-col size="12">
 
-      <span [hidden]="loading">Adicionar</span>
+        <ion-label class="label-custom">Quantidade Máxima</ion-label>
 
-    </ion-button>
+        <ion-input class="input-custom" type="number" formControlName="qty_max" placeholder="Qtd. máxima de itens">
+        </ion-input>
 
-  </form>
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
 
 </ion-content>
+
+<ion-footer mode="ios">
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button class="add" expand="block" [color]="formGroupComplement.valid ? 'primary' : 'light'"
+          [disabled]="formGroupComplement.invalid ? true : false" (click)="add()">
+
+          Adicionar
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

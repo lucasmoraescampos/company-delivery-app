@@ -1,12 +1,12 @@
-<ion-header mode="ios" class="ion-no-border">
+<ion-header mode="ios">
 
   <ion-toolbar>
 
     <ion-buttons slot="end">
 
-      <ion-button color="dark" (click)="options($event)">
+      <ion-button (click)="options($event)">
 
-        <ion-icon slot="icon-only" name="menu-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
 
       </ion-button>
 
@@ -16,12 +16,12 @@
 
   </ion-toolbar>
 
-  <ion-toolbar class="ion-no-padding">
+  <ion-toolbar mode="md" *ngIf="sessions?.length > 0">
 
-    <ion-segment scrollable mode="md" [value]="sessions[0]?.id">
+    <ion-segment scrollable [value]="sessions[0].id" (ionChange)="segmentChanged()">
 
       <ion-segment-button class="animated bounceInRight" [id]="'session' + s.id" [value]="s.id"
-        (click)="changeSession(s.id)" *ngFor="let s of sessions">
+        *ngFor="let s of sessions">
 
         <ion-label>{{ s.name }}</ion-label>
 
@@ -35,29 +35,26 @@
 
 <ion-content>
 
-  <ion-list>
+  <ion-list class="ion-no-padding">
 
-    <div *ngFor="let p of products">
+    <ion-item class="animated bounceInUp" lines="full" button="true" detail="false" *ngFor="let p of products"
+      (click)="details(p.id)">
 
-      <ion-item class="animated bounceInUp" lines="full" button="true" detail="false" (click)="details(p.id)">
+      <ion-thumbnail slot="start">
 
-        <ion-avatar slot="start">
+        <img [src]="p.photo">
 
-          <img [src]="p.photo">
+      </ion-thumbnail>
 
-        </ion-avatar>
+      <ion-label>
 
-        <ion-label>
+        <h6 class="ion-text-wrap">{{ p.name }}</h6>
 
-          <h6 class="ion-text-wrap">{{ p.name }}</h6>
+        <p class="ion-text-wrap">{{ p.description }}</p>
 
-          <p class="ion-text-wrap">{{ p.description }}</p>
+      </ion-label>
 
-        </ion-label>
-
-      </ion-item>
-
-    </div>
+    </ion-item>
 
     <div class="no-product animated fadeIn" *ngIf="products?.length == 0">
 
@@ -68,5 +65,15 @@
     </div>
 
   </ion-list>
+
+  <ion-fab class="animated bounceInUp" vertical="bottom" horizontal="end" slot="fixed">
+
+    <ion-fab-button (click)="addProduct()">
+
+      <ion-icon name="add"></ion-icon>
+
+    </ion-fab-button>
+
+  </ion-fab>
 
 </ion-content>

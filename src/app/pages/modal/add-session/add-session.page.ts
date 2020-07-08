@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from '../../../services/product/product.service';
 import { ToastService } from '../../../services/toast/toast.service';
 import { ModalController } from '@ionic/angular';
+import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
 
 @Component({
   selector: 'app-add-session',
@@ -11,14 +12,14 @@ import { ModalController } from '@ionic/angular';
 })
 export class AddSessionPage implements OnInit {
 
-  public spinner: boolean = false;
+  public loading: boolean = false;
 
   public formGroupSession: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
     private toastSrv: ToastService,
-    private productSrv: ProductService,
+    private menuSession: MenuSessionService,
     private modalCtrl: ModalController
   ) { }
 
@@ -34,12 +35,12 @@ export class AddSessionPage implements OnInit {
 
     if (this.formGroupSession.valid) {
 
-      this.spinner = true;
+      this.loading = true;
 
-      this.productSrv.createSession(this.formGroupSession.value)
+      this.menuSession.create(this.formGroupSession.value)
         .subscribe(res => {
 
-          this.spinner = false;
+          this.loading = false;
 
           if (res.success) {
 

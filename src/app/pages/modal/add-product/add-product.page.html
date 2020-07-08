@@ -4,9 +4,9 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()" color="dark">
+      <ion-button class="close" color="dark" (click)="dismiss()">
 
-        <ion-icon class="icon-close" src="../../../assets/icon/close.svg"></ion-icon>
+        <ion-icon src="../../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
@@ -26,23 +26,67 @@
 
   <ion-grid class="ion-padding" [formGroup]="formGroupProduct">
 
-    <ion-row>
+    <ion-row class="animated bounceInDown" *ngIf="!session">
 
       <ion-col class="ion-text-center" size="12">
 
-        <ion-thumbnail *ngIf="photo" (click)="choosePhoto()">
+        <ion-label>
+
+          <p>Escolha a sessão onde o produto será encontrado</p>
+
+        </ion-label>
+
+      </ion-col>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-button fill="outline" expand="block" (click)="selectSession()">
+
+          <ion-icon slot="start" name="albums-outline"></ion-icon>
+
+          Escolher Sessão
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="animated bounceInDown" *ngIf="session && !photo">
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-label>
+
+          <p>Escolha uma imagem para o produto</p>
+
+        </ion-label>
+
+      </ion-col>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-button expand="block" fill="outline" (click)="choosePhoto()" *ngIf="!photo">
+
+          <ion-icon slot="start" name="image-outline"></ion-icon>
+
+          Escolher Imagem
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="animated bounceInUp" *ngIf="session && photo">
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-thumbnail (click)="choosePhoto()">
 
           <img [src]="photo">
 
         </ion-thumbnail>
-
-        <ion-button size="small" fill="outline" (click)="choosePhoto()" *ngIf="!photo">
-
-          <ion-icon slot="start" name="image-outline"></ion-icon>
-
-          Adicionar Imagem
-
-        </ion-button>
 
       </ion-col>
 
@@ -50,12 +94,7 @@
 
         <ion-label class="label-custom">Sessão</ion-label>
 
-        <ion-select class="select-custom" formControlName="menu_session_id" placeholder="Selecione a sessão do produto"
-          mode="md" interface="action-sheet" cancelText="Cancelar">
-
-          <ion-select-option [value]="s.id" *ngFor="let s of sessions">{{ s.name }}</ion-select-option>
-
-        </ion-select>
+        <p class="input-custom" (click)="selectSession()">{{ session.name }}</p>
 
       </ion-col>
 
@@ -105,13 +144,14 @@
 
   </ion-grid>
 
-  <ion-grid class="ion-no-padding ion-margin-top" [formGroup]="formGroupProduct">
+  <ion-grid class="ion-no-padding ion-margin-top animated bounceInUp" [formGroup]="formGroupProduct"
+    *ngIf="session && photo">
 
     <ion-row>
 
       <ion-col class="header" size="12">
 
-        <h6>Dias disponíveis:</h6>
+        <p>Dias disponíveis:</p>
 
       </ion-col>
 
@@ -182,7 +222,7 @@
 
       <ion-col class="header" size="12">
 
-        <h6 class="ion-no-margin ion-text-center">Horários disponíveis:</h6>
+        <p>Horários disponíveis:</p>
 
       </ion-col>
 

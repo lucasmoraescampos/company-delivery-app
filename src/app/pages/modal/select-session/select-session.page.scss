@@ -1,0 +1,15 @@
+ion-content {
+    ion-item {
+        --padding-start: 15px;
+        --inner-padding-end: 15px;
+        --border-color: var(--ion-color-medium-tint);
+    }
+
+    ion-label {
+        margin: 0;
+
+        h6 {
+            font-size: 12pt;
+        }
+    }
+}

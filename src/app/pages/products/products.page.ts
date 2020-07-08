@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PopoverController, ModalController, IonSegment } from '@ionic/angular';
 import { LoadingService } from '../../services/loading/loading.service';
 import { ProductOptionsPage } from '../popover/product-options/product-options.page';
 import { ProductService } from '../../services/product/product.service';
@@ -8,6 +8,8 @@ import { MenuSessionsPage } from '../modal/menu-sessions/menu-sessions.page';
 import { AddSessionPage } from '../modal/add-session/add-session.page';
 import { AddProductPage } from '../modal/add-product/add-product.page';
 import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
+import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
+import { SearchProductPage } from '../modal/search-product/search-product.page';
 
 @Component({
   selector: 'app-products',
@@ -16,18 +18,21 @@ import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
 })
 export class ProductsPage implements OnInit {
 
-  public sessions: Array<any> = [];
+  @ViewChild(IonSegment) segment: IonSegment;
 
-  public subcategories: Array<any> = [];
+  public sessions: Array<any>;
 
-  public products: Array<any> = [];
+  public subcategories: Array<any>;
 
-  public allProducts: Array<any> = [];
+  public products: Array<any>;
+
+  public allProducts: Array<any>;
 
   constructor(
     private modalCtrl: ModalController,
     private popoverController: PopoverController,
     private productSrv: ProductService,
+    private menuSessionSrv: MenuSessionService,
     private loadingSrv: LoadingService
   ) { }
 
@@ -44,8 +49,7 @@ export class ProductsPage implements OnInit {
       component: ProductOptionsPage,
       event: ev,
       translucent: true,
-      cssClass: 'popover-custom',
-      mode: 'ios'
+      mode: 'md'
     });
 
     popover.onWillDismiss()
@@ -53,16 +57,16 @@ export class ProductsPage implements OnInit {
 
         switch (res.data) {
 
-          case 'sessions':
-            this.openSessions();
-            break;
-
           case 'add_session':
             this.openAddSession();
             break;
 
-          case 'add_product':
-            this.openAddProduct();
+          case 'edit_sessions':
+            this.openSessions();
+            break;
+
+          case 'search_product':
+            this.openSearch();
             break;
 
         }
@@ -73,13 +77,14 @@ export class ProductsPage implements OnInit {
 
   }
 
-  public changeSession(session_id: number) {
+  public segmentChanged() {
 
-    let session = document.getElementById(`session${session_id}`);
+    let session = document.getElementById(`session${this.segment.value}`);
 
     session.scrollIntoView({ behavior: "smooth", inline: "center" });
 
-    this.filterProducts(session_id);
+    this.filterProducts();
+
   }
 
   public details(product_id: number) {
@@ -91,34 +96,34 @@ export class ProductsPage implements OnInit {
 
         if (res.success) {
 
+          const index = ArrayHelper.getIndexByKey(this.sessions, 'id', res.data.menu_session_id);
+
           const modal = await this.modalCtrl.create({
             component: ProductDetailsPage,
             cssClass: 'modal-custom',
             componentProps: {
               product: res.data,
-              sessions: this.sessions,
+              session: this.sessions[index],
               subcategories: this.subcategories
             }
           });
 
-          await modal.present();
-
           modal.onWillDismiss()
             .then(res => {
 
-              const index = ArrayHelper.getIndexByKey(this.products, 'id', product_id);
+              if (res.data != undefined) {
 
-              this.products[index] = res.data;
+                const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product_id);
+
+                this.allProducts[index] = res.data;
+
+                this.filterProducts();
+
+              }
 
             });
 
-          this.loadingSrv.hide();
-
-          return;
-
-        }
-
-        else {
+          await modal.present();
 
           this.loadingSrv.hide();
 
@@ -128,15 +133,42 @@ export class ProductsPage implements OnInit {
 
   }
 
-  private async openSessions() {
+  public async addProduct() {
 
     const modal = await this.modalCtrl.create({
-      component: MenuSessionsPage,
+      component: AddProductPage,
       cssClass: 'modal-custom',
       backdropDismiss: false,
       componentProps: {
         sessions: this.sessions
       }
+    });
+
+    modal.onWillDismiss()
+      .then(res => {
+
+        if (res.data != undefined) {
+
+          this.segment.value = res.data.menu_session_id;
+
+          this.allProducts.push(res.data);
+
+          this.filterProducts();
+
+        }
+
+      });
+
+    return await modal.present();
+
+  }
+
+  private async openSessions() {
+
+    const modal = await this.modalCtrl.create({
+      component: MenuSessionsPage,
+      cssClass: 'modal-custom',
+      backdropDismiss: false
     });
 
     modal.onWillDismiss()
@@ -173,29 +205,53 @@ export class ProductsPage implements OnInit {
 
   }
 
-  private async openAddProduct() {
+  private async openSearch() {
 
     const modal = await this.modalCtrl.create({
-      component: AddProductPage,
+      component: SearchProductPage,
       cssClass: 'modal-custom',
-      backdropDismiss: false
+      backdropDismiss: false,
+      componentProps: {
+        products: this.allProducts,
+        sessions: this.sessions,
+        subcategories: this.subcategories
+      }
     });
+
+    modal.onWillDismiss()
+      .then(res => {
+
+        if (res.data != undefined) {
+
+          this.allProducts = res.data;
+
+        }
+
+      });
 
     return await modal.present();
 
   }
 
-  private filterProducts(session_id: number) {
+  private filterProducts() {
 
-    this.products = [];
+    const products = [];
+
+    this.products = null;
 
     this.allProducts.forEach(element => {
 
-      if (element.menu_session_id == session_id) {
+      if (element.menu_session_id == this.segment.value) {
 
-        this.products.push(element);
+        products.push(element);
 
       }
+
+      setTimeout(() => {
+
+        this.products = ArrayHelper.orderbyAsc(products, 'name');
+
+      });
 
     });
 
@@ -205,7 +261,7 @@ export class ProductsPage implements OnInit {
 
     this.loadingSrv.show();
 
-    this.productSrv.getSessions()
+    this.menuSessionSrv.get()
       .subscribe(res => {
 
         this.loadingSrv.hide();
@@ -214,7 +270,7 @@ export class ProductsPage implements OnInit {
 
           this.sessions = res.data;
 
-          if (res.data.length > 0) {
+          if (this.sessions.length > 0) {
             this.prepareProducts();
           }
 
@@ -255,7 +311,7 @@ export class ProductsPage implements OnInit {
 
           this.allProducts = res.data;
 
-          this.filterProducts(this.sessions[0].id);
+          this.filterProducts();
 
         }
       });

@@ -276,7 +276,11 @@ export class OrdersPage implements OnInit{
 
           const running = res.data[1] ? res.data[1] : [];
 
-          res.data[2].forEach((order: any) => running.push(order));
+          if (res.data[2]) {
+
+            res.data[2].forEach((order: any) => running.push(order));
+
+          }
 
           this.running = ArrayHelper.orderbyDesc(running, 'created_at');
 

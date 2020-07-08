@@ -12,6 +12,9 @@ import { ArrayHelper } from '../../../helpers/ArrayHelper';
 import { AlertService } from '../../../services/alert/alert.service';
 import { ProductService } from '../../../services/product/product.service';
 import { NumberHelper } from '../../../helpers/NumberHelper';
+import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+
+const { Camera } = Plugins;
 
 @Component({
   selector: 'app-product-details',
@@ -24,7 +27,7 @@ export class ProductDetailsPage implements OnInit {
 
   public segment: string = 'info';
 
-  public sessions: Array<any>;
+  public session: any;
 
   public subcategories: Array<any>;
 
@@ -57,7 +60,7 @@ export class ProductDetailsPage implements OnInit {
 
     this.product = this.navParams.get('product');
 
-    this.sessions = this.navParams.get('sessions');
+    this.session = this.navParams.get('session');
 
     this.subcategories = this.navParams.get('subcategories');
 
@@ -108,7 +111,31 @@ export class ProductDetailsPage implements OnInit {
 
         product.price = NumberHelper.parse(product.price);
 
-        this.productSrv.update(this.product.id, product)
+        const formData = new FormData();
+
+        formData.append('menu_session_id', product.menu_session_id);
+        formData.append('name', product.name);
+        formData.append('description', product.description);
+        formData.append('subcategory_id', product.subcategory_id);
+        formData.append('price', product.price);
+        formData.append('is_available_sunday', product.is_available_sunday);
+        formData.append('is_available_monday', product.is_available_monday);
+        formData.append('is_available_tuesday', product.is_available_tuesday);
+        formData.append('is_available_wednesday', product.is_available_wednesday);
+        formData.append('is_available_thursday', product.is_available_thursday);
+        formData.append('is_available_friday', product.is_available_friday);
+        formData.append('is_available_saturday', product.is_available_saturday);
+        
+        if (product.start_time && product.end_time) {
+          formData.append('start_time', product.start_time);
+          formData.append('end_time', product.end_time);
+        }
+
+        if (this.blob) {
+          formData.append('photo', this.blob);
+        }
+
+        this.productSrv.update(this.product.id, formData)
           .subscribe(res => {
 
             this.loading = false;
@@ -380,54 +407,6 @@ export class ProductDetailsPage implements OnInit {
 
   }
 
-  public changeDays(event: CustomEvent) {
-
-    switch (event.detail.value) {
-
-      case 'is_available_sunday':
-        this.formGroupProduct.patchValue({
-          is_available_sunday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_monday':
-        this.formGroupProduct.patchValue({
-          is_available_monday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_tuesday':
-        this.formGroupProduct.patchValue({
-          is_available_tuesday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_wednesday':
-        this.formGroupProduct.patchValue({
-          is_available_wednesday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_thursday':
-        this.formGroupProduct.patchValue({
-          is_available_thursday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_friday':
-        this.formGroupProduct.patchValue({
-          is_available_friday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-
-      case 'is_available_saturday':
-        this.formGroupProduct.patchValue({
-          is_available_saturday: event.detail.checked == true ? 1 : 0
-        });
-        break;
-    }
-  }
-
   public dismiss() {
     this.modalCtrl.dismiss(this.product);
   }
@@ -435,16 +414,38 @@ export class ProductDetailsPage implements OnInit {
   public changeAlwaysAvailable(event: CustomEvent) {
 
     if (event.detail.checked) {
+
       this.isAlwaysAvailable = true;
+
+      this.formGroupProduct.patchValue({
+        start_time: null,
+        end_time: null
+      });
+
     }
     else {
-      this.isAlwaysAvailable = false;
-    }
 
-    this.formGroupProduct.patchValue({
-      start_time: this.product.start_time,
-      end_time: this.product.end_time
-    });
+      this.isAlwaysAvailable = false;
+
+      if (this.product.start_time && this.product.end_time) {
+
+        this.formGroupProduct.patchValue({
+          start_time: this.product.start_time,
+          end_time: this.product.end_time
+        });
+
+      }
+
+      else {
+
+        this.formGroupProduct.patchValue({
+          start_time: '00:00',
+          end_time: '00:00'
+        });
+
+      }
+
+    }
   }
 
   public changeSegment(segment: string) {
@@ -489,13 +490,13 @@ export class ProductDetailsPage implements OnInit {
         text: 'Tirar Foto',
         icon: 'camera-outline',
         handler: () => {
-          // this.openCamera();
+          this.camera();
         }
       }, {
         text: 'Abrir Galeria',
         icon: 'image-outline',
         handler: () => {
-          // this.openGallery();
+          this.gallery();
         }
       }]
     });
@@ -507,75 +508,57 @@ export class ProductDetailsPage implements OnInit {
 
   }
 
-  // public openCamera() {
+  private async camera() {
 
-  //   const options: CameraOptions = {
-  //     quality: 100,
-  //     sourceType: this.camera.PictureSourceType.CAMERA,
-  //     destinationType: this.camera.DestinationType.DATA_URL,
-  //     encodingType: this.camera.EncodingType.JPEG,
-  //     mediaType: this.camera.MediaType.PICTURE,
-  //     correctOrientation: true,
-  //     allowEdit: true
-  //   }
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Camera
+    });
 
-  //   this.camera.getPicture(options).then((imageData) => {
+    this.blob = Base64Helper.toBlob(image.dataUrl, image.format);
 
-  //     this.blob = Base64Helper.dataURItoBlob(imageData);
+    if (this.blob.size > 8388608) {
 
-  //     if (this.blob.size > 8388608) {
+      this.blob = null;
 
-  //       this.photo = null;
+      this.toastSrv.error('A imagem escolhida é muito grande, escolha uma imagem menor que 8MB!');
 
-  //       this.blob = null;
+    }
 
-  //       this.toastSrv.error('A foto escolhida é muito grande, escolha uma foto menor que 8MB!');
+    else {
 
-  //     }
+      this.photo = image.dataUrl;
 
-  //     else {
+    }
 
-  //       this.photo = 'data:image/jpeg;base64,' + imageData;
+  }
 
-  //     }
+  private async gallery() {
 
-  //   });
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Photos
+    });
 
-  // }
+    this.blob = Base64Helper.toBlob(image.dataUrl, image.format);
 
-  // public openGallery() {
+    if (this.blob.size > 8388608) {
 
-  //   const options: CameraOptions = {
-  //     quality: 100,
-  //     sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-  //     destinationType: this.camera.DestinationType.DATA_URL,
-  //     encodingType: this.camera.EncodingType.JPEG,
-  //     mediaType: this.camera.MediaType.PICTURE,
-  //     correctOrientation: true,
-  //     allowEdit: true
-  //   }
+      this.blob = null;
 
-  //   this.camera.getPicture(options).then((imageData) => {
+      this.toastSrv.error('A imagem escolhida é muito grande, escolha uma imagem menor que 8MB!');
 
-  //     this.blob = Base64Helper.dataURItoBlob(imageData);
+    }
 
-  //     if (this.blob.size > 8388608) {
+    else {
 
-  //       this.photo = null;
+      this.photo = image.dataUrl;
 
-  //       this.blob = null;
+    }
 
-  //       this.toastSrv.error('A foto escolhida é muito grande, escolha uma foto menor que 8MB!');
-
-  //     }
-
-  //     else {
-
-  //       this.photo = 'data:image/jpeg;base64,' + imageData;
-
-  //     }
-
-  //   });
-
-  // }
+  }
 }

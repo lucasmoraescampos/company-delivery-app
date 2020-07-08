@@ -24,9 +24,9 @@
 
 </ion-header>
 
-<ion-content class="animated fadeInLeft">
+<ion-content mode="ios">
 
-  <ion-card mode="ios" *ngIf="company?.accept_payment_app">
+  <ion-card class="animated fadeInLeft" *ngIf="company?.accept_payment_app">
 
     <ion-card-header>
 
@@ -66,7 +66,7 @@
 
   </ion-card>
 
-  <ion-card mode="ios">
+  <ion-card class="animated fadeInLeft" *ngIf="company">
 
     <ion-card-header>
 
@@ -138,7 +138,7 @@
 
   </ion-card>
 
-  <ion-card mode="ios" *ngIf="performance?.months || performance?.days">
+  <ion-card class="animated fadeInLeft" *ngIf="performance?.months || performance?.days">
 
     <ion-card-header>
 

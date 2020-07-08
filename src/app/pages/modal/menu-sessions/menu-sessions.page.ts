@@ -1,40 +1,37 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { ModalController, NavParams, IonReorderGroup, PopoverController } from '@ionic/angular';
-import { ProductService } from '../../../services/product/product.service';
+import { Component, OnInit } from '@angular/core';
+import { ModalController,  PopoverController } from '@ionic/angular';
 import { ChangeSessionPage } from '../change-session/change-session.page';
 import { ArrayHelper } from '../../../helpers/ArrayHelper';
 import { ToastService } from '../../../services/toast/toast.service';
 import { AlertService } from '../../../services/alert/alert.service';
 import { SessionHelpPage } from '../../popover/session-help/session-help.page';
+import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
 
 @Component({
   selector: 'app-menu-sessions',
   templateUrl: './menu-sessions.page.html',
   styleUrls: ['./menu-sessions.page.scss'],
 })
-export class MenuSessionsPage implements OnInit, OnDestroy {
-
-  @ViewChild(IonReorderGroup, { static: true }) reorderGroup: IonReorderGroup;
+export class MenuSessionsPage implements OnInit {
 
   public sessions: Array<any>;
 
   public loading: boolean = false;
 
+  public enable_reorder: boolean = false;
+
   constructor(
     private modalCtrl: ModalController,
-    private productSrv: ProductService,
-    private navParams: NavParams,
+    private menuSessionSrv: MenuSessionService,
     private alertSrv: AlertService,
     private ToastSrv: ToastService,
     private popoverCtrl: PopoverController
   ) { }
 
   ngOnInit() {
-    this.sessions = this.navParams.get('sessions');
-  }
 
-  ngOnDestroy() {
-    this.productSrv.sessionsReorder(this.sessions).subscribe();
+    this.prepareSessions();
+
   }
 
   public async help(ev: any) {
@@ -51,11 +48,34 @@ export class MenuSessionsPage implements OnInit, OnDestroy {
 
   }
 
-  // public help() {
+  public enableReorder() {
+    this.enable_reorder = true;
+  }
 
-  //   this.alertSrv.info(HtmlHelper.MenuSessionsInfo);
+  public disableReorder() {
+    this.enable_reorder = false;
+  }
 
-  // }
+  public save() {
+
+    this.loading = true;
+  
+    this.menuSessionSrv.reorder(this.sessions)
+      .subscribe(res => {
+
+        if (res.success) {
+
+          this.loading = false;
+
+          this.enable_reorder = false;
+
+          this.ToastSrv.success(res.message);
+
+        }
+
+      });
+
+  }
 
   public dismiss() {
     this.modalCtrl.dismiss(this.sessions);
@@ -100,7 +120,7 @@ export class MenuSessionsPage implements OnInit, OnDestroy {
 
       this.loading = true;
 
-      this.productSrv.deleteSession(session_id)
+      this.menuSessionSrv.delete(session_id)
         .subscribe(res => {
 
           this.loading = false;
@@ -125,4 +145,21 @@ export class MenuSessionsPage implements OnInit, OnDestroy {
 
   }
 
+  private prepareSessions() {
+
+    this.loading = true;
+
+    this.menuSessionSrv.get()
+      .subscribe(res => {
+
+        if (res.success) {
+
+          this.sessions = res.data;
+
+        }
+
+        this.loading = false;
+
+      });
+  }
 }

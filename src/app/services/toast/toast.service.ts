@@ -16,8 +16,7 @@ export class ToastService {
       position: 'top',
       color: 'success',
       mode: 'ios',
-      animated: false,
-      cssClass: 'toast-custom animated fadeInDown',
+      cssClass: 'ion-text-center',
       duration: 4000,
       buttons: [
         {
@@ -39,8 +38,7 @@ export class ToastService {
       position: 'top',
       color: 'danger',
       mode: 'ios',
-      animated: false,
-      cssClass: 'toast-custom animated bounceInDown',
+      cssClass: 'ion-text-center',
       duration: 4000,
       buttons: [
         {
@@ -62,8 +60,7 @@ export class ToastService {
       position: 'top',
       color: 'medium',
       mode: 'ios',
-      animated: false,
-      cssClass: 'toast-custom animated fadeInDown',
+      cssClass: 'ion-text-center',
       duration: 4000,
       buttons: [
         {
