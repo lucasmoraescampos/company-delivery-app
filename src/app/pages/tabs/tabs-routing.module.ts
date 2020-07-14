@@ -38,12 +38,12 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'extract',
+        path: 'vouchers',
         children: [
           {
             path: '',
             loadChildren: () =>
-              import('../extract/extract.module').then(m => m.ExtractPageModule)
+              import('../vouchers/vouchers.module').then(m => m.VouchersPageModule)
           }
         ]
       },

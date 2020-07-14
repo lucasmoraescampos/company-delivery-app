@@ -2,8 +2,8 @@ export class ArrayHelper {
 
     public static orderbyAsc(array: Array<any>, key: string) {
         return array.sort((catA: any, catB: any) => {
-            catA = catA[key].toUpperCase();
-            catB = catB[key].toUpperCase();
+            catA = String(catA[key]).toUpperCase();
+            catB = String(catB[key]).toUpperCase();
             if (catA > catB) {
                 return 1;
             } else if (catA < catB) {
@@ -16,8 +16,8 @@ export class ArrayHelper {
 
     public static orderbyDesc(array: Array<any>, key: string) {
         return array.sort((catA: any, catB: any) => {
-            catA = catA[key].toUpperCase();
-            catB = catB[key].toUpperCase();
+            catA = String(catA[key]).toUpperCase();
+            catB = String(catB[key]).toUpperCase();
             if (catA < catB) {
                 return 1;
             } else if (catA > catB) {
@@ -32,8 +32,6 @@ export class ArrayHelper {
         array.splice(index, 1);
         return array;
     }
-
-    
 
     public static getIndexByKey(array: Array<any>, key: string, value: any) {
         return array.findIndex(x => x[key] == value);

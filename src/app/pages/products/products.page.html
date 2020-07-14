@@ -33,40 +33,79 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content mode="ios">
 
-  <ion-list class="ion-no-padding">
+  <ion-list class="ion-no-margin" *ngIf="products?.length > 0">
 
-    <ion-item class="animated bounceInUp" lines="full" button="true" detail="false" *ngFor="let p of products"
-      (click)="details(p.id)">
+    <ion-item-sliding class="animated bounceInUp" *ngFor="let p of products">
 
-      <ion-thumbnail slot="start">
+      <ion-item lines="full" button="true" detail="false" (click)="details(p.id)">
 
-        <img [src]="p.photo">
+        <ion-thumbnail [ngClass]="{ 'paused': p.status == 0 }" slot="start">
 
-      </ion-thumbnail>
+          <ion-badge color="secondary">Pausado</ion-badge>
 
-      <ion-label>
+          <img [src]="p.photo">
 
-        <h6 class="ion-text-wrap">{{ p.name }}</h6>
+        </ion-thumbnail>
 
-        <p class="ion-text-wrap">{{ p.description }}</p>
+        <ion-label class="ion-no-margin">
 
-      </ion-label>
+          <h6>{{ p.name }}</h6>
 
-    </ion-item>
+          <p>{{ p.description }}</p>
 
-    <div class="no-product animated fadeIn" *ngIf="products?.length == 0">
+          <p class="price">{{ p.price | money }}</p>
 
-      <ion-icon class="order" src="../../../assets/icon/product.svg"></ion-icon>
+        </ion-label>
 
-      <p>Nenhum produto cadastrado</p>
+      </ion-item>
 
-    </div>
+      <ion-item-options side="end">
+
+        <ion-item-option color="light" (click)="updateStatus(p)">
+
+          <ion-icon slot="top" name="pause" *ngIf="p.status == 1"></ion-icon>
+
+          <ion-icon slot="top" name="play" *ngIf="p.status == 0"></ion-icon>
+
+          <span *ngIf="p.status == 1">Pausar</span>
+
+          <span *ngIf="p.status == 0">Ativar</span>
+
+        </ion-item-option>
+
+        <ion-item-option color="danger" (click)="remove(p.id)">
+
+          <ion-icon slot="top" name="trash-outline"></ion-icon>
+
+          Excluir
+
+        </ion-item-option>
+
+      </ion-item-options>
+
+    </ion-item-sliding>
 
   </ion-list>
 
-  <ion-fab class="animated bounceInUp" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-grid class="no-products animated fadeIn" *ngIf="products?.length == 0">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-icon class="order" src="../../../assets/icon/product.svg"></ion-icon>
+
+        <p>Nenhum produto cadastrado</p>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-fab class="animated bounceInUp" mode="md" vertical="bottom" horizontal="end" slot="fixed">
 
     <ion-fab-button (click)="addProduct()">
 

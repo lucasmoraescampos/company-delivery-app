@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActionSheetController, ModalController, NavParams, PopoverController } from '@ionic/angular';
+import { ActionSheetController, ModalController, NavParams, IonContent, PopoverController } from '@ionic/angular';
 import { ToastService } from '../../../services/toast/toast.service';
 import { Base64Helper } from '../../../helpers/Base64Helper';
 import { AddComplementPage } from '../add-complement/add-complement.page';
@@ -13,6 +13,8 @@ import { AlertService } from '../../../services/alert/alert.service';
 import { ProductService } from '../../../services/product/product.service';
 import { NumberHelper } from '../../../helpers/NumberHelper';
 import { Plugins, CameraResultType, CameraSource } from '@capacitor/core';
+import { SubcomplementService } from 'src/app/services/subcomplement/subcomplement.service';
+import { ComplementService } from 'src/app/services/complement/complement.service';
 
 const { Camera } = Plugins;
 
@@ -22,6 +24,8 @@ const { Camera } = Plugins;
   styleUrls: ['./product-details.page.scss'],
 })
 export class ProductDetailsPage implements OnInit {
+
+  @ViewChild(IonContent) content: IonContent;
 
   public loading: boolean = false;
 
@@ -37,7 +41,7 @@ export class ProductDetailsPage implements OnInit {
 
   public isAlwaysAvailable: boolean;
 
-  public isNoPromotion: boolean;
+  public has_promotion: boolean;
 
   public blob: Blob;
 
@@ -53,7 +57,9 @@ export class ProductDetailsPage implements OnInit {
     private formbuilder: FormBuilder,
     private toastSrv: ToastService,
     private alertSrv: AlertService,
-    public actionSheetController: ActionSheetController
+    public actionSheetController: ActionSheetController,
+    private subcomplementSrv: SubcomplementService,
+    private complementSrv: ComplementService
   ) { }
 
   ngOnInit() {
@@ -68,7 +74,7 @@ export class ProductDetailsPage implements OnInit {
 
     this.isAlwaysAvailable = this.product.start_time == null && this.product.end_time == null;
 
-    this.isNoPromotion = this.product.promotional_price == null;
+    this.has_promotion = this.product.rebate != null;
 
     this.formGroupProduct = this.formbuilder.group({
       menu_session_id: [this.product.menu_session_id, Validators.required],
@@ -88,7 +94,7 @@ export class ProductDetailsPage implements OnInit {
     });
 
     this.formGroupPromotion = this.formbuilder.group({
-      value: [NumberHelper.formatCents(this.product.price - this.product.promotional_price)]
+      rebate: [this.product.rebate ? NumberHelper.cents(this.product.rebate) : '0,00']
     });
 
   }
@@ -169,7 +175,9 @@ export class ProductDetailsPage implements OnInit {
 
     const promotion = this.formGroupPromotion.value;
 
-    if (!this.isNoPromotion && (promotion.value == '0,00' || promotion.value.length == 0)) {
+    promotion.rebate = NumberHelper.parse(promotion.rebate);
+
+    if (this.has_promotion && promotion.rebate == 0) {
 
       this.toastSrv.error('Informe o valor de desconto!');
 
@@ -179,9 +187,11 @@ export class ProductDetailsPage implements OnInit {
 
       this.loading = true;
 
-      const value = NumberHelper.parse(promotion.value);
+      const formData = new FormData();
 
-      this.productSrv.updatePromotion(this.product.id, value)
+      formData.append('rebate', promotion.rebate);
+
+      this.productSrv.update(this.product.id, formData)
         .subscribe(res => {
 
           this.loading = false;
@@ -192,19 +202,25 @@ export class ProductDetailsPage implements OnInit {
 
           }
 
+          else {
+
+            this.toastSrv.error(res.message);
+
+          }
+
         });
 
     }
 
   }
 
-  public async options(complement: any, ev: any) {
+  public async optionsComplement(complement: any, ev: any) {
 
     const popover = await this.popoverCtrl.create({
       component: ComplementOptionsPage,
       event: ev,
       translucent: true,
-      mode: 'ios'
+      mode: 'md'
     });
 
     popover.onWillDismiss()
@@ -357,7 +373,7 @@ export class ProductDetailsPage implements OnInit {
 
       this.loading = true;
 
-      this.productSrv.deleteComplement(id)
+      this.complementSrv.delete(id)
         .subscribe(res => {
 
           this.loading = false;
@@ -384,7 +400,7 @@ export class ProductDetailsPage implements OnInit {
 
       this.loading = true;
 
-      this.productSrv.deleteSubcomplement(subcomplement.id)
+      this.subcomplementSrv.delete(subcomplement.id)
         .subscribe(res => {
 
           this.loading = false;
@@ -445,6 +461,10 @@ export class ProductDetailsPage implements OnInit {
 
       }
 
+      setTimeout(() => {
+        this.content.scrollToBottom(1000);
+      });
+
     }
   }
 
@@ -458,23 +478,24 @@ export class ProductDetailsPage implements OnInit {
 
   }
 
-  public checkNoPromotion(event: any) {
+  public checkPromotion(event: any) {
 
     if (event.detail.checked) {
 
-      this.isNoPromotion = true;
+      this.has_promotion = false;
 
-      this.formGroupProduct.patchValue({
-        value: NumberHelper.formatCents(this.product.price - this.product.promotional_price)
+      this.formGroupPromotion.patchValue({
+        rebate: 0
       });
 
     }
+
     else {
 
-      this.isNoPromotion = false;
+      this.has_promotion = true;
 
-      this.formGroupProduct.patchValue({
-        value: null
+      this.formGroupPromotion.patchValue({
+        rebate: this.product.rebate ? NumberHelper.cents(this.product.rebate) : '0,00'
       });
 
     }

@@ -1,8 +1,21 @@
 ion-content {
     --background: var(--ion-color-light-tint);
 
+    ion-list {
+        background: var(--ion-color-light-tint);
+    }
+
     ion-card {
         margin-top: 10px !important;
+
+        ion-item {
+            --padding-start: 0;
+            --inner-padding-end: 0;
+        }
+
+        ion-thumbnail {
+            margin-right: 15px;
+        }
 
         p.sm {
             font-size: 10pt;
@@ -10,19 +23,12 @@ ion-content {
         }
 
         h6 {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: var(--ion-color-dark);
             font-size: 12pt;
             line-height: 18pt;
             margin: 0;
         }
 
         p {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             font-size: 12pt;
             line-height: 17pt;
             margin: 0;
@@ -45,16 +51,23 @@ ion-content {
         }
     }
 
-    ion-row.no-orders {
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        text-align: center;
+    ion-grid.no-orders {
+        height: 100%;
 
-        ion-icon {
-            font-size: 60px;
+        ion-row {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+
+            ion-icon {
+                font-size: 50pt;
+            }
+
+            p {
+                font-size: 11pt;
+            }
         }
     }
 }

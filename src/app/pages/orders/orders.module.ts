@@ -9,6 +9,8 @@ import { DistanceModule } from 'src/app/pipes/distance/distance.module';
 import { MoneyModule } from 'src/app/pipes/money/money.module';
 import { TimeModule } from 'src/app/pipes/time/time.module';
 import { OrderDetailsPageModule } from '../modal/order-details/order-details.module';
+import { OrderOptionsPageModule } from '../popover/order-options/order-options.module';
+import { SearchOrderPageModule } from '../modal/search-order/search-order.module';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { OrderDetailsPageModule } from '../modal/order-details/order-details.mod
     MoneyModule,
     TimeModule,
     OrderDetailsPageModule,
-    OrdersPageRoutingModule
+    OrdersPageRoutingModule,
+    OrderOptionsPageModule,
+    SearchOrderPageModule
   ],
   declarations: [OrdersPage]
 })

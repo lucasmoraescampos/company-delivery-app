@@ -4,8 +4,8 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { AlertService } from '../../../services/alert/alert.service';
 import { HtmlHelper } from '../../../helpers/HtmlHelper';
 import { ToastService } from '../../../services/toast/toast.service';
-import { ProductService } from '../../../services/product/product.service';
 import { NumberHelper } from 'src/app/helpers/NumberHelper';
+import { SubcomplementService } from 'src/app/services/subcomplement/subcomplement.service';
 
 @Component({
   selector: 'app-change-subcomplement',
@@ -16,7 +16,7 @@ export class ChangeSubcomplementPage implements OnInit {
 
   public loading: boolean = false;
 
-  public isNoPrice: boolean;
+  public has_price: boolean;
 
   public info: boolean = false;
 
@@ -29,7 +29,7 @@ export class ChangeSubcomplementPage implements OnInit {
     private navParams: NavParams,
     private alertSrv: AlertService,
     private toastSrv: ToastService,
-    private productSrv: ProductService,
+    private subcomplementSrv: SubcomplementService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -37,7 +37,7 @@ export class ChangeSubcomplementPage implements OnInit {
 
     this.subcomplement = this.navParams.get('subcomplement');
 
-    this.isNoPrice = this.subcomplement.price == null;
+    this.has_price = this.subcomplement.price != null ? true : false;
 
     this.formGroupSubcomplement = this.formBuilder.group({
       description: [this.subcomplement.description, Validators.required],
@@ -48,13 +48,15 @@ export class ChangeSubcomplementPage implements OnInit {
 
   public update() {
 
-    const subcomplement = this.formGroupSubcomplement.value;
-
     if (this.formGroupSubcomplement.valid) {
+      
+      const subcomplement = this.formGroupSubcomplement.value;
+      
+      subcomplement.price = NumberHelper.parse(subcomplement.price);
 
-      if (subcomplement.price == '0,00') {
+      if (this.has_price && subcomplement.price == 0) {
 
-        this.toastSrv.error('Informe o valor do item!');
+        this.toastSrv.error('Informe o preço!');
 
       }
 
@@ -62,9 +64,7 @@ export class ChangeSubcomplementPage implements OnInit {
 
         this.loading = true;
 
-        subcomplement.price = NumberHelper.parse(subcomplement.price);
-
-        this.productSrv.updateSubcomplement(this.subcomplement.id, subcomplement)
+        this.subcomplementSrv.update(this.subcomplement.id, subcomplement)
           .subscribe(res => {
 
             this.loading = false;
@@ -90,18 +90,13 @@ export class ChangeSubcomplementPage implements OnInit {
   }
 
   public checkPrice(event: CustomEvent) {
-    if (event.detail.checked) {
-      this.isNoPrice = true;
-      this.formGroupSubcomplement.patchValue({
-        price: null
-      });
-    }
-    else {
-      this.isNoPrice = false;
-      this.formGroupSubcomplement.patchValue({
-        price: '0,00'
-      });
-    }
+
+    this.has_price = event.detail.value == '1' ? true : false;
+
+    this.formGroupSubcomplement.patchValue({
+      price: event.detail.value == '1' ? '0,00' : null
+    });
+    
   }
 
   public dismiss() {

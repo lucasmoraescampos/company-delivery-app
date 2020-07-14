@@ -4,6 +4,7 @@ import { AddressComponents } from 'src/app/models/AddressComponents';
 import { ModalController } from '@ionic/angular';
 import { AddressPage } from '../modal/address/address.page';
 import { Geolocation } from '@capacitor/core';
+import { LoadingService } from 'src/app/services/loading/loading.service';
 
 declare var google: any;
 
@@ -19,8 +20,6 @@ export class LocationPage implements OnInit {
   public search: string;
 
   public searchResults: Array<any> = [];
-
-  public loading: boolean = false;
 
   public title: string;
 
@@ -40,7 +39,8 @@ export class LocationPage implements OnInit {
 
   constructor(
     private ngZone: NgZone,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private loadingSrv: LoadingService
   ) { }
 
   ngOnInit() {
@@ -101,7 +101,7 @@ export class LocationPage implements OnInit {
 
   public selectLocation(address: string) {
 
-    this.loading = true;
+    this.loadingSrv.show();
 
     this.no_search = true;
 
@@ -184,7 +184,7 @@ export class LocationPage implements OnInit {
 
       this.map.setCenter(latLng);
 
-      this.loading = false;
+      this.loadingSrv.hide();
 
       this.no_search = false;
 
@@ -194,7 +194,7 @@ export class LocationPage implements OnInit {
 
   private async init() {
 
-    this.loading = true;
+    this.loadingSrv.show();
 
     const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
 
@@ -206,12 +206,14 @@ export class LocationPage implements OnInit {
     this.loadMap();
 
     this.loadAddressComponent();
+
+    this.loadingSrv.hide();
     
   }
 
   private loadMap() {
 
-    this.loading = true;
+    this.loadingSrv.show();
 
     const mapOptions = {
       zoom: 18,
@@ -249,13 +251,13 @@ export class LocationPage implements OnInit {
 
     });
 
-    this.loading = false;
+    this.loadingSrv.hide();
 
   }
 
   private loadAddressComponent() {
 
-    this.loading = true;
+    this.loadingSrv.show();
 
     const geocoder = new google.maps.Geocoder();
 
@@ -323,7 +325,7 @@ export class LocationPage implements OnInit {
 
       this.loadHeaderLocation();
 
-      this.loading = false;
+      this.loadingSrv.hide();
 
     });
 

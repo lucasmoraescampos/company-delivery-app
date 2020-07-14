@@ -45,6 +45,10 @@ ion-content {
         }
     }
 
+    ion-datetime {
+        padding: 2px;
+    }
+
     ion-item {
         --padding-start: 15px;
         --inner-padding-end: 15px;
@@ -54,10 +58,9 @@ ion-content {
         --background: var(--ion-color-light-tint);
     }
 
-    ion-list {
-        ion-item:last-child {
-            --border-width: 0;
-        }
+    ion-item.rebate {
+        --padding-start: 5px;
+        --background-activated: none;
     }
 
     ion-grid.complements {
@@ -78,6 +81,26 @@ ion-content {
         ion-icon[name="ellipse"] {
             color: var(--ion-color-primary);
             font-size: 7pt;
+        }
+    }
+
+    ion-grid.no-complements {
+        height: 100%;
+
+        ion-row {
+            position: absolute;
+            top: calc(50% - 33.5px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+
+            ion-icon {
+                font-size: 50pt;
+            }
+
+            p {
+                font-size: 11pt;
+            }
         }
     }
 }

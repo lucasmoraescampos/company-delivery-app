@@ -35,6 +35,21 @@
 
       <ion-col size="12">
 
+        <ion-label class="label-custom">Obrigatório</ion-label>
+
+        <ion-select class="select-custom" mode="md" formControlName="is_required" interface="action-sheet"
+          placeholder="Complemento obrigatório?" okText="Confirmar" cancelText="Cancelar">
+
+          <ion-select-option value="1">Sim</ion-select-option>
+
+          <ion-select-option value="0">Não</ion-select-option>
+
+        </ion-select>
+
+      </ion-col>
+
+      <ion-col class="animated fadeIn" size="12" *ngIf="formGroupComplement.value.is_required == 1">
+
         <ion-label class="label-custom">Quantidade Mínima</ion-label>
 
         <ion-input class="input-custom" type="number" formControlName="qty_min" placeholder="Qtd. mínima de itens">

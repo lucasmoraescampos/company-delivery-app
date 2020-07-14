@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { AddProductPage } from './add-product.page';
 import { BrMaskerModule } from 'br-mask';
 import { SelectSessionPageModule } from '../select-session/select-session.module';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { SelectSessionPageModule } from '../select-session/select-session.module
     IonicModule,
     BrMaskerModule,
     ReactiveFormsModule,
-    SelectSessionPageModule
+    SelectSessionPageModule,
+    NgxLoadingModule
   ],
   declarations: [AddProductPage],
   entryComponents: [AddProductPage]

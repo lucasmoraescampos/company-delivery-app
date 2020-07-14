@@ -26,8 +26,8 @@
 
 <ion-content>
 
-  <ion-searchbar mode="ios" placeholder="Endereço e número" [(ngModel)]="search" (ionChange)="searchChanged()"
-    [hidden]="loading"></ion-searchbar>
+  <ion-searchbar mode="ios" placeholder="Endereço e número" [(ngModel)]="search" (ionChange)="searchChanged()">
+  </ion-searchbar>
 
   <ion-list class="ion-padding-start" [hidden]="searchResults.length == 0">
 
@@ -53,5 +53,3 @@
   </ion-button>
 
 </ion-content>
-
-<ngx-loading [show]="loading"></ngx-loading>

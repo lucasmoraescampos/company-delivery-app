@@ -31,6 +31,19 @@ export class CompanyService {
     return JSON.parse(localStorage.getItem(ConfigHelper.Storage.CurrentUser));
   }
 
+  public get() {
+    return this.http.get<HttpResult>(`${this.url}/company/auth`)
+      .pipe(
+        map(res => {
+          if (res.success) {
+            localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(res.data));
+            this.currentUserSubject.next(res.data);
+          }
+          return res;
+        })
+      );
+  }
+
   public create(company: any) {
     return this.http.post<HttpResult>(`${this.url}/company/auth/register`, company)
       .pipe(
@@ -45,22 +58,42 @@ export class CompanyService {
       );
   }
 
-  public update(data: FormData) {
-
-    data.append('_method', 'put');
+  public update(data: FormData | any) {
 
     const id = this.currentUserSubject.value.id;
 
-    return this.http.post<HttpResult>(`${this.url}/company/auth/${id}`, data)
-      .pipe(
-        map(res => {
-          if (res.success) {
-            localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(res.data));
-            this.currentUserSubject.next(res.data);
-          }
-          return res;
-        })
-      );
+    if (data instanceof FormData) {
+
+      data.append('_method', 'put');
+
+      return this.http.post<HttpResult>(`${this.url}/company/auth/${id}`, data)
+        .pipe(
+          map(res => {
+            if (res.success) {
+              localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(res.data));
+              this.currentUserSubject.next(res.data);
+            }
+            return res;
+          })
+        );
+
+    }
+
+    else {
+
+      return this.http.put<HttpResult>(`${this.url}/company/auth/${id}`, data)
+        .pipe(
+          map(res => {
+            if (res.success) {
+              localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(res.data));
+              this.currentUserSubject.next(res.data);
+            }
+            return res;
+          })
+        );
+
+    }
+
   }
 
   public authenticate(email: string, password: string) {

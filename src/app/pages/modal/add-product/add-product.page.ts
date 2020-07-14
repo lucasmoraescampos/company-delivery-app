@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, ActionSheetController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalController, ActionSheetController, IonContent } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from '../../../services/product/product.service';
 import { ToastService } from '../../../services/toast/toast.service';
@@ -16,6 +16,8 @@ const { Camera } = Plugins;
   styleUrls: ['./add-product.page.scss'],
 })
 export class AddProductPage implements OnInit {
+
+  @ViewChild(IonContent) content: IonContent;
 
   public photo: any = null;
 
@@ -59,8 +61,8 @@ export class AddProductPage implements OnInit {
       is_available_thursday: [0],
       is_available_friday: [0],
       is_available_saturday: [0],
-      start_time: ['00:00'],
-      end_time: ['00:00']
+      start_time: ['00:00:00'],
+      end_time: ['00:00:00']
     });
 
     this.prepareSubcategories();
@@ -219,20 +221,32 @@ export class AddProductPage implements OnInit {
   }
 
   public changeAlwaysAvailable(event: CustomEvent) {
+
     if (event.detail.checked) {
+
       this.isAlwaysAvailable = true;
+
       this.formGroupProduct.patchValue({
         start_time: null,
         end_time: null
       });
+
     }
     else {
+
       this.isAlwaysAvailable = false;
+
       this.formGroupProduct.patchValue({
         start_time: '00:00',
         end_time: '00:00'
       });
+
+      setTimeout(() => {
+        this.content.scrollToBottom(1000);
+      });
+
     }
+    
   }
 
   public async choosePhoto() {

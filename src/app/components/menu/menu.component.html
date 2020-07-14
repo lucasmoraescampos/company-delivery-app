@@ -1,4 +1,4 @@
-<ion-menu side="start" menuId="first" contentId="content" mode="md">
+<ion-menu side="start" menuId="first" contentId="content" mode="ios">
 
   <ion-content>
 
@@ -14,15 +14,15 @@
 
       <ion-menu-toggle auto-hide="true">
 
-        <ion-item routerLink="/profile" button="true" detail="true">
+        <ion-item button="true" detail="false" (click)="settings()">
 
-          <ion-icon slot="start" name="person-outline" color="dark"></ion-icon>
+          <ion-icon slot="start" name="settings-outline"></ion-icon>
 
-          <ion-label>Perfil</ion-label>
+          <ion-label>Configurações</ion-label>
 
         </ion-item>
 
-        <ion-item button="true" detail="true" (click)="location()">
+        <ion-item button="true" detail="false" (click)="location()">
 
           <ion-icon slot="start" name="location-outline" color="dark"></ion-icon>
 
@@ -30,15 +30,15 @@
 
         </ion-item>
 
-        <ion-item button="true" detail="true" (click)="delivers()">
+        <ion-item button="true" detail="false" (click)="delivers()">
 
-          <ion-icon slot="start" src="../../../assets/icon/delivery-man.svg" color="dark"></ion-icon>
+          <ion-icon slot="start" name="person-outline" color="dark"></ion-icon>
 
           <ion-label>Entregadores</ion-label>
 
         </ion-item>
 
-        <ion-item button="true" detail="true">
+        <ion-item button="true" detail="false">
 
           <ion-icon slot="start" name="card-outline" color="dark"></ion-icon>
 
@@ -46,7 +46,7 @@
 
         </ion-item>
 
-        <ion-item (click)="logout()" button="true" detail="true">
+        <ion-item (click)="logout()" button="true" detail="false">
 
           <ion-icon slot="start" name="log-out-outline" color="dark"></ion-icon>
 

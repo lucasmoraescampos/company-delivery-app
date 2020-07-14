@@ -32,11 +32,6 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule),
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'setup',
     loadChildren: () => import('./pages/setup/setup.module').then( m => m.SetupPageModule),
     canActivate: [AuthGuard]
@@ -68,6 +63,10 @@ const routes: Routes = [
   {
     path: 'delivers',
     loadChildren: () => import('./pages/delivers/delivers.module').then( m => m.DeliversPageModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
   }
 ];
 @NgModule({

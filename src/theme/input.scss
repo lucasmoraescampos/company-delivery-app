@@ -62,26 +62,14 @@ ion-select.select-custom {
   }
 }
 
-ion-datetime.datetime-custom.ng-untouched.ng-pristine.ng-valid.ion-untouched.ion-pristine.ion-valid.md.hydrated,
-ion-datetime.datetime-custom.ng-valid.md.hydrated.ng-touched.ng-dirty.ion-valid.ion-touched.ion-dirty {
-  border: 1px solid var(--ion-color-medium-tint);
+ion-datetime.datetime-custom {
   border-radius: 10px;
   font-size: 16px;
-  height: 36px;
-  padding: 5px 15px !important;
-
-  &[aria-expanded="true"] {
-    border: 1px solid var(--ion-color-primary);
-  }
-}
-
-ion-datetime.datetime-custom.ng-pristine.ng-valid.ios.hydrated.ng-touched.ion-pristine.ion-valid.ion-touched,
-ion-datetime.datetime-custom.ng-valid.ios.hydrated.ng-touched.ng-dirty.ion-valid.ion-touched.ion-dirty,
-ion-datetime.datetime-custom.ng-untouched.ng-pristine.ng-valid.ion-untouched.ion-pristine.ion-valid.ios.hydrated {
+  height: 46px;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
   border: 1px solid var(--ion-color-medium-tint);
-  border-radius: 10px;
-  font-size: 16px;
-  height: 44px;
+  background: var(--ion-background-color);
 
   &[aria-expanded="true"] {
     border: 1px solid var(--ion-color-primary);
@@ -96,12 +84,12 @@ ion-input.input-money {
 }
 
 ion-label.label-custom {
-  color: var(--ion-color-dark);
-  font-size: 11pt;
-  background: var(--ion-background-color);
-  padding: 0 5px;
-  position: relative;
-  top: 12px;
-  left: 12px;
-  z-index: 99999999999999;
+  color: var(--ion-color-dark) !important;
+  font-size: 11pt !important;
+  background: var(--ion-background-color) !important;
+  padding: 0 5px !important;
+  position: relative !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 99 !important;
 }

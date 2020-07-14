@@ -7,33 +7,22 @@ ion-header {
 }
 
 ion-content {
-    ion-label {
-        margin: 0;
-        padding: 10px 15px;
-    }
-
     ion-item {
-        --padding-start: 0;
-        --inner-padding-end: 0;
-
-        ion-button {
-            margin: 0;
-            height: 100%;
-            width: 50px;
-        }
+        --padding-start: 15px;
+        --inner-padding-end: 15px;
     }
 
     ion-reorder {
         width: 100%;
 
-        ion-label {
-            margin-left: 10px;
+        p {
+            font-size: 12pt;
+            margin-top: 8px;
         }
 
-        ion-icon[name="swap-vertical"] {
+        ion-icon[name="reorder-three-outline"] {
+            margin-top: 6px;
             font-size: 18pt;
-            margin-top: 7pt;
-            margin-left: 15px;
         }
     }
 }

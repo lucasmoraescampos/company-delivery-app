@@ -57,8 +57,8 @@ export class ProductService {
       );
   }
 
-  public updatePromotion(id: number, value: number) {
-    return this.http.put<HttpResult>(`${this.url}/company/product/promotion/${id}`, { value })
+  public delete(id: number) {
+    return this.http.delete<HttpResult>(`${this.url}/company/product/${id}`)
       .pipe(
         map(res => {
           return res;
@@ -70,65 +70,6 @@ export class ProductService {
 
   public getSubcategories() {
     return this.http.get<HttpResult>(`${this.url}/company/subcategory`)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-
-  /* Complements */
-
-  public createComplement(data: any) {
-    return this.http.post<HttpResult>(`${this.url}/company/product/complement`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public updateComplement(id: number, data: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/product/complement/${id}`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public deleteComplement(id: number) {
-    return this.http.delete<HttpResult>(`${this.url}/company/product/complement/${id}`)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  /* Subcomplements */
-
-  public createSubcomplement(data: any) {
-    return this.http.post<HttpResult>(`${this.url}/company/product/subcomplement`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-
-  public updateSubcomplement(id:number, data: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/product/subcomplement/${id}`, data)
-      .pipe(
-        map(res => {
-          return res;
-        })
-      );
-  }
-  
-  public deleteSubcomplement(id: number) {
-    return this.http.delete<HttpResult>(`${this.url}/company/product/subcomplement/${id}`)
       .pipe(
         map(res => {
           return res;

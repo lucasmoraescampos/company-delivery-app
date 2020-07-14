@@ -2,6 +2,8 @@
 
   <ion-toolbar>
 
+    <ion-title>Detalhes</ion-title>
+
     <ion-buttons slot="end">
 
       <ion-button class="close" (click)="dismiss()">
@@ -11,12 +13,6 @@
       </ion-button>
 
     </ion-buttons>
-
-    <ion-title>
-
-      Detalhes
-
-    </ion-title>
 
   </ion-toolbar>
 
@@ -50,7 +46,7 @@
 
 </ion-header>
 
-<ion-content mode="ios">
+<ion-content mode="ios" [scrollEvents]="true">
 
   <ion-grid class="ion-padding animated bounceInUp" [formGroup]="formGroupProduct" *ngIf="segment == 'info'">
 
@@ -202,14 +198,14 @@
 
         <ion-item lines="full">
 
-          <ion-checkbox color="primary" mode="md" (ionChange)="changeAlwaysAvailable($event)"
-            [checked]="isAlwaysAvailable"></ion-checkbox>
+          <ion-label>Enquanto estiver aberto</ion-label>
 
-          <ion-label class="ion-margin-start">Enquanto estiver aberto</ion-label>
+          <ion-checkbox color="primary" (ionChange)="changeAlwaysAvailable($event)" [checked]="isAlwaysAvailable">
+          </ion-checkbox>
 
         </ion-item>
 
-        <ion-item lines="full" [hidden]="isAlwaysAvailable">
+        <ion-item class="animated fadeIn" lines="full" [hidden]="isAlwaysAvailable">
 
           <ion-label>À partir de</ion-label>
 
@@ -218,7 +214,7 @@
 
         </ion-item>
 
-        <ion-item lines="full" [hidden]="isAlwaysAvailable">
+        <ion-item class="animated fadeIn" lines="full" [hidden]="isAlwaysAvailable">
 
           <ion-label>Até</ion-label>
 
@@ -233,7 +229,8 @@
 
   </ion-grid>
 
-  <ion-grid class="ion-no-padding animated bounceInUp complements" *ngIf="segment == 'complements'">
+  <ion-grid class="ion-no-padding animated bounceInUp complements"
+    *ngIf="segment == 'complements' && product.complements?.length > 0">
 
     <ion-row>
 
@@ -251,7 +248,7 @@
 
             </ion-label>
 
-            <ion-button fill="clear" (click)="options(c, $event)">
+            <ion-button fill="clear" (click)="optionsComplement(c, $event)">
 
               <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
 
@@ -259,20 +256,51 @@
 
           </ion-item>
 
-          <ion-item lines="full" button="true" detail="false" *ngFor="let s of c.subcomplements"
-            (click)="changeSubcomplement(s)">
+          <ion-item-sliding *ngFor="let s of c.subcomplements">
 
-            <ion-label class="ion-margin-vertical">
+            <ion-item lines="full" button="true" detail="false" (click)="changeSubcomplement(s)">
 
-              <h6>{{ s.description }}</h6>
+              <ion-label>
 
-              <p>{{ s.price | money }}</p>
+                <h6>{{ s.description }}</h6>
 
-            </ion-label>
+                <p>{{ s.price | money }}</p>
 
-          </ion-item>
+              </ion-label>
+
+            </ion-item>
+
+            <ion-item-options side="end">
+
+              <ion-item-option color="danger" (click)="deleteSubcomplement(s)">
+
+                <ion-icon slot="top" name="trash-outline"></ion-icon>
+
+                Excluir
+
+              </ion-item-option>
+
+            </ion-item-options>
+
+          </ion-item-sliding>
 
         </ion-list>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-grid class="no-complements" *ngIf="segment == 'complements' && product.complements?.length == 0">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-icon src="../../../../assets/icon/complements.svg"></ion-icon>
+
+        <p>Nenhum complemento cadastrado</p>
 
       </ion-col>
 
@@ -340,10 +368,10 @@
 
       <ion-col class="ion-margin-top" size="12">
 
-        <ion-item class="animated fadeIn" lines="none">
+        <ion-item class="rebate animated fadeIn" lines="none">
 
-          <ion-checkbox mode="md" color="primary" [checked]="product.promotional_price == null"
-            (ionChange)="checkNoPromotion($event)"></ion-checkbox>
+          <ion-checkbox mode="md" color="primary" [checked]="!has_promotion" (ionChange)="checkPromotion($event)">
+          </ion-checkbox>
 
           <ion-label class="ion-padding-start">Produto sem desconto</ion-label>
 
@@ -351,11 +379,11 @@
 
       </ion-col>
 
-      <ion-col size="12" class="animated fadeIn" *ngIf="!isNoPromotion">
+      <ion-col size="12" class="animated fadeIn" *ngIf="has_promotion">
 
         <ion-label class="label-custom">Valor de desconto</ion-label>
 
-        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="value"
+        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="rebate"
           [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }">
         </ion-input>
 
@@ -365,7 +393,8 @@
 
   </ion-grid>
 
-  <ion-fab class="animated bounceInUp delay-1s" vertical="bottom" horizontal="end" slot="fixed" *ngIf="segment == 'complements'">
+  <ion-fab class="animated bounceInUp" mode="md" vertical="bottom" horizontal="end" slot="fixed"
+    *ngIf="segment == 'complements'">
 
     <ion-fab-button (click)="addComplement()">
 
@@ -396,8 +425,8 @@
 
       <ion-col *ngIf="segment == 'promotion'">
 
-        <ion-button expand="block" (click)="update()" [disabled]="formGroupPromotion.invalid"
-          [color]="formGroupPromotion.valid ? 'primary' : 'light'" (click)="updatePromotion()">
+        <ion-button expand="block" (click)="updatePromotion()" [disabled]="formGroupPromotion.invalid"
+          [color]="formGroupPromotion.valid ? 'primary' : 'light'">
 
           Atualizar
 
@@ -410,3 +439,5 @@
   </ion-grid>
 
 </ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -51,12 +51,6 @@ export class HomePage implements OnInit {
 
     this.check();
 
-    this.preparePerformance();
-
-    this.companySrv.currentUser.subscribe(company => {
-      this.company = company;
-    });
-
   }
 
   public segmentChanged(event: any) {
@@ -97,12 +91,12 @@ export class HomePage implements OnInit {
 
   public formatMonth(value: string) {
     const date = new Date(`${value} 00:00:00`);
-    return DateHelper.getMonth(date);
+    return DateHelper.getMonthShortName(date);
   }
 
   public formatDay(value: string) {
     const date = new Date(`${value} 00:00:00`);
-    return DateHelper.getDay(date);
+    return DateHelper.getDayShortName(date);
   }
 
   private check() {
@@ -119,6 +113,14 @@ export class HomePage implements OnInit {
 
     else if (this.route.snapshot.queryParamMap.get('setup')) {
       this.alertSrv.alertSuccessSetup();
+    }
+
+    else {
+
+      this.preparePerformance();
+
+      this.prepareCompany();
+
     }
 
   }
@@ -148,6 +150,25 @@ export class HomePage implements OnInit {
         });
 
         this.loadingSrv.hide();
+
+      });
+
+  }
+
+  private prepareCompany() {
+
+    this.loadingSrv.show();
+
+    this.companySrv.get()
+      .subscribe(res => {
+
+        this.loadingSrv.hide();
+
+        if (res.success) {
+
+          this.company = res.data;
+
+        }
 
       });
 

@@ -9,6 +9,8 @@ import { AddProductPageModule } from '../modal/add-product/add-product.module';
 import { MenuSessionsPageModule } from '../modal/menu-sessions/menu-sessions.module';
 import { ProductDetailsPageModule } from '../modal/product-details/product-details.module';
 import { SearchProductPageModule } from '../modal/search-product/search-product.module';
+import { PausedPageModule } from '../modal/paused/paused.module';
+import { MoneyModule } from 'src/app/pipes/money/money.module';
 
 @NgModule({
   imports: [
@@ -20,7 +22,9 @@ import { SearchProductPageModule } from '../modal/search-product/search-product.
     MenuSessionsPageModule,
     ProductDetailsPageModule,
     ProductsPageRoutingModule,
-    SearchProductPageModule
+    SearchProductPageModule,
+    PausedPageModule,
+    MoneyModule
   ],
   declarations: [ProductsPage]
 })

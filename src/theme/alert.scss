@@ -2,12 +2,20 @@ button.swal2-confirm {
   background-color: var(--ion-color-primary) !important;
   border-color: var(--ion-color-primary) !important;
   border-radius: 6px !important;
+  margin: 5px;
+  padding: 10px 0;
+  width: calc(50% - 10px);
+  font-size: 12pt;
 }
 
 button.swal2-cancel {
   background-color: var(--ion-color-light) !important;
   border-color: var(--ion-color-light) !important;
   border-radius: 6px !important;
+  margin: 5px;
+  padding: 10px 0;
+  width: calc(50% - 10px);
+  font-size: 12pt;
 }
 
 .swal2-icon {
@@ -31,7 +39,7 @@ button.swal2-cancel {
 }
 
 .swal2-actions {
-  margin-bottom: 20px !important;
+  margin-bottom: 12px !important;
 }
 
 .swal2-btn-desconnection {

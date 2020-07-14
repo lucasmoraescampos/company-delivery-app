@@ -3,6 +3,8 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
 import { ProductService } from 'src/app/services/product/product.service';
 import { ProductDetailsPage } from '../product-details/product-details.page';
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-search-product',
@@ -26,7 +28,9 @@ export class SearchProductPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private productSrv: ProductService
+    private productSrv: ProductService,
+    private alertSrv: AlertService,
+    private toastSrv: ToastService
   ) { }
 
   ngOnInit() {
@@ -67,13 +71,10 @@ export class SearchProductPage implements OnInit {
 
       });
 
-      setTimeout(() => {
+      this.results = ArrayHelper.orderbyAsc(results, 'name');
 
-        this.results = ArrayHelper.orderbyAsc(results, 'name');
-
-        this.loading = false;
-
-      }, 1000);
+      this.loading = false;
+      
     }
 
   }
@@ -120,6 +121,84 @@ export class SearchProductPage implements OnInit {
         }
 
       });
+
+  }
+
+  public updateStatus(product: any) {
+
+    const action = product.status == 1 ? 'Pausar' : 'Ativar';
+
+    this.alertSrv.confirm(`${action} este produto?`, () => {
+
+      this.loading = true;
+
+      const formData = new FormData();
+
+      formData.append('status', product.status == 1 ? '0' : '1');
+
+      this.productSrv.update(product.id, formData)
+        .subscribe(res => {
+
+          this.loading = false;
+
+          if (res.success) {
+
+            if (res.data.status == 1) {
+
+              this.toastSrv.success('Produto ativado com sucesso!');
+
+            }
+
+            else {
+
+              this.toastSrv.secondary('Produto pausado com sucesso!');
+
+            }
+
+            let index = ArrayHelper.getIndexByKey(this.products, 'id', product.id);
+
+            this.products[index] = res.data;
+
+            index = ArrayHelper.getIndexByKey(this.results, 'id', product.id);
+
+            this.results[index] = res.data;
+
+          }
+
+        });
+
+    });
+
+  }
+
+  public remove(product_id: number) {
+
+    this.alertSrv.confirm('Apagar este produto?', () => {
+
+       this.loading= true;
+
+      this.productSrv.delete(product_id)
+        .subscribe(res => {
+
+          this.loading = false;
+
+          if (res.success) {
+
+            this.toastSrv.success(res.message);
+
+            let index = ArrayHelper.getIndexByKey(this.products, 'id', product_id);
+
+            this.products = ArrayHelper.removeItem(this.products, index);
+
+            index = ArrayHelper.getIndexByKey(this.results, 'id', product_id);
+
+            this.results = ArrayHelper.removeItem(this.results, index);
+
+          }
+
+        });
+
+    });
 
   }
 

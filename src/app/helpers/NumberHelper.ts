@@ -6,12 +6,27 @@ export class NumberHelper {
         return parseFloat(number);
     }
 
-    public static formatCents(number: number): string {
+    public static cents(number: number): string {
 
-        if (number.toString().indexOf('.') == -1) {
-            return number.toString() + '.00';
+        if (String(number).indexOf('.') == -1) {
+
+            return String(number) + '.00';
+
         }
-        return number.toString();
+
+        else {
+
+            const n = String(number).split('.');
+
+            if (n[1].length == 1) {
+
+                return String(number) + '0';
+
+            }
+
+        }
+
+        return String(number);
     }
 
     public static orderCode(id: number): string {

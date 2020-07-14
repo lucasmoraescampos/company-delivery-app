@@ -10,6 +10,7 @@ import { AddSubcomplementPageModule } from '../add-subcomplement/add-subcompleme
 import { ChangeComplementPageModule } from '../change-complement/change-complement.module';
 import { ChangeSubcomplementPageModule } from '../change-subcomplement/change-subcomplement.module';
 import { MoneyModule } from 'src/app/pipes/money/money.module';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { MoneyModule } from 'src/app/pipes/money/money.module';
     AddSubcomplementPageModule,
     ChangeComplementPageModule,
     ChangeSubcomplementPageModule,
-    MoneyModule
+    MoneyModule,
+    NgxLoadingModule
   ],
   declarations: [ProductDetailsPage],
   entryComponents: [ProductDetailsPage]

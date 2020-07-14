@@ -26,4 +26,8 @@ export class ProductOptionsPage implements OnInit {
   public async searchProduct() {
     this.popoverCtrl.dismiss('search_product');
   }
+
+  public async paused() {
+    this.popoverCtrl.dismiss('paused');
+  }
 }

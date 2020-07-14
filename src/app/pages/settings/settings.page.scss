@@ -1,0 +1,38 @@
+ion-content {
+    ion-label,
+    h6,
+    p {
+        font-size: 12pt;
+    }
+
+    ion-range {
+        margin-top: 20px;
+    }
+
+    ion-grid {
+        ion-thumbnail {
+            margin: 20px auto;
+            --border-radius: 50%;
+            --size: 128px;
+        }
+
+        span.sufix {
+            position: absolute;
+            right: 15px;
+            color: var(--ion-color-medium-tint);
+        }
+    }
+
+    ion-list {
+        ion-item.header {
+            --padding-top: 10px;
+            --padding-bottom: 10px;
+            --background: var(--ion-color-light-tint);
+        }
+
+        img {
+            width: 30px;
+            margin-right: 10px;
+        }
+    }
+}

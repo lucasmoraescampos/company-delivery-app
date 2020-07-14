@@ -39,22 +39,25 @@
 
       <ion-col size="12">
 
-        <ion-label class="label-custom" [hidden]="isNoPrice">Preço</ion-label>
+        <ion-label class="label-custom">Possui preço?</ion-label>
 
-        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="price"
-          [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }" [hidden]="isNoPrice"></ion-input>
+        <ion-select class="select-custom" mode="md" interface="action-sheet" okText="Confirmar" cancelText="Cancelar"
+          (ionChange)="checkPrice($event)" placeholder="Este item possui preço?" [value]="has_price ? '1' : '0'">
+
+          <ion-select-option value="1">Sim</ion-select-option>
+
+          <ion-select-option value="0">Não</ion-select-option>
+
+        </ion-select>
 
       </ion-col>
 
-      <ion-col size="12">
+      <ion-col class="animated fadeIn" size="12" *ngIf="has_price">
 
-        <ion-item class="ion-no-padding" lines="none">
+        <ion-label class="label-custom">Preço</ion-label>
 
-          <ion-checkbox mode="md" color="primary" [checked]="isNoPrice" (ionChange)="checkPrice($event)"></ion-checkbox>
-
-          <ion-label>Grátis</ion-label>
-
-        </ion-item>
+        <ion-input class="input-custom" type="text" inputmode="numeric" formControlName="price"
+          [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }"></ion-input>
 
       </ion-col>
 
@@ -72,8 +75,9 @@
 
       <ion-col size="12">
 
-        <ion-button expand="block" (click)="update()">
-          
+        <ion-button expand="block" (click)="update()" [disabled]="formGroupSubcomplement.invalid"
+          [color]="formGroupSubcomplement.valid ? 'primary' : 'light'">
+
           Atualizar
 
         </ion-button>
@@ -85,3 +89,5 @@
   </ion-grid>
 
 </ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -23,5 +23,14 @@ export class CategoryService {
         })
       );
   }
+
+  public getById(id: number) {
+    return this.http.get<HttpResult>(`${this.url}/company/category/${id}`)
+      .pipe(
+        map(res => {
+          return res;
+        })
+      );
+  }
   
 }

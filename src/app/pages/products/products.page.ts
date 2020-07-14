@@ -10,6 +10,9 @@ import { AddProductPage } from '../modal/add-product/add-product.page';
 import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
 import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
 import { SearchProductPage } from '../modal/search-product/search-product.page';
+import { AlertService } from 'src/app/services/alert/alert.service';
+import { PausedPage } from '../modal/paused/paused.page';
+import { ToastService } from 'src/app/services/toast/toast.service';
 
 @Component({
   selector: 'app-products',
@@ -33,7 +36,9 @@ export class ProductsPage implements OnInit {
     private popoverController: PopoverController,
     private productSrv: ProductService,
     private menuSessionSrv: MenuSessionService,
-    private loadingSrv: LoadingService
+    private loadingSrv: LoadingService,
+    private alertSrv: AlertService,
+    private toastSrv: ToastService
   ) { }
 
   ngOnInit() {
@@ -67,6 +72,10 @@ export class ProductsPage implements OnInit {
 
           case 'search_product':
             this.openSearch();
+            break;
+
+          case 'paused':
+            this.openPaused();
             break;
 
         }
@@ -163,6 +172,80 @@ export class ProductsPage implements OnInit {
 
   }
 
+  public updateStatus(product: any) {
+
+    const action = product.status == 1 ? 'Pausar' : 'Ativar';
+
+    this.alertSrv.confirm(`${action} este produto?`, () => {
+
+      this.loadingSrv.show();
+
+      const formData = new FormData();
+
+      formData.append('status', product.status == 1 ? '0' : '1');
+
+      this.productSrv.update(product.id, formData)
+        .subscribe(res => {
+
+          this.loadingSrv.hide();
+
+          if (res.success) {
+
+            if (res.data.status == 1) {
+
+              this.toastSrv.success('Produto ativado com sucesso!');
+
+            }
+
+            else {
+
+              this.toastSrv.secondary('Produto pausado com sucesso!');
+
+            }
+
+            const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product.id);
+
+            this.allProducts[index] = res.data;
+
+            this.filterProducts();
+
+          }
+
+        });
+
+    });
+
+  }
+
+  public remove(product_id: number) {
+
+    this.alertSrv.confirm('Apagar este produto?', () => {
+
+      this.loadingSrv.show();
+
+      this.productSrv.delete(product_id)
+        .subscribe(res => {
+
+          this.loadingSrv.hide();
+
+          if (res.success) {
+
+            this.toastSrv.success(res.message);
+
+            const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product_id);
+
+            this.allProducts = ArrayHelper.removeItem(this.allProducts, index);
+
+            this.filterProducts();
+
+          }
+
+        });
+
+    });
+
+  }
+
   private async openSessions() {
 
     const modal = await this.modalCtrl.create({
@@ -233,25 +316,49 @@ export class ProductsPage implements OnInit {
 
   }
 
+  private async openPaused() {
+
+    const modal = await this.modalCtrl.create({
+      component: PausedPage,
+      cssClass: 'modal-custom',
+      backdropDismiss: false,
+      componentProps: {
+        products: this.allProducts,
+        sessions: this.sessions,
+        subcategories: this.subcategories
+      }
+    });
+
+    modal.onWillDismiss()
+      .then(res => {
+
+        if (res.data != undefined) {
+
+          this.allProducts = res.data;
+
+          this.filterProducts();
+
+        }
+
+      });
+
+    return await modal.present();
+
+  }
+
   private filterProducts() {
 
-    const products = [];
-
-    this.products = null;
+    this.products = [];
 
     this.allProducts.forEach(element => {
 
       if (element.menu_session_id == this.segment.value) {
 
-        products.push(element);
+        this.products.push(element);
 
       }
 
-      setTimeout(() => {
-
-        this.products = ArrayHelper.orderbyAsc(products, 'name');
-
-      });
+      this.products = ArrayHelper.orderbyAsc(this.products, 'name');
 
     });
 

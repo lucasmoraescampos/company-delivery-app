@@ -1,20 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
-import { ProfilePageRoutingModule } from './profile-routing.module';
-
-import { ProfilePage } from './profile.page';
+import { VoucherOptionsPage } from './voucher-options.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    ProfilePageRoutingModule
+    IonicModule
   ],
-  declarations: [ProfilePage]
+  declarations: [VoucherOptionsPage],
+  entryComponents: [VoucherOptionsPage]
 })
-export class ProfilePageModule {}
+export class VoucherOptionsPageModule {}

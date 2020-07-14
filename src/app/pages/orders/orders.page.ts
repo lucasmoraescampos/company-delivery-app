@@ -4,33 +4,32 @@ import { LoadingService } from 'src/app/services/loading/loading.service';
 import { CompanyService } from 'src/app/services/company/company.service';
 import { LocationHelper } from 'src/app/helpers/LocationHelper';
 import { OrderDetailsPage } from '../modal/order-details/order-details.page';
-import { ModalController } from '@ionic/angular';
+import { ModalController, PopoverController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
 import { NumberHelper } from 'src/app/helpers/NumberHelper';
+import { OrderOptionsPage } from '../popover/order-options/order-options.page';
+import { SearchOrderPage } from '../modal/search-order/search-order.page';
 
 @Component({
   selector: 'app-orders',
   templateUrl: 'orders.page.html',
   styleUrls: ['orders.page.scss'],
 })
-export class OrdersPage implements OnInit{
+export class OrdersPage implements OnInit {
 
   public segment: string = 'requests';
 
-  public requests: Array<any>;
+  public allOrders: Array<any>;
 
-  public running: Array<any>;
-
-  public delivering: Array<any>;
-
-  public completed: Array<any>;
+  public orders: Array<any>;
 
   constructor(
     private orderSrv: OrderService,
     private loadingSrv: LoadingService,
     private modalCtrl: ModalController,
-    private alertSrv: AlertService
+    private alertSrv: AlertService,
+    private popoverCtrl: PopoverController
   ) { }
 
   ngOnInit() {
@@ -38,7 +37,33 @@ export class OrdersPage implements OnInit{
     this.prepareOrders();
 
   }
-  
+
+  public async options(ev: any) {
+
+    const popover = await this.popoverCtrl.create({
+      component: OrderOptionsPage,
+      event: ev,
+      translucent: true,
+      mode: 'md'
+    });
+
+    popover.onWillDismiss()
+      .then(res => {
+
+        switch (res.data) {
+
+          case 'search':
+            this.search();
+            break;
+
+        }
+
+      });
+
+    return await popover.present();
+
+  }
+
   public refresh(event: any) {
 
     this.orderSrv.getAll()
@@ -48,45 +73,35 @@ export class OrdersPage implements OnInit{
 
         if (res.success) {
 
-          this.requests = res.data[0] ? res.data[0] : [];
+          this.allOrders = res.data;
 
-          const running = res.data[1] ? res.data[1] : [];
-
-          res.data[2].forEach((order: any) => running.push(order));
-
-          this.running = ArrayHelper.orderbyDesc(running, 'created_at');
-
-          this.delivering = res.data[3] ? res.data[3] : [];
-
-          this.completed = res.data[4] ? res.data[4] : [];
+          this.filterOrders();
 
         }
 
       });
   }
 
-  public accept(index: number) {
+  public accept(order: any) {
 
-    const id = this.requests[index].id;
-
-    const code = NumberHelper.orderCode(id);
+    const code = NumberHelper.orderCode(order.id);
 
     this.alertSrv.confirm(`Aceitar pedido Nº ${code}?`, () => {
 
       this.loadingSrv.show();
 
-      this.orderSrv.accept(id)
+      this.orderSrv.accept(order.id)
         .subscribe(res => {
 
           this.loadingSrv.hide();
 
           if (res.success) {
 
-            this.requests[index].status = 1;
+            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
 
-            this.running.unshift(this.requests[index]);
+            this.allOrders[index] = res.data;
 
-            this.requests = ArrayHelper.removeItem(this.requests, index);
+            this.filterOrders();
 
           }
 
@@ -96,24 +111,26 @@ export class OrdersPage implements OnInit{
 
   }
 
-  public refuse(index: number) {
+  public refuse(order: any) {
 
-    const id = this.requests[index].id;
-
-    const code = NumberHelper.orderCode(id);
+    const code = NumberHelper.orderCode(order.id);
 
     this.alertSrv.confirm(`Recusar pedido Nº ${code}?`, () => {
 
       this.loadingSrv.show();
 
-      this.orderSrv.refuse(id)
+      this.orderSrv.refuse(order.id)
         .subscribe(res => {
 
           this.loadingSrv.hide();
 
           if (res.success) {
 
-            this.requests = ArrayHelper.removeItem(this.requests, index);
+            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
+
+            this.allOrders = ArrayHelper.removeItem(this.allOrders, index);
+
+            this.filterOrders();
 
           }
 
@@ -123,24 +140,26 @@ export class OrdersPage implements OnInit{
 
   }
 
-  public release(index: number) {
+  public release(order: any) {
 
-    const id = this.running[index].id;
-
-    const code = NumberHelper.orderCode(id);
+    const code = NumberHelper.orderCode(order.id);
 
     this.alertSrv.confirm(`Liberar pedido Nº ${code}?`, () => {
 
       this.loadingSrv.show();
 
-      this.orderSrv.release(id)
+      this.orderSrv.release(order.id)
         .subscribe(res => {
 
           this.loadingSrv.hide();
 
           if (res.success) {
 
-            this.running[index].status = 2;
+            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
+
+            this.allOrders[index] = res.data;
+
+            this.filterOrders();
 
           }
 
@@ -162,68 +181,24 @@ export class OrdersPage implements OnInit{
 
     modal.onWillDismiss()
       .then(res => {
-        
-        if (this.segment == 'requests') {
 
-          if (res.data.status == 1) {
+        if (res.data != undefined) {
 
-            const index = ArrayHelper.getIndexByKey(this.requests, 'id', id);
+          const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', id);
 
-            this.requests[index].status = 1;
+          if (res.data == 5) {
 
-            this.running.unshift(this.requests[index]);
-
-            this.requests = ArrayHelper.removeItem(this.requests, index);
+            this.allOrders = ArrayHelper.removeItem(this.allOrders, index);
 
           }
 
-          else if (res.data.status == 4) {
+          else {
 
-            const index = ArrayHelper.getIndexByKey(this.requests, 'id', id);
-
-            this.requests = ArrayHelper.removeItem(this.requests, index);
+            this.allOrders[index] = res.data;
 
           }
 
-        }
-
-        else if (this.segment == 'running') {
-
-          if (res.data.status == 2) {
-
-            const index = ArrayHelper.getIndexByKey(this.running, 'id', id);
-
-            this.running[index].status = 2;
-
-          }
-
-          else if (res.data.status == 4) {
-
-            const index = ArrayHelper.getIndexByKey(this.running, 'id', id);
-
-            this.running[index].status = 4;
-
-            this.completed.unshift(this.running[index]);
-
-            this.running = ArrayHelper.removeItem(this.running, index);
-
-          }
-
-        }
-
-        else if (this.segment == 'delivering') {
-
-          if (res.data.status == 4) {
-
-            const index = ArrayHelper.getIndexByKey(this.delivering, 'id', id);
-
-            this.delivering[index].status = 4;
-
-            this.completed.unshift(this.delivering[index]);
-
-            this.delivering = ArrayHelper.removeItem(this.delivering, index);
-
-          }
+          this.filterOrders();
 
         }
 
@@ -240,6 +215,8 @@ export class OrdersPage implements OnInit{
     element.scrollIntoView({ behavior: "smooth", inline: "center" });
 
     this.segment = value;
+
+    this.filterOrders();
 
   }
 
@@ -261,6 +238,87 @@ export class OrdersPage implements OnInit{
 
   }
 
+  public filterOrders() {
+
+    const orders = [];
+
+    this.orders = null;
+
+    if (this.segment == 'requests') {
+
+      this.allOrders.forEach(order => {
+        if (order.status == 0) {
+          orders.push(order);
+        }
+      });
+
+    }
+
+    else if (this.segment == 'running') {
+
+      this.allOrders.forEach(order => {
+        if (order.status == 1 || order.status == 2) {
+          orders.push(order);
+        }
+      });
+
+    }
+
+    else if (this.segment == 'delivering') {
+
+      this.allOrders.forEach(order => {
+        if (order.status == 3) {
+          orders.push(order);
+        }
+      });
+
+    }
+
+    else if (this.segment == 'completed') {
+
+      this.allOrders.forEach(order => {
+        if (order.status == 4) {
+          orders.push(order);
+        }
+      });
+
+    }
+
+    setTimeout(() => {
+
+      this.orders = ArrayHelper.orderbyAsc(orders, 'created_at');
+
+    });
+
+  }
+
+  private async search() {
+
+    const modal = await this.modalCtrl.create({
+      component: SearchOrderPage,
+      cssClass: 'modal-custom',
+      componentProps: {
+        orders: this.allOrders
+      }
+    });
+
+    modal.onWillDismiss()
+      .then(res => {
+
+        if (res.data != undefined) {
+
+          this.allOrders = res.data;
+
+          this.filterOrders();
+
+        }
+
+      });
+
+    return await modal.present();
+
+  }
+
   private prepareOrders() {
 
     this.loadingSrv.show();
@@ -272,21 +330,9 @@ export class OrdersPage implements OnInit{
 
         if (res.success) {
 
-          this.requests = res.data[0] ? res.data[0] : [];
+          this.allOrders = res.data;
 
-          const running = res.data[1] ? res.data[1] : [];
-
-          if (res.data[2]) {
-
-            res.data[2].forEach((order: any) => running.push(order));
-
-          }
-
-          this.running = ArrayHelper.orderbyDesc(running, 'created_at');
-
-          this.delivering = res.data[3] ? res.data[3] : [];
-
-          this.completed = res.data[4] ? res.data[4] : [];
+          this.filterOrders();
 
         }
 

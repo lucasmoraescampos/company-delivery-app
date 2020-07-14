@@ -26,6 +26,10 @@ export class MenuComponent implements OnInit {
 
   }
 
+  public settings() {
+    this.navCtrl.navigateForward('/settings');
+  }
+
   public location() {
     this.navCtrl.navigateForward('/location');
   }

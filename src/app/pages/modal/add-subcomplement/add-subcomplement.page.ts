@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalController, NavParams } from '@ionic/angular';
-import { AlertService } from '../../../services/alert/alert.service';
-import { HtmlHelper } from '../../../helpers/HtmlHelper';
 import { ToastService } from '../../../services/toast/toast.service';
-import { ProductService } from '../../../services/product/product.service';
 import { NumberHelper } from '../../../helpers/NumberHelper';
+import { SubcomplementService } from 'src/app/services/subcomplement/subcomplement.service';
 
 @Component({
   selector: 'app-add-subcomplement',
@@ -16,7 +14,7 @@ export class AddSubcomplementPage implements OnInit {
 
   public loading: boolean = false;
 
-  public isNoPrice: boolean = false;
+  public has_price: boolean = null;
 
   public info: boolean = false;
 
@@ -25,9 +23,8 @@ export class AddSubcomplementPage implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private alertSrv: AlertService,
     private toastSrv: ToastService,
-    private productSrv: ProductService,
+    private subcomplementSrv: SubcomplementService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -38,7 +35,7 @@ export class AddSubcomplementPage implements OnInit {
     this.formGroupSubcomplement = this.formBuilder.group({
       complement_id: [complement_id, Validators.required],
       description: [null, Validators.required],
-      price: ['0,00']
+      price: [null]
     });
 
   }
@@ -61,7 +58,7 @@ export class AddSubcomplementPage implements OnInit {
 
         subcomplement.price = NumberHelper.parse(subcomplement.price);
 
-        this.productSrv.createSubcomplement(subcomplement)
+        this.subcomplementSrv.create(subcomplement)
           .subscribe(res => {
 
             this.loading = false;
@@ -88,29 +85,16 @@ export class AddSubcomplementPage implements OnInit {
   }
 
   public checkPrice(event: CustomEvent) {
-    if (event.detail.checked) {
-      this.isNoPrice = true;
-      this.formGroupSubcomplement.patchValue({
-        price: null
-      });
-    }
-    else {
-      this.isNoPrice = false;
-      this.formGroupSubcomplement.patchValue({
-        price: '0,00'
-      });
-    }
+
+    this.has_price = event.detail.value == '1' ? true : false;
+
+    this.formGroupSubcomplement.patchValue({
+      price: event.detail.value == '1' ? '0,00' : null
+    });
+    
   }
 
   public dismiss() {
     this.modalCtrl.dismiss();
-  }
-
-  public help() {
-
-    this.info = true;
-
-    this.alertSrv.info(HtmlHelper.AddComplementInfo, () => this.info = false);
-
   }
 }

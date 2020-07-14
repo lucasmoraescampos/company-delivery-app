@@ -22,7 +22,7 @@
 
 </ion-header>
 
-<ion-content mode="ios">
+<ion-content mode="ios" [scrollEvents]="true">
 
   <ion-grid class="ion-padding" [formGroup]="formGroupProduct">
 
@@ -232,8 +232,8 @@
 
           <ion-label>À partir de</ion-label>
 
-          <ion-datetime formControlName="start_time" displayFormat="HH:mm" cancelText="Voltar" doneText="Confirmar">
-          </ion-datetime>
+          <ion-datetime formControlName="start_time" displayFormat="HH:mm" displayTimezone="America/Sao_Paulo"
+            cancelText="Voltar" doneText="Confirmar"></ion-datetime>
 
         </ion-item>
 
@@ -241,8 +241,8 @@
 
           <ion-label>Até</ion-label>
 
-          <ion-datetime formControlName="end_time" displayFormat="HH:mm" cancelText="Voltar" doneText="Confirmar">
-          </ion-datetime>
+          <ion-datetime formControlName="end_time" displayFormat="HH:mm" displayTimezone="America/Sao_Paulo"
+            cancelText="Voltar" doneText="Confirmar"></ion-datetime>
 
         </ion-item>
 
@@ -258,16 +258,22 @@
 
     </ion-row>
 
-    <ion-row class="ion-padding ion-margin-top">
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer mode="ios" *ngIf="session && photo">
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
 
       <ion-col size="12">
 
-        <ion-button mode="ios" expand="block" (click)="add()" [disabled]="formGroupProduct.invalid"
+        <ion-button expand="block" (click)="add()" [disabled]="formGroupProduct.invalid"
           [color]="formGroupProduct.valid ? 'primary' : 'light'">
 
-          <ion-spinner mode="md" name="crescent" [hidden]="loading == false"></ion-spinner>
-
-          <span [hidden]="loading">Adicionar</span>
+          Adicionar
 
         </ion-button>
 
@@ -277,4 +283,6 @@
 
   </ion-grid>
 
-</ion-content>
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>
