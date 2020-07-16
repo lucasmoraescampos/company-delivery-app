@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, Platform } from '@ionic/angular';
+import { Platform, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { CompanyService } from 'src/app/services/company/company.service';
 import { ActivatedRoute } from '@angular/router';
@@ -30,12 +30,12 @@ export class HomePage implements OnInit {
   constructor(
     private splashScreen: SplashScreen,
     private platform: Platform,
-    private navCtrl: NavController,
     private route: ActivatedRoute,
     private alertSrv: AlertService,
     private companySrv: CompanyService,
     private toastSrv: ToastService,
-    private loadingSrv: LoadingService
+    private loadingSrv: LoadingService,
+    private navCtrl: NavController
   ) {
 
     this.splashScreen.hide();
@@ -49,7 +49,52 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
 
-    this.check();
+    this.companySrv.currentUser.subscribe(company => {
+      this.company = company;
+    });
+
+    if (this.route.snapshot.queryParamMap.get('setup')) {
+      this.alertSrv.setupSuccessful();
+    }
+
+  }
+
+  ionViewWillEnter() {
+
+    this.preparePerformance();
+
+    this.prepareCompany();
+
+  }
+
+  public refresh(event: any) {
+
+    this.companySrv.get()
+      .subscribe(res => {
+
+        if (res.success) {
+
+          this.company = res.data;
+
+          this.companySrv.getPerformance()
+            .subscribe(res => {
+
+              if (res.success) {
+
+                this.performance = {
+                  days: res.data.days,
+                  months: res.data.months
+                };
+
+                event.target.complete();
+
+              }
+
+            });
+
+        }
+
+      });
 
   }
 
@@ -59,24 +104,30 @@ export class HomePage implements OnInit {
 
   public changeStatus(event: any) {
 
-    const data = new FormData();
-
     if (event.detail.checked) {
 
-      data.append('is_open', '1');
+      const data = {
+        is_open: true
+      };
 
       this.companySrv.update(data)
         .subscribe(res => {
+
           if (res.success) {
+
             this.toastSrv.success('Empresa aberta com sucesso!');
+
           }
+
         });
 
     }
 
     else {
 
-      data.append('is_open', '0');
+      const data = {
+        is_open: false
+      };
 
       this.companySrv.update(data)
         .subscribe(res => {
@@ -99,30 +150,8 @@ export class HomePage implements OnInit {
     return DateHelper.getDayShortName(date);
   }
 
-  private check() {
-
-    const auth = CompanyService.auth();
-
-    if (auth.status == 0) {
-      this.navCtrl.navigateRoot('/waiting-confirmation');
-    }
-
-    else if (auth.latitude == null) {
-      this.navCtrl.navigateRoot('/setup');
-    }
-
-    else if (this.route.snapshot.queryParamMap.get('setup')) {
-      this.alertSrv.alertSuccessSetup();
-    }
-
-    else {
-
-      this.preparePerformance();
-
-      this.prepareCompany();
-
-    }
-
+  public wallet() {
+    this.navCtrl.navigateForward('wallet');
   }
 
   private preparePerformance() {
@@ -132,24 +161,16 @@ export class HomePage implements OnInit {
     this.companySrv.getPerformance()
       .subscribe(res => {
 
-        this.performance = {
-          days: null,
-          months: null
-        };
-
-        res.data.days.forEach((element: any) => {
-          if (element.value > 0) {
-            this.performance.days = res.data.days;
-          }
-        });
-
-        res.data.months.forEach((element: any) => {
-          if (element.value > 0) {
-            this.performance.months = res.data.months;
-          }
-        });
-
         this.loadingSrv.hide();
+
+        if (res.success) {
+
+          this.performance = {
+            days: res.data.days,
+            months: res.data.months
+          };
+
+        }
 
       });
 

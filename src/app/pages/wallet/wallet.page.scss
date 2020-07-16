@@ -1,0 +1,38 @@
+ion-content {
+    ion-grid {
+        h6,
+        p {
+            font-size: 11pt;
+        }
+
+        p {
+            color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.4);
+        }
+
+        ion-icon {
+            font-size: 40pt;
+        }
+    }
+
+    ion-list {
+        ion-item {
+            --padding-top: 10px;
+            --padding-bottom: 10px;
+            --padding-start: 15px;
+            --inner-padding-end: 15px;
+            --border-width: 0.55px 0 0.55px 0;
+
+            ion-label {
+                margin: 0;
+
+                h6 {
+                    font-size: 18pt;
+                }
+            }
+
+            ion-input {
+                --padding-end: 0;
+            }
+        }
+    }
+}

@@ -61,7 +61,7 @@ export class AlertService {
     });
   }
 
-  public alertSuccessSetup(): void {
+  public setupSuccessful(): void {
     Swal.fire({
       title: 'Que comecem os trabalhos!',
       text: 'Suas configurações foram definidas com sucesso, e você já pode começar a cadastrar os seus produtos e até receber pedidos!',

@@ -1,0 +1,104 @@
+<ion-header class="ion-no-border" mode="ios">
+
+  <ion-toolbar>
+
+    <ion-title>Retirada</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button class="close" color="dark" (click)="dismiss()">
+
+        <ion-icon src="../../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content mode="ios">
+
+  <ion-list>
+
+    <ion-item lines="full">
+
+      <ion-label>Saldo Diponível</ion-label>
+
+      <ion-input class="ion-text-right" readonly="true" [value]="company.balance_available | money"></ion-input>
+
+    </ion-item>
+
+  </ion-list>
+
+  <ion-grid class="ion-margin-top">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-label>Informe o valor</ion-label>
+
+        <ion-input type="text" [(ngModel)]="value" [brmasker]="{ money: true, thousand: '.',  decimalCaracter: ',' }" (ionChange)="valueChanged()">
+        </ion-input>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-list class="ion-margin-top">
+
+    <ion-item lines="full" button="true" detail="true" (click)="bank()" *ngIf="company.bank_name">
+
+      <ion-thumbnail slot="start">
+
+        <img src="../../../../assets/icon/bank.svg">
+
+      </ion-thumbnail>
+
+      <ion-label>
+
+        <h6>Conta Bancária</h6>
+
+        <p>{{ company.bank_holder_name }}</p>
+
+        <p>{{ company.bank_name }}</p>
+
+      </ion-label>
+
+    </ion-item>
+
+    <ion-item lines="full" button="true" detail="true" (click)="bank()" *ngIf="!company.bank_name">
+
+      <ion-label>Adicionar conta bancária</ion-label>
+
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer mode="ios">
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" [disabled]="value == '0,00' || !company.bank_name" [color]="value != '0,00' && company.bank_name ? 'primary' : 'light'">
+
+          Solicitar Retirada
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>

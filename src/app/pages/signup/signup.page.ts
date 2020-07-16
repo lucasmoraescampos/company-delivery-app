@@ -59,9 +59,10 @@ export class SignupPage implements OnInit {
 
           if (res.success) {
 
-            this.navCtrl.navigateRoot('tabs/home');
+            this.navCtrl.navigateRoot('/waiting-confirmation');
 
           }
+          
           else {
 
             this.spinner = false;

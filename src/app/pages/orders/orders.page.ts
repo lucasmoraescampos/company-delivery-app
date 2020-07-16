@@ -10,6 +10,8 @@ import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
 import { NumberHelper } from 'src/app/helpers/NumberHelper';
 import { OrderOptionsPage } from '../popover/order-options/order-options.page';
 import { SearchOrderPage } from '../modal/search-order/search-order.page';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { ConfigHelper } from 'src/app/helpers/ConfigHelper';
 
 @Component({
   selector: 'app-orders',
@@ -20,9 +22,11 @@ export class OrdersPage implements OnInit {
 
   public segment: string = 'requests';
 
-  public allOrders: Array<any>;
+  public all_orders: Array<any>;
 
   public orders: Array<any>;
+
+  private socket: WebSocketSubject<any>;
 
   constructor(
     private orderSrv: OrderService,
@@ -35,6 +39,8 @@ export class OrdersPage implements OnInit {
   ngOnInit() {
 
     this.prepareOrders();
+
+    this.prepareSocket();
 
   }
 
@@ -73,7 +79,7 @@ export class OrdersPage implements OnInit {
 
         if (res.success) {
 
-          this.allOrders = res.data;
+          this.all_orders = res.data;
 
           this.filterOrders();
 
@@ -97,11 +103,23 @@ export class OrdersPage implements OnInit {
 
           if (res.success) {
 
-            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
+            const index = ArrayHelper.getIndexByKey(this.all_orders, 'id', order.id);
 
-            this.allOrders[index] = res.data;
+            this.all_orders[index] = res.data;
 
             this.filterOrders();
+
+            console.log({
+              user_id: order.user_id,
+              order_id: order.id,
+              status: 1
+            })
+
+            this.socket.next({
+              user_id: order.user_id,
+              order_id: order.id,
+              status: 1
+            });
 
           }
 
@@ -126,11 +144,17 @@ export class OrdersPage implements OnInit {
 
           if (res.success) {
 
-            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
+            const index = ArrayHelper.getIndexByKey(this.all_orders, 'id', order.id);
 
-            this.allOrders = ArrayHelper.removeItem(this.allOrders, index);
+            this.all_orders = ArrayHelper.removeItem(this.all_orders, index);
 
             this.filterOrders();
+
+            this.socket.next({
+              user_id: order.user_id,
+              order_id: order.id,
+              status: 5
+            });
 
           }
 
@@ -155,11 +179,17 @@ export class OrdersPage implements OnInit {
 
           if (res.success) {
 
-            const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', order.id);
+            const index = ArrayHelper.getIndexByKey(this.all_orders, 'id', order.id);
 
-            this.allOrders[index] = res.data;
+            this.all_orders[index] = res.data;
 
             this.filterOrders();
+
+            this.socket.next({
+              user_id: order.user_id,
+              order_id: order.id,
+              status: 2
+            });
 
           }
 
@@ -184,17 +214,17 @@ export class OrdersPage implements OnInit {
 
         if (res.data != undefined) {
 
-          const index = ArrayHelper.getIndexByKey(this.allOrders, 'id', id);
+          const index = ArrayHelper.getIndexByKey(this.all_orders, 'id', id);
 
           if (res.data == 5) {
 
-            this.allOrders = ArrayHelper.removeItem(this.allOrders, index);
+            this.all_orders = ArrayHelper.removeItem(this.all_orders, index);
 
           }
 
           else {
 
-            this.allOrders[index] = res.data;
+            this.all_orders[index] = res.data;
 
           }
 
@@ -240,13 +270,15 @@ export class OrdersPage implements OnInit {
 
   public filterOrders() {
 
+    this.loadingSrv.show();
+
     const orders = [];
 
     this.orders = null;
 
     if (this.segment == 'requests') {
 
-      this.allOrders.forEach(order => {
+      this.all_orders.forEach(order => {
         if (order.status == 0) {
           orders.push(order);
         }
@@ -256,7 +288,7 @@ export class OrdersPage implements OnInit {
 
     else if (this.segment == 'running') {
 
-      this.allOrders.forEach(order => {
+      this.all_orders.forEach(order => {
         if (order.status == 1 || order.status == 2) {
           orders.push(order);
         }
@@ -266,7 +298,7 @@ export class OrdersPage implements OnInit {
 
     else if (this.segment == 'delivering') {
 
-      this.allOrders.forEach(order => {
+      this.all_orders.forEach(order => {
         if (order.status == 3) {
           orders.push(order);
         }
@@ -276,7 +308,7 @@ export class OrdersPage implements OnInit {
 
     else if (this.segment == 'completed') {
 
-      this.allOrders.forEach(order => {
+      this.all_orders.forEach(order => {
         if (order.status == 4) {
           orders.push(order);
         }
@@ -286,10 +318,12 @@ export class OrdersPage implements OnInit {
 
     setTimeout(() => {
 
-      this.orders = ArrayHelper.orderbyAsc(orders, 'created_at');
+      this.orders = ArrayHelper.orderbyDesc(orders, 'created_at');
+
+      this.loadingSrv.hide();
 
     });
-
+    
   }
 
   private async search() {
@@ -298,7 +332,7 @@ export class OrdersPage implements OnInit {
       component: SearchOrderPage,
       cssClass: 'modal-custom',
       componentProps: {
-        orders: this.allOrders
+        orders: this.all_orders
       }
     });
 
@@ -307,7 +341,7 @@ export class OrdersPage implements OnInit {
 
         if (res.data != undefined) {
 
-          this.allOrders = res.data;
+          this.all_orders = res.data;
 
           this.filterOrders();
 
@@ -330,13 +364,29 @@ export class OrdersPage implements OnInit {
 
         if (res.success) {
 
-          this.allOrders = res.data;
+          this.all_orders = res.data;
 
           this.filterOrders();
 
         }
 
       });
+  }
+
+  private prepareSocket() {
+
+    const company = CompanyService.auth();
+
+    this.socket = webSocket(`${ConfigHelper.Socket}/company/order?id=${company.id}`);
+
+    this.socket.subscribe(order => {
+
+      this.all_orders.unshift(order);
+
+      this.filterOrders()
+
+    });
+
   }
 
 }

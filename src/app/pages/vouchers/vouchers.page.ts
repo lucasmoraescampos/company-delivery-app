@@ -16,7 +16,7 @@ export class VouchersPage implements OnInit {
 
   @ViewChild(IonContent) content: IonContent;
 
-  public segment: string = '1';
+  public segment: string = 'available';
 
   public vouchers: Array<any>;
 
@@ -127,7 +127,7 @@ export class VouchersPage implements OnInit {
 
     this.vouchers = [];
 
-    if (this.segment == '1') {
+    if (this.segment == 'available') {
 
       this.allVouchers.forEach(voucher => {
 

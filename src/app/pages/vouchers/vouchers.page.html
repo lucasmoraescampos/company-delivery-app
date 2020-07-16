@@ -8,15 +8,15 @@
 
   <ion-toolbar mode="md">
 
-    <ion-segment value="1" (ionChange)="changeSegment($event)">
+    <ion-segment value="available" (ionChange)="changeSegment($event)">
 
-      <ion-segment-button class="animated bounceInRight" id="requests" value="1">
+      <ion-segment-button class="animated bounceInRight" value="available">
 
         <ion-label>Disponíveis</ion-label>
 
       </ion-segment-button>
 
-      <ion-segment-button class="animated bounceInRight" id="running" value="0">
+      <ion-segment-button class="animated bounceInRight" value="expired">
 
         <ion-label>Expirados</ion-label>
 
@@ -30,7 +30,7 @@
 
 <ion-content mode="ios" [scrollEvents]="true">
 
-  <ion-list>
+  <ion-list *ngIf="vouchers?.length > 0">
 
     <ion-item-sliding class="animated bounceInUp" *ngFor="let voucher of vouchers">
 
@@ -68,7 +68,7 @@
 
   </ion-list>
 
-  <ion-grid class="no-vouchers animated fadeIn" *ngIf="vouchers?.length == 0">
+  <ion-grid class="no-vouchers animated bounceInUp" *ngIf="vouchers?.length == 0">
 
     <ion-row>
 
@@ -76,7 +76,9 @@
 
         <ion-icon class="order" src="../../../assets/icon/voucher.svg"></ion-icon>
 
-        <p>Nenhum cupom cadastrado</p>
+        <p *ngIf="segment == 'available'">Nenhum cupom disponível</p>
+
+        <p *ngIf="segment == 'expired'">Nenhum cupom expirado</p>
 
       </ion-col>
 

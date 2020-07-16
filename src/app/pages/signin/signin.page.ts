@@ -48,7 +48,19 @@ export class SigninPage implements OnInit {
           this.spinner = false;
           
           if (res.success) {
-            this.navCtrl.navigateForward('tabs/home');
+
+            if (res.data.status == 0) {
+              this.navCtrl.navigateRoot('/waiting-confirmation');
+            }
+  
+            else if (res.data.latitude == null) {
+              this.navCtrl.navigateRoot('/setup');
+            }
+
+            else {
+              this.navCtrl.navigateForward('tabs/home');
+            }
+            
           }
           else {
             this.toastSrv.error(res.message);

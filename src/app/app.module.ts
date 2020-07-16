@@ -23,7 +23,7 @@ import { MenuModule } from './components/menu/menu.module';
     BrowserAnimationsModule,
     NgxLoadingModule.forRoot({
       backdropBorderRadius: '4px',
-      backdropBackgroundColour: 'rgba(0, 0, 0, 0.1)',
+      backdropBackgroundColour: 'rgba(255, 255, 255, 0.5)',
       primaryColour: '#18a4e0',
       secondaryColour: '#18a4e0',
       tertiaryColour: '#18a4e0',
