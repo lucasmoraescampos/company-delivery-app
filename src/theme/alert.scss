@@ -1,65 +1,66 @@
-button.swal2-confirm {
-  background-color: var(--ion-color-primary) !important;
-  border-color: var(--ion-color-primary) !important;
-  border-radius: 6px !important;
-  margin: 5px;
-  padding: 10px 0;
-  width: calc(50% - 10px);
-  font-size: 12pt;
-}
-
-button.swal2-cancel {
-  background-color: var(--ion-color-light) !important;
-  border-color: var(--ion-color-light) !important;
-  border-radius: 6px !important;
-  margin: 5px;
-  padding: 10px 0;
-  width: calc(50% - 10px);
-  font-size: 12pt;
-}
-
-.swal2-icon {
-  zoom: 0.65;
-}
-
-.swal2-title {
-  font-size: 16pt !important;
-  margin: 0 !important;
-}
-
-.swal2-content {
-  font-size: 12pt !important;
-  font-weight: 400 !important;
-  padding: 0 15px !important;
+.swal2-container {
+    padding: 20px !important;
 }
 
 .swal2-popup {
-  width: 100% !important;
-  padding: 0 10px !important;
+    padding: 15px !important;
+}
+
+.swal2-header {
+    padding: 0 !important;
+}
+
+.swal2-icon {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    zoom: 0.75;
+}
+
+.swal2-image {
+    margin: 5px auto 1.56em auto !important;
+}
+
+.swal2-title {
+    font-size: 14pt !important;
+    margin: 0 !important;
+}
+
+.swal2-html-container {
+    margin-top: 10px;
 }
 
 .swal2-actions {
-  margin-bottom: 12px !important;
+    padding: 0 !important;
 }
 
-.swal2-btn-desconnection {
-  background: var(--ion-color-primary);
-  color: #fff;
-  border-radius: 6px;
-  font-size: 17px;
-  font-weight: 400;
-  height: 46px;
-  padding: 0 0.9em;
+.swal2-styled {
+    margin: 5px !important;
+    padding: 12px 10px !important;
+    width: calc(50% - 10px) !important;
+    font-weight: 600 !important;
 }
 
-.swal2-btn-desconnection:focus {
-  outline: none;
+.swal2-cancel {
+    background-color: var(--ion-color-medium) !important;
 }
 
-.swal2-image-desconnection {
-  margin: 0 !important;
+.swal2-confirm {
+    background-color: var(--ion-color-primary) !important;
 }
 
-.swal2-popup-desconnection {
-  padding-top: 0 !important;
+.swal2-styled:focus {
+    box-shadow: none !important;
+}
+
+body.swal2-toast-shown .swal2-container.swal2-top {
+    width: 100% !important;
+
+    .swal2-popup {
+        margin-top: 20px !important;
+    }
+
+    .swal2-title {
+        font-size: 12pt !important;
+        margin-left: 10px !important;
+    }
 }

@@ -1,0 +1,21 @@
+div {
+    width: 265px;
+    height: 55px;
+    margin: 0 auto;
+
+    ion-input {
+        height: 45px;
+        width: 45px;
+        text-align: center;
+        float: left;
+        margin: 5px;
+    
+        &:first-child {
+            margin-left: 0;
+        }
+    
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

@@ -1,0 +1,25 @@
+<div class="ion-text-center">
+
+  <input type="file" accept="image/*" (change)="fileChangeEvent($event)" [hidden]="true" #inputfile>
+
+  <ion-button [ngClass]="{ invalid: invalid, rounded: rounded }" fill="clear" *ngIf="!image" (click)="chooseImage()">
+
+    <div>
+
+      <ion-icon name="image-outline"></ion-icon>
+
+      Escolher Imagem
+
+    </div>
+
+  </ion-button>
+
+  <ion-thumbnail [ngClass]="{ invalid: invalid, rounded: rounded }" *ngIf="image" (click)="chooseImage()">
+
+    <img [src]="image">
+
+  </ion-thumbnail>
+
+</div>
+
+<ngx-loading [show]="loading"></ngx-loading>

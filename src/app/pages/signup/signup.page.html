@@ -1,114 +1,169 @@
-<ion-header class="ion-no-border" mode="ios">
+<ion-content color="light" customScroll>
 
-  <ion-toolbar>
+  <ion-list>
 
-    <ion-buttons slot="start">
+    <ion-card>
 
-      <ion-back-button text=""></ion-back-button>
+      <ion-card-header>
 
-    </ion-buttons>
+        <ion-card-title>Cadastre-se</ion-card-title>
 
-    <ion-title>
+      </ion-card-header>
 
-      <img src="../../../assets/images/logo.png">
+      <ion-card-content>
 
-    </ion-title>
+        <form [formGroup]="formGroup" (ngSubmit)="save()">
 
-  </ion-toolbar>
+          <ion-grid>
 
-</ion-header>
+            <ion-row>
 
-<ion-content mode="ios">
+              <ion-col size-xs="12" size-sm="6">
 
-  <ion-grid class="ion-padding" [formGroup]="formGroupRegister">
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.name.errors">Nome</ion-label>
 
-    <ion-row>
+                <ion-input [class.invalid]="submitAttempt && formControl.name.errors" formControlName="name" maxlength="100" enterkeyhint="go" (keyup.enter)="onEnter(input2)"></ion-input>
 
-      <ion-col size="12">
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.name.errors?.required">
 
-        <h4>Informe os dados do empresa</h4>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Nome é obrigatório.
+                
+                </ion-note>
 
-      </ion-col>
+              </ion-col>
 
-      <ion-col size="12">
+              <ion-col size-xs="12" size-sm="6">
 
-        <ion-label class="label-custom">Categoria</ion-label>
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.surname.errors">Sobrenome</ion-label>
 
-        <ion-select class="select-custom" formControlName="category_id" placeholder="Selecione uma categoria" mode="md"
-          interface="action-sheet" cancelText="Cancelar">
+                <ion-input [class.invalid]="submitAttempt && formControl.surname.errors" formControlName="surname" maxlength="100" enterkeyhint="go" (keyup.enter)="onEnter(input3)" #input2></ion-input>
 
-          <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}
-          </ion-select-option>
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.surname.errors?.required">
 
-        </ion-select>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Sobrenome é obrigatório.
+                
+                </ion-note>
 
-      </ion-col>
+              </ion-col>
 
-      <ion-col size="12">
+              <ion-col size-xs="12" size-sm="6">
 
-        <ion-label class="label-custom">Nome</ion-label>
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.email.errors">E-mail</ion-label>
 
-        <ion-input class="input-custom" type="text" formControlName="name" placeholder="Nome da empresa"
-          autocapitalize="on"></ion-input>
+                <ion-input [class.invalid]="submitAttempt && formControl.email.errors" inputmode="email" formControlName="email" maxlength="255" enterkeyhint="go" (keyup.enter)="onEnter(input4)" #input3></ion-input>
+                
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.email.errors?.required">
 
-      </ion-col>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  E-mail é obrigatório.
+                
+                </ion-note>
+                
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.email.errors?.email">
 
-      <ion-col size="12">
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  E-mail inválido.
+                
+                </ion-note>
+                
+              </ion-col>
 
-        <ion-label class="label-custom">Telefone</ion-label>
+              <ion-col size-xs="12" size-sm="6">
 
-        <ion-input class="input-custom" type="text" formControlName="phone" placeholder="Telefone da empresa"
-          autocapitalize="on" [brmasker]="{ phone: true }"></ion-input>
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.phone.errors">Celular</ion-label>
 
-      </ion-col>
+                <ion-input [class.invalid]="submitAttempt && formControl.phone.errors" [brmasker]="{ phone: true }" inputmode="tel" formControlName="phone" maxlength="15" enterkeyhint="go" (keyup.enter)="onEnter(input5)" #input4></ion-input>
 
-      <ion-col size="12">
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.phone.errors?.required">
 
-        <ion-label class="label-custom">E-mail</ion-label>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Celular é obrigatório.
+                
+                </ion-note>
 
-        <ion-input class="input-custom" type="email" formControlName="email" placeholder="E-mail para contato">
-        </ion-input>
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.phone.errors?.minLength !== null && formControl.phone.errors?.required == undefined">
 
-      </ion-col>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Celular inválido.
+                
+                </ion-note>
+                
+              </ion-col>
 
-      <ion-col size="12">
+              <ion-col size-xs="12" size-sm="6">
 
-        <ion-label class="label-custom">Senha</ion-label>
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.password.errors">Senha</ion-label>
 
-        <ion-input class="input-custom passwd" [type]="eye ? 'text' : 'password'" maxlength="8"
-          formControlName="password" placeholder="Crie uma senha para sua conta" #passwd>
+                <ion-input [class.invalid]="submitAttempt && formControl.password.errors" type="password" formControlName="password" enterkeyhint="go" (keyup.enter)="onEnter(input6)" #input5></ion-input>
 
-          <ion-buttons>
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.password.errors?.required">
 
-            <ion-button buttonType="reset" (click)="changeEye(passwd)">
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Senha é obrigatório.
+                
+                </ion-note>
+                
+              </ion-col>
 
-              <ion-icon slot="icon-only" name="eye-outline" [hidden]="eye"></ion-icon>
+              <ion-col size-xs="12" size-sm="6">
 
-              <ion-icon slot="icon-only" name="eye-off-outline" [hidden]="!eye"></ion-icon>
+                <ion-label class="stacked" [class.invalid]="submitAttempt && formControl.confirmPassword.errors">Confirmar senha</ion-label>
 
-            </ion-button>
+                <ion-input [class.invalid]="submitAttempt && formControl.confirmPassword.errors" type="password" formControlName="confirmPassword" enterkeyhint="done" (keyup.enter)="onEnter()" #input6></ion-input>
 
-          </ion-buttons>
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.confirmPassword.errors?.required">
 
-        </ion-input>
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Confirmação de senha é obrigatório.
+                
+                </ion-note>
 
-      </ion-col>
+                <ion-note class="validation-error" *ngIf="submitAttempt && formControl.confirmPassword.errors?.mustMatch">
 
-      <ion-col size="12">
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  
+                  Senhas diferentes.
+                
+                </ion-note>
+                
+              </ion-col>
+              
+              <ion-col class="ion-margin-top" size="12">
 
-        <ion-button class="send" expand="block" (click)="send()" [disabled]="formGroupRegister.invalid"
-          [color]="formGroupRegister.valid ? 'primary' : 'light'">
+                <ion-button type="submit" expand="block">Cadastrar</ion-button>
 
-          <ion-spinner mode="md" name="crescent" [hidden]="!spinner"></ion-spinner>
+              </ion-col>
+              
+              <ion-col class="ion-text-center" size="12">
 
-          <span [hidden]="spinner">Continuar</span>
+                <ion-button class="ion-no-padding" fill="clear" size="small" (click)="signin()">
+                  
+                  <span>Já possui cadastro?</span> Entre
+                
+                </ion-button>
 
-        </ion-button>
+              </ion-col>
 
-      </ion-col>
+            </ion-row>
+            
+          </ion-grid>
 
-    </ion-row>
+        </form>
 
-  </ion-grid>
+      </ion-card-content>
+
+    </ion-card>
+
+  </ion-list>
 
 </ion-content>

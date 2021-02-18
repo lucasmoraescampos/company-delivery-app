@@ -1,82 +1,83 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { CompanyGuard } from './guards/company.guard';
 
 const routes: Routes = [
   {
-    path: 'welcome',
-    loadChildren: () => import('./pages/welcome/welcome.module').then(m => m.WelcomePageModule)
-  },
-  {
-    path: 'signup',
-    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupPageModule)
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
   {
     path: 'signin',
-    loadChildren: () => import('./pages/signin/signin.module').then(m => m.SigninPageModule)
+    loadChildren: () => import('./pages/signin/signin.module').then( m => m.SigninPageModule)
   },
   {
-    path: '',
-    loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
+    path: 'signup',
+    loadChildren: () => import('./pages/signup/signup.module').then( m => m.SignupPageModule)
+  },
+  {
+    path: 'companies',
+    loadChildren: () => import('./pages/companies/companies.module').then( m => m.CompaniesPageModule),
     canActivate: [AuthGuard]
   },
   {
-    path: 'location',
-    loadChildren: () => import('./pages/location/location.module').then(m => m.LocationPageModule),
-    canActivate: [AuthGuard]
-  },
-  
-  {
-    path: 'notifications',
-    loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsPageModule),
-    canActivate: [AuthGuard]
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomePageModule),
+    canActivate: [AuthGuard, CompanyGuard]
   },
   {
-    path: 'setup',
-    loadChildren: () => import('./pages/setup/setup.module').then( m => m.SetupPageModule),
-    canActivate: [AuthGuard]
+    path: 'orders',
+    loadChildren: () => import('./pages/orders/orders.module').then(m => m.OrdersPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
   },
   {
-    path: 'photo',
-    loadChildren: () => import('./pages/photo/photo.module').then( m => m.PhotoPageModule),
-    canActivate: [AuthGuard]
+    path: 'products',
+    loadChildren: () => import('./pages/products/products.module').then(m => m.ProductsPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
   },
   {
-    path: 'pre-location',
-    loadChildren: () => import('./pages/pre-location/pre-location.module').then( m => m.PreLocationPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'delivery-settings',
-    loadChildren: () => import('./pages/delivery-settings/delivery-settings.module').then( m => m.DeliverySettingsPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'payment-methods',
-    loadChildren: () => import('./pages/payment-methods/payment-methods.module').then( m => m.PaymentMethodsPageModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'waiting-confirmation',
-    loadChildren: () => import('./pages/waiting-confirmation/waiting-confirmation.module').then( m => m.WaitingConfirmationPageModule)
-  },
-  {
-    path: 'delivers',
-    loadChildren: () => import('./pages/delivers/delivers.module').then( m => m.DeliversPageModule)
+    path: 'reports',
+    loadChildren: () => import('./pages/reports/reports.module').then(m => m.ReportsPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
   },
   {
     path: 'settings',
-    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
+    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
   },
   {
-    path: 'wallet',
-    loadChildren: () => import('./pages/wallet/wallet.module').then( m => m.WalletPageModule)
+    path: 'tables',
+    loadChildren: () => import('./pages/tables/tables.module').then(m => m.TablesPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
+  },
+  {
+    path: 'table/:code',
+    loadChildren: () => import('./pages/table/table.module').then(m => m.TablePageModule),
+    canActivate: [AuthGuard, CompanyGuard]
+  },
+  {
+    path: 'attendants',
+    loadChildren: () => import('./pages/attendants/attendants.module').then( m => m.AttendantsPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
+  },
+  {
+    path: 'delivery-persons',
+    loadChildren: () => import('./pages/delivery-persons/delivery-persons.module').then( m => m.DeliveryPersonsPageModule),
+    canActivate: [AuthGuard, CompanyGuard]
+  },
+  {
+    path: 'categories',
+    loadChildren: () => import('./pages/categories/categories.module').then( m => m.CategoriesPageModule)
   }
+
 ];
+
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

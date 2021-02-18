@@ -1,0 +1,373 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Produto</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-slides class="swiper-no-swiping" [options]="{ initialSlide: 0 }">
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup1" [hidden]="slideActiveIndex != 0">
+
+        <ion-grid class="ion-padding-horizontal">
+
+          <ion-row>
+
+            <ion-col class="ion-text-center" size="12">
+
+              <app-choose-image [invalid]="submitAttempt1 && !blob && !product" [aspectRatio]="3/2" [image]="product?.image" (changeImage)="changeImage($event)"></app-choose-image>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blob && !product">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Imagem é obrigatória.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.name.errors" class="stacked">Nome</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.name.errors" formControlName="name" maxlength="40" enterkeyhint="go" (keyup.enter)="category.open()"></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.name.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Nome é obrigatório.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.category_id.errors" class="stacked">Categoria</ion-label>
+
+              <ion-select [class.invalid]="submitAttempt1 && formControl1.category_id.errors" interface="action-sheet" cancelText="Cancelar" formControlName="category_id" (keyup.enter)="description.setFocus()" #category>
+
+                <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}</ion-select-option>
+
+              </ion-select>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.category_id.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Categoria é obrigatória.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="12">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.description.errors" class="stacked">Descrição</ion-label>
+
+              <ion-textarea [class.invalid]="submitAttempt1 && formControl1.description.errors" formControlName="description" maxlength="200" #description></ion-textarea>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.description.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Descrição é obrigatória.
+      
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+      
+      <form [formGroup]="formGroup2" [hidden]="slideActiveIndex != 1">
+
+        <ion-grid class="ion-padding-horizontal">
+
+          <ion-row>
+
+            <ion-col size="6">
+
+              <ion-label class="stacked">Quantidade</ion-label>
+
+              <ion-input inputmode="numeric" formControlName="qty" placeholder="opcional" [brmasker]="{ type: 'num' }" enterkeyhint="go" (keyup.enter)="cost.setFocus()"></ion-input>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label class="stacked">Preço de custo</ion-label>
+
+              <ion-input inputmode="numeric" formControlName="cost" placeholder="opcional" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="price.setFocus()" #cost></ion-input>
+              
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.price.errors" class="stacked">Preço de venda</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.price.errors" inputmode="numeric" formControlName="price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="rebate.setFocus()" (ionBlur)="checkPrice()" #price></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.price.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Preço é obrigatório.
+      
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.price.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Preço não pode ser igual a zero.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label class="stacked">Desconto</ion-label>
+
+              <ion-input inputmode="numeric" formControlName="rebate" placeholder="opcional" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="done" (keyup.enter)="next()" #rebate></ion-input>
+
+            </ion-col>
+
+          </ion-row>
+          
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup3" [hidden]="slideActiveIndex != 2">
+
+        <ion-list>
+
+          <ion-item-divider>
+
+            <ion-label class="ion-text-wrap">Selecione os dias que o produto estará disponível</ion-label>
+
+          </ion-item-divider>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Domingo</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_sunday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Segunda-feira</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_monday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Terça-feira</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_tuesday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Quarta-feira</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_wednesday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Quinta-feira</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_thursday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Sexta-feira</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_friday"></ion-checkbox>
+
+          </ion-item>
+
+          <ion-item lines="full" detail="false">
+
+            <ion-label>Sábado</ion-label>
+
+            <ion-checkbox slot="end" formControlName="has_saturday"></ion-checkbox>
+
+          </ion-item>
+
+        </ion-list>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup4" [hidden]="slideActiveIndex != 3">
+
+        <ion-list>
+
+          <ion-item-divider>
+
+            <ion-label class="ion-text-wrap">Informes o horário que o produto estará disponível</ion-label>
+
+          </ion-item-divider>
+
+          <ion-grid class="ion-padding-horizontal" [hidden]="allTimes">
+
+            <ion-row>
+
+              <ion-col size="6">
+
+                <ion-label [class.invalid]="submitAttempt4 && !allTimes && (formControl4.start_time.value.length == 0 || formControl4.start_time.errors)" class="stacked">Horário inicial</ion-label>
+
+                <ion-input [class.invalid]="submitAttempt4 && !allTimes && (formControl4.start_time.value.length == 0 || formControl4.start_time.errors)" inputmode="tel" formControlName="start_time" [brmasker]="{ mask: '00:00', type: 'num', len: 5 }" enterkeyhint="go" (keyup.enter)="endtime.setFocus()" (ionBlur)="checkStartTime()"></ion-input>
+
+                <ion-note inputmode="numeric" class="validation-error" *ngIf="submitAttempt4 && !allTimes && formControl4.start_time.value.length == 0">
+
+                  <ion-icon name="information-circle-outline"></ion-icon>
+        
+                  Horário inicial é obrigatório.
+        
+                </ion-note>
+
+                <ion-note inputmode="numeric" class="validation-error" *ngIf="submitAttempt4 && !allTimes && formControl4.start_time.errors?.time">
+
+                  <ion-icon name="information-circle-outline"></ion-icon>
+        
+                  Horário inválido.
+        
+                </ion-note>
+
+              </ion-col>
+
+              <ion-col size="6">
+
+                <ion-label [class.invalid]="submitAttempt4 && !allTimes && (formControl4.end_time.value.length == 0 || formControl4.end_time.errors)" class="stacked">Horário final</ion-label>
+
+                <ion-input [class.invalid]="submitAttempt4 && !allTimes && (formControl4.end_time.value.length == 0 || formControl4.end_time.errors)" inputmode="tel" formControlName="end_time" [brmasker]="{ mask: '00:00', type: 'num', len: 5 }" enterkeyhint="done" (keyup.enter)="save()" (ionBlur)="checkEndTime()" #endtime></ion-input>
+
+                <ion-note inputmode="numeric" class="validation-error" *ngIf="submitAttempt4 && !allTimes && formControl4.end_time.value.length == 0">
+
+                  <ion-icon name="information-circle-outline"></ion-icon>
+        
+                  Horário final é obrigatório.
+        
+                </ion-note>
+
+                <ion-note inputmode="numeric" class="validation-error" *ngIf="submitAttempt4 && !allTimes && formControl4.end_time.errors?.time">
+
+                  <ion-icon name="information-circle-outline"></ion-icon>
+        
+                  Horário inválido.
+        
+                </ion-note>
+
+              </ion-col>
+
+            </ion-row>
+
+          </ion-grid>
+
+          <ion-item class="ion-margin-top" lines="none" mode="md">
+
+            <ion-checkbox class="times" slot="start" [checked]="allTimes" (ionChange)="changeTimes($event)"></ion-checkbox>
+
+            <ion-label class="ion-text-wrap">Disponível sempre que o restaurante estiver aberto</ion-label>
+
+          </ion-item>
+
+        </ion-list>
+
+      </form>
+
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col size="6">
+
+        <ion-button fill="clear" (click)="prev()" *ngIf="slideActiveIndex > 0">
+          
+          <ion-icon slot="start" name="arrow-back-outline"></ion-icon> Voltar
+        
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex < 3">
+
+        <ion-button (click)="next()">
+          
+          Continuar <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+        
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex == 3">
+
+        <ion-button (click)="save()">
+          
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar
+        
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,58 @@
+ion-header {
+    ion-toolbar {
+        ion-buttons[slot="start"] {
+            margin-left: 12px;
+        }
+        ion-buttons[slot="end"] {
+            margin-right: 12px;
+        }
+    }
+}
+
+ion-item {
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+}
+
+ion-segment {
+    width: -webkit-fill-available;
+}
+
+ion-segment-button {
+    text-transform: capitalize;
+    letter-spacing: normal;
+    font-size: 16px;
+}
+
+ion-card {
+    margin: 16px;
+}
+
+ion-card-title {
+    font-size: 16px;
+}
+
+.popover-content {
+    width: auto !important;
+}
+
+ion-note.note-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    ion-icon {
+        font-size: 32px;
+    }
+
+    p {
+        margin: 5px 0 10px;
+        font-size: 16px;
+    }
+}
+
+ion-fab {
+    margin: 10px;
+}

@@ -1,31 +1,40 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ProductsPageRoutingModule } from './products-routing.module';
 import { ProductsPage } from './products.page';
-import { AddSessionPageModule } from '../modal/add-session/add-session.module';
-import { AddProductPageModule } from '../modal/add-product/add-product.module';
-import { MenuSessionsPageModule } from '../modal/menu-sessions/menu-sessions.module';
-import { ProductDetailsPageModule } from '../modal/product-details/product-details.module';
-import { SearchProductPageModule } from '../modal/search-product/search-product.module';
-import { PausedPageModule } from '../modal/paused/paused.module';
 import { MoneyModule } from 'src/app/pipes/money/money.module';
+import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
+import { ModalProductComponent } from './modal-product/modal-product.component';
+import { NgxLoadingModule } from 'ngx-loading';
+import { ChooseImageModule } from 'src/app/components/choose-image/choose-image.module';
+import { BrMaskerModule } from 'br-mask';
+import { ModalComplementComponent } from './modal-complement/modal-complement.component';
+import { ModalComplementsComponent } from './modal-complements/modal-complements.component';
+import { ModalSearchProductComponent } from './modal-search-product/modal-search-product.component';
+import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AddSessionPageModule,
-    AddProductPageModule,
-    MenuSessionsPageModule,
-    ProductDetailsPageModule,
     ProductsPageRoutingModule,
-    SearchProductPageModule,
-    PausedPageModule,
-    MoneyModule
+    MoneyModule,
+    ChooseCompanyModule,
+    ReactiveFormsModule,
+    NgxLoadingModule,
+    ChooseImageModule,
+    BrMaskerModule,
+    CustomScrollModule
   ],
-  declarations: [ProductsPage]
+  declarations: [
+    ProductsPage,
+    ModalProductComponent,
+    ModalComplementsComponent,
+    ModalComplementComponent,
+    ModalSearchProductComponent
+  ]
 })
 export class ProductsPageModule {}

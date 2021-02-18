@@ -1,427 +1,284 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { PopoverController, ModalController, IonSegment } from '@ionic/angular';
-import { LoadingService } from '../../services/loading/loading.service';
-import { ProductOptionsPage } from '../popover/product-options/product-options.page';
-import { ProductService } from '../../services/product/product.service';
-import { ProductDetailsPage } from '../modal/product-details/product-details.page';
-import { MenuSessionsPage } from '../modal/menu-sessions/menu-sessions.page';
-import { AddSessionPage } from '../modal/add-session/add-session.page';
-import { AddProductPage } from '../modal/add-product/add-product.page';
-import { ArrayHelper } from 'src/app/helpers/ArrayHelper';
-import { MenuSessionService } from 'src/app/services/menu-session/menu-session.service';
-import { SearchProductPage } from '../modal/search-product/search-product.page';
-import { AlertService } from 'src/app/services/alert/alert.service';
-import { PausedPage } from '../modal/paused/paused.page';
-import { ToastService } from 'src/app/services/toast/toast.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { ArrayHelper } from 'src/app/helpers/array.helper';
+import { AlertService } from 'src/app/services/alert.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { ProductService } from 'src/app/services/product.service';
+import { ModalComplementsComponent } from './modal-complements/modal-complements.component';
+import { ModalProductComponent } from './modal-product/modal-product.component';
+import { ModalSearchProductComponent } from './modal-search-product/modal-search-product.component';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.page.html',
   styleUrls: ['./products.page.scss'],
 })
-export class ProductsPage implements OnInit {
+export class ProductsPage implements OnInit, OnDestroy {
 
-  @ViewChild(IonSegment) segment: IonSegment;
+  public categories: any[];
 
-  public sessions: Array<any>;
+  public products: any[];
 
-  public subcategories: Array<any>;
-
-  public products: Array<any>;
-
-  public allProducts: Array<any>;
-
+  private unsubscribe: Subject<void> = new Subject();
+  
   constructor(
     private modalCtrl: ModalController,
-    private popoverController: PopoverController,
+    private categorySrv: CategoryService,
     private productSrv: ProductService,
-    private menuSessionSrv: MenuSessionService,
     private loadingSrv: LoadingService,
+    private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService,
-    private toastSrv: ToastService
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
 
-    this.prepareSubcategories();
+    this.prepareCategories();
 
-    this.prepareSessions();
+    this.prepareProducts();
+
   }
 
-  public async options(ev: any) {
+  ngOnDestroy() {
 
-    const popover = await this.popoverController.create({
-      component: ProductOptionsPage,
-      event: ev,
-      translucent: true,
-      mode: 'md'
+    this.unsubscribe.next();
+
+    this.unsubscribe.complete();
+
+  }
+
+  public async options(product: any) {
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: product.name,
+      buttons: [{
+        text: product.status ? 'Inativar' : 'Ativar',
+        handler: () => {
+          this.updateStatus(product);
+        }
+      }, {
+        text: 'Editar',
+        handler: () => {
+          this.modalProduct(product);
+        }
+      }, {
+        text: 'Excluir',
+        handler: () => {
+          this.deleteProduct(product);
+        }
+      }, {
+        text: 'Cancelar',
+        role: 'cancel'
+      }]
     });
 
-    popover.onWillDismiss()
-      .then(res => {
+    await actionSheet.present();
 
-        switch (res.data) {
+  }
 
-          case 'add_session':
-            this.openAddSession();
-            break;
+  public async modalProduct(product?: any) {
 
-          case 'edit_sessions':
-            this.openSessions();
-            break;
+    if (this.categories?.length > 0) {
 
-          case 'search_product':
-            this.openSearch();
-            break;
-
-          case 'paused':
-            this.openPaused();
-            break;
-
+      const modal = await this.modalCtrl.create({
+        component: ModalProductComponent,
+        backdropDismiss: false,
+        componentProps: {
+          categories: this.categories,
+          product: product
         }
-
       });
 
-    return await popover.present();
+      modal.onWillDismiss()
+        .then(res => {
 
-  }
+          if (res.data) {
 
-  public segmentChanged() {
+            if (product) {
 
-    let session = document.getElementById(`session${this.segment.value}`);
+              const index = ArrayHelper.getIndexByKey(this.products, 'id', product.id);
 
-    session.scrollIntoView({ behavior: "smooth", inline: "center" });
-
-    this.filterProducts();
-
-  }
-
-  public details(product_id: number) {
-
-    this.loadingSrv.show();
-
-    this.productSrv.getById(product_id)
-      .subscribe(async res => {
-
-        if (res.success) {
-
-          const index = ArrayHelper.getIndexByKey(this.sessions, 'id', res.data.menu_session_id);
-
-          const modal = await this.modalCtrl.create({
-            component: ProductDetailsPage,
-            cssClass: 'modal-custom',
-            componentProps: {
-              product: res.data,
-              session: this.sessions[index],
-              subcategories: this.subcategories
-            }
-          });
-
-          modal.onWillDismiss()
-            .then(res => {
-
-              if (res.data != undefined) {
-
-                const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product_id);
-
-                this.allProducts[index] = res.data;
-
-                this.filterProducts();
-
-              }
-
-            });
-
-          await modal.present();
-
-          this.loadingSrv.hide();
-
-        }
-
-      });
-
-  }
-
-  public async addProduct() {
-
-    const modal = await this.modalCtrl.create({
-      component: AddProductPage,
-      cssClass: 'modal-custom',
-      backdropDismiss: false,
-      componentProps: {
-        sessions: this.sessions
-      }
-    });
-
-    modal.onWillDismiss()
-      .then(res => {
-
-        if (res.data != undefined) {
-
-          this.segment.value = res.data.menu_session_id;
-
-          this.allProducts.push(res.data);
-
-          this.filterProducts();
-
-        }
-
-      });
-
-    return await modal.present();
-
-  }
-
-  public updateStatus(product: any) {
-
-    const action = product.status == 1 ? 'Pausar' : 'Ativar';
-
-    this.alertSrv.confirm(`${action} este produto?`, () => {
-
-      this.loadingSrv.show();
-
-      const formData = new FormData();
-
-      formData.append('status', product.status == 1 ? '0' : '1');
-
-      this.productSrv.update(product.id, formData)
-        .subscribe(res => {
-
-          this.loadingSrv.hide();
-
-          if (res.success) {
-
-            if (res.data.status == 1) {
-
-              this.toastSrv.success('Produto ativado com sucesso!');
+              this.products[index] = res.data;
 
             }
 
             else {
 
-              this.toastSrv.secondary('Produto pausado com sucesso!');
+              this.products.unshift(res.data);
 
             }
 
-            const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product.id);
-
-            this.allProducts[index] = res.data;
-
-            this.filterProducts();
-
           }
 
         });
 
-    });
+      return await modal.present();
 
-  }
+    }
 
-  public remove(product_id: number) {
+    else {
 
-    this.alertSrv.confirm('Apagar este produto?', () => {
-
-      this.loadingSrv.show();
-
-      this.productSrv.delete(product_id)
-        .subscribe(res => {
-
-          this.loadingSrv.hide();
-
-          if (res.success) {
-
-            this.toastSrv.success(res.message);
-
-            const index = ArrayHelper.getIndexByKey(this.allProducts, 'id', product_id);
-
-            this.allProducts = ArrayHelper.removeItem(this.allProducts, index);
-
-            this.filterProducts();
-
-          }
-
-        });
-
-    });
-
-  }
-
-  private async openSessions() {
-
-    const modal = await this.modalCtrl.create({
-      component: MenuSessionsPage,
-      cssClass: 'modal-custom',
-      backdropDismiss: false
-    });
-
-    modal.onWillDismiss()
-      .then(res => {
-
-        this.sessions = res.data;
-
-      });
-
-    return await modal.present();
-
-  }
-
-  private async openAddSession() {
-
-    const modal = await this.modalCtrl.create({
-      component: AddSessionPage,
-      cssClass: 'modal-custom',
-      backdropDismiss: false
-    });
-
-    modal.onWillDismiss()
-      .then(res => {
-
-        if (res.data != undefined) {
-
-          this.sessions.push(res.data);
-
+      this.alertSrv.show({
+        icon: 'warning',
+        message: 'Antes de cadastrar produtos você precisa cadastrar as categorias.',
+        confirmButtonText: 'Categorias',
+        onConfirm: () => {
+          this.navCtrl.navigateForward('/categories');
         }
-
       });
+
+    }
+
+  }
+
+  public async modalSearch() {
+
+    const modal = await this.modalCtrl.create({
+      component: ModalSearchProductComponent,
+      backdropDismiss: false,
+      cssClass: 'modal-lg',
+      componentProps: {
+        products: this.products
+      }
+    });
 
     return await modal.present();
 
   }
 
-  private async openSearch() {
+  public async modalComplements(product: any) {
 
     const modal = await this.modalCtrl.create({
-      component: SearchProductPage,
-      cssClass: 'modal-custom',
+      component: ModalComplementsComponent,
       backdropDismiss: false,
       componentProps: {
-        products: this.allProducts,
-        sessions: this.sessions,
-        subcategories: this.subcategories
+        product: product
       }
     });
 
     modal.onWillDismiss()
       .then(res => {
-
-        if (res.data != undefined) {
-
-          this.allProducts = res.data;
-
-        }
-
+        
       });
 
     return await modal.present();
 
   }
 
-  private async openPaused() {
+  private updateStatus(product: any) {
 
-    const modal = await this.modalCtrl.create({
-      component: PausedPage,
-      cssClass: 'modal-custom',
-      backdropDismiss: false,
-      componentProps: {
-        products: this.allProducts,
-        sessions: this.sessions,
-        subcategories: this.subcategories
+    const action = product.status ? 'Inativar' : 'Ativar';
+
+    const formData = new FormData();
+
+    formData.append('status', product.status ? '0' : '1');
+
+    this.alertSrv.show({
+      icon: 'question',
+      message: `${action} ${product.name}?`,
+      confirmButtonText: action,
+      onConfirm: () => {
+
+        this.loadingSrv.show();
+
+        this.productSrv.update(product.id, formData)
+          .pipe(takeUntil(this.unsubscribe))
+          .subscribe(res => {
+
+            this.loadingSrv.hide();
+
+            if (res.success) {
+
+              let message: string;
+
+              if (res.data.status) {
+                message = 'Produto ativado com sucesso';
+              }
+
+              else {
+                message = 'Produto inativado com sucesso';
+              }
+
+              this.alertSrv.toast({
+                icon: 'success',
+                message: message
+              });
+
+              const index = ArrayHelper.getIndexByKey(this.products, 'id', product.id);
+
+              this.products[index] = res.data;
+
+            }
+
+          });
+
       }
+
     });
 
-    modal.onWillDismiss()
-      .then(res => {
-
-        if (res.data != undefined) {
-
-          this.allProducts = res.data;
-
-          this.filterProducts();
-
-        }
-
-      });
-
-    return await modal.present();
-
   }
 
-  private filterProducts() {
+  private deleteProduct(product: any) {
 
-    this.products = [];
+    this.alertSrv.show({
+      icon: 'question',
+      message: `Excluir o produto ${product.name}?`,
+      confirmButtonText: 'Excluir',
+      onConfirm: () => {
+        
+        this.loadingSrv.show();
 
-    this.allProducts.forEach(element => {
+        this.productSrv.delete(product.id)
+          .pipe(takeUntil(this.unsubscribe))
+          .subscribe(res => {
 
-      if (element.menu_session_id == this.segment.value) {
+            this.loadingSrv.hide();
 
-        this.products.push(element);
+            if (res.success) {
+
+              const index = ArrayHelper.getIndexByKey(this.products, 'id', product.id);
+              
+              this.products = ArrayHelper.removeItem(this.products, index);
+
+              this.alertSrv.toast({
+                icon: 'success',
+                message: res.message
+              });
+
+            }
+
+          });
 
       }
-
-      this.products = ArrayHelper.orderbyAsc(this.products, 'name');
-
     });
-
-  }
-
-  private prepareSessions() {
-
-    this.loadingSrv.show();
-
-    this.menuSessionSrv.get()
-      .subscribe(res => {
-
-        this.loadingSrv.hide();
-
-        if (res.success) {
-
-          this.sessions = res.data;
-
-          if (this.sessions.length > 0) {
-            this.prepareProducts();
-          }
-
-        }
-      });
-
-  }
-
-  private prepareSubcategories() {
-
-    this.loadingSrv.show();
-
-    this.productSrv.getSubcategories()
-      .subscribe(res => {
-
-        this.loadingSrv.hide();
-
-        if (res.success) {
-
-          this.subcategories = res.data;
-
-        }
-
-      });
-
+    
   }
 
   private prepareProducts() {
-
     this.loadingSrv.show();
-
     this.productSrv.getAll()
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
-
         this.loadingSrv.hide();
-
         if (res.success) {
-
-          this.allProducts = res.data;
-
-          this.filterProducts();
-
+          this.products = res.data;
         }
       });
-
   }
+
+  private prepareCategories() {
+    this.loadingSrv.show();
+    this.categorySrv.getAll()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(res => {
+        this.loadingSrv.hide();
+        if (res.success) {
+          this.categories = res.data;
+        }
+      });
+  }
+
 }

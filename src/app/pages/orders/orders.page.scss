@@ -1,72 +1,84 @@
-ion-content {
-    --background: var(--ion-color-light-tint);
+ion-header {
+    ion-toolbar.search {
+        padding: 0 calc(25% - 40px);
 
-    ion-list {
-        background: var(--ion-color-light-tint);
+        ion-searchbar {
+            padding-bottom: 10px;
+            float: left;
+
+            &:first-child {
+                width: 50%;
+            }
+
+            &:last-child {
+                width: 50%;
+            }
+        }
+    }
+}
+
+ion-content {
+    ion-grid {
+        padding: 8px;
+
+        ion-col {
+            padding: 0;
+        }
     }
 
     ion-card {
-        margin-top: 10px !important;
-
         ion-item {
-            --padding-start: 0;
-            --inner-padding-end: 0;
-        }
+            ion-label {
+                h6 {
+                    font-weight: 500;
+                    font-size: 16px;
+                }
 
-        ion-thumbnail {
-            margin-right: 15px;
-        }
+                p {
+                    color: var(--ion-color-medium);
+                }
 
-        p.sm {
-            font-size: 10pt;
-            line-height: 11pt;
-        }
+                span {
+                    margin: 0 5px;
+                }
+                
+                &:first-child {
+                    background: #F2F2F2;
+                    max-width: 54px;
+                    border-radius: 8px;
+                    text-align: center;
+                    padding: 5px 0;
+                    margin-right: 16px;
 
-        h6 {
-            font-size: 12pt;
-            line-height: 18pt;
-            margin: 0;
-        }
+                    h6 {
+                        font-weight: 500;
+                        font-size: 18px;
+                        margin: 0;
+                    }
 
-        p {
-            font-size: 12pt;
-            line-height: 17pt;
-            margin: 0;
-        }
-
-        ion-button {
-            font-size: 17px;
-            font-weight: 400;
-        }
-
-        span.info {
-            margin-right: 8px;
-        }
-
-        ion-icon[name="ellipse"] {
-            font-size: 6pt;
-            margin-right: 8px;
-            color: var(--ion-color-primary);
-            margin-bottom: 1.25px;
+                    p {
+                        font-size: 16px;
+                        color: var(--ion-color-medium);
+                    }
+                }
+            }
         }
     }
+}
 
-    ion-grid.no-orders {
-        height: 100%;
+@media (max-width: 600px) {
+    ion-header {
+        ion-toolbar.search {
+            padding: 10px;
 
-        ion-row {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-
-            ion-icon {
-                font-size: 50pt;
-            }
-
-            p {
-                font-size: 11pt;
+            ion-searchbar {                
+                &:first-child {
+                    width: 100%;
+                }
+    
+                &:last-child {
+                    width: 100%;
+                }
             }
         }
     }

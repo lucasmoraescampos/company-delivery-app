@@ -5,15 +5,17 @@ import { IonicModule } from '@ionic/angular';
 import { SignupPageRoutingModule } from './signup-routing.module';
 import { SignupPage } from './signup.page';
 import { BrMaskerModule } from 'br-mask';
+import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     IonicModule,
+    SignupPageRoutingModule,
+    ReactiveFormsModule,
     BrMaskerModule,
-    SignupPageRoutingModule
+    CustomScrollModule
   ],
   declarations: [SignupPage]
 })

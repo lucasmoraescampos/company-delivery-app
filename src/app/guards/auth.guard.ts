@@ -1,25 +1,27 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { CompanyService } from '../services/company/company.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 
 export class AuthGuard implements CanActivate {
     constructor(
         private navCtrl: NavController,
-        private companySrv: CompanyService
+        private authSrv: AuthService
     ) {
 
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        const auth = this.companySrv.auth();
-        if (auth) {
+
+        if (this.authSrv.user) {
             return true;
         }
 
-        this.navCtrl.navigateRoot('welcome');
+        this.navCtrl.navigateRoot('/signin');
+        
         return false;
+
     }
 }

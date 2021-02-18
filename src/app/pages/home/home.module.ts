@@ -5,16 +5,20 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { MoneyModule } from 'src/app/pipes/money/money.module';
+import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
+import { ModalOrderMenuModule } from 'src/app/components/modal-order-menu/modal-order-menu.module';
+import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    HomePageRoutingModule,
     NgxChartsModule,
-    MoneyModule,
-    HomePageRoutingModule
+    ModalOrderMenuModule,
+    ChooseCompanyModule,
+    CustomScrollModule
   ],
   declarations: [HomePage]
 })

@@ -1,50 +1,52 @@
-<ion-header mode="ios">
+<ion-header class="ion-no-border">
 
   <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-menu-button></ion-menu-button>
+
+    </ion-buttons>
 
     <ion-title>Pedidos</ion-title>
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="options($event)">
-
-        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
-
-      </ion-button>
+      <app-choose-company></app-choose-company>
 
     </ion-buttons>
 
   </ion-toolbar>
 
+</ion-header>
+
+<ion-header>
+
+  <ion-toolbar class="search">
+
+    <ion-searchbar placeholder="Número, cliente, mesa"></ion-searchbar>
+
+    <ion-searchbar placeholder="Data"></ion-searchbar>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-header>
+
   <ion-toolbar mode="md">
 
-    <ion-segment scrollable value="requests">
+    <ion-segment value="1">
 
-      <ion-segment-button class="animated bounceInRight" id="requests" value="requests"
-        (click)="changeSegment('requests')">
+      <ion-segment-button value="1">
 
-        <ion-label>Solicitações</ion-label>
-
-      </ion-segment-button>
-
-      <ion-segment-button class="animated bounceInRight" id="running" value="running"
-        (click)="changeSegment('running')">
-
-        <ion-label>Em Andamento</ion-label>
+        <ion-label>Em Aberto</ion-label>
 
       </ion-segment-button>
 
-      <ion-segment-button class="animated bounceInRight" id="delivering" value="delivering"
-        (click)="changeSegment('delivering')">
+      <ion-segment-button value="2">
 
-        <ion-label>Entregando</ion-label>
-
-      </ion-segment-button>
-
-      <ion-segment-button class="animated bounceInRight" id="completed" value="completed"
-        (click)="changeSegment('completed')">
-
-        <ion-label>Finalizados</ion-label>
+        <ion-label>Finalizado</ion-label>
 
       </ion-segment-button>
 
@@ -54,172 +56,259 @@
 
 </ion-header>
 
-<ion-content mode="ios">
+<ion-content color="light" customScroll>
 
-  <ion-refresher mode="md" slot="fixed" (ionRefresh)="refresh($event)">
-
-    <ion-refresher-content></ion-refresher-content>
-
-  </ion-refresher>
-
-  <ion-list class="ion-margin-top animated bounceInUp" *ngIf="orders?.length > 0">
-
-    <ion-card button="true" *ngFor="let order of orders">
-
-      <ion-card-header (click)="details(order.id)">
-
-        <ion-grid class="ion-no-padding">
-
-          <ion-row>
-
-            <ion-col class="ion-margin-bottom" size="12">
-
-              <p class="sm">Realizado em</p>
-
-              <h6>{{ order.created_at | date:'d MMM yyyy' }} às {{ order.created_at | date:'HH:mm' }}</h6>
-
-            </ion-col>
-
-            <ion-col size="12">
-
-              <ion-item lines="none">
-
-                <ion-thumbnail>
-
-                  <img src="../../../assets/icon/order.svg">
-
-                </ion-thumbnail>
-
-                <ion-label class="ion-no-margin">
-
-                  <h6>Pedido Nº {{ order.id | orderCode }}</h6>
-
-                  <p>
-
-                    <ion-icon name="ellipse"></ion-icon>
-
-                    <span class="info">{{ order.user_name }} {{ order.user_surname }}</span>
-
-                  </p>
-
-                  <p>
-
-                    <ion-icon name="ellipse"></ion-icon>
-
-                    <span class="info" *ngIf="order.is_withdrawal_local">Retirar no local</span>
-
-                    <span class="info"
-                      *ngIf="!order.is_withdrawal_local">{{ distance(order.latitude, order.longitude) | distance }}</span>
-
-                    <ion-icon name="ellipse"></ion-icon>
-
-                    <span class="info">{{ order.delivery_forecast | date:'HH:mm' }}</span>
-
-                  </p>
-
-                </ion-label>
-
-              </ion-item>
-
-            </ion-col>
-
-          </ion-row>
-
-        </ion-grid>
-
-      </ion-card-header>
-
-      <ion-card-content *ngIf="order.status != 4">
-
-        <ion-grid class="ion-no-padding">
-
-          <ion-row>
-
-            <ion-col size="6" *ngIf="order.status == 0">
-
-              <ion-button size="small" expand="block" (click)="accept(order)">
-
-                Aceitar
-
-              </ion-button>
-
-            </ion-col>
-
-            <ion-col size="6" *ngIf="order.status == 0">
-
-              <ion-button size="small" expand="block" color="danger" (click)="refuse(order)">
-
-                Recusar
-
-              </ion-button>
-
-            </ion-col>
-
-            <ion-col size="12" *ngIf="order.status == 1">
-
-              <ion-button size="small" expand="block" (click)="release(order)">
-
-                Liberar Entrega
-
-              </ion-button>
-
-            </ion-col>
-
-            <ion-col size="12" *ngIf="order.status == 2">
-
-              <ion-progress-bar class="ion-margin-bottom" type="indeterminate"></ion-progress-bar>
-
-              <p>
-
-                <ion-icon name="ellipse"></ion-icon>
-
-                <span class="info" *ngIf="order.is_withdrawal_local">Aguardando Retirada</span>
-
-                <span class="info" *ngIf="!order.is_withdrawal_local">Aguardando Entregador</span>
-
-              </p>
-
-            </ion-col>
-
-            <ion-col size="12" *ngIf="order.status == 3">
-
-              <ion-progress-bar class="ion-margin-bottom" type="indeterminate"></ion-progress-bar>
-
-              <p>
-
-                <ion-icon name="ellipse"></ion-icon>
-
-                <span class="info">Em Entrega</span>
-
-              </p>
-
-            </ion-col>
-
-          </ion-row>
-
-        </ion-grid>
-
-      </ion-card-content>
-
-    </ion-card>
-
-  </ion-list>
-
-  <ion-grid class="no-orders animated bounceInUp" *ngIf="orders?.length == 0">
+  <ion-grid>
 
     <ion-row>
 
-      <ion-col class="ion-text-center" size="12">
+      <ion-col size-xs="12" size-sm="6">
 
-        <ion-icon class="order" src="../../../assets/icon/order.svg"></ion-icon>
+        <ion-card button="true" (click)="modalOrder()">
+          
+          <ion-list lines="none">
 
-        <p *ngIf="segment == 'requests'">Nenhuma pedido solicitado</p>
+            <ion-item>
 
-        <p *ngIf="segment == 'running'">Nenhum pedido em andamento</p>
+              <ion-label>
 
-        <p *ngIf="segment == 'delivering'">Nenhum pedido em entrega</p>
+                <h6>12</h6>
+    
+                <p>Mai</p>
+    
+              </ion-label>
+    
+              <ion-label>
 
-        <p *ngIf="segment == 'completed'">Nenhum pedido finalizado</p>
+                <h6>
+                  
+                  0019
+
+                  <span>-</span>
+                  
+                  Lucas Moraes
+                
+                </h6>
+
+                <p>
+                  
+                  Mesa 1
+
+                  <span>-</span>
+                
+                  R$ 10,00
+                
+                </p>
+
+                <p>Status: Concluído</p>
+
+              </ion-label>
+
+            </ion-item>
+
+          </ion-list>
+
+        </ion-card>
+
+      </ion-col>
+
+      <ion-col size-xs="12" size-sm="6">
+
+        <ion-card button="true" (click)="modalOrder()">
+          
+          <ion-list lines="none">
+
+            <ion-item>
+
+              <ion-label>
+
+                <h6>12</h6>
+    
+                <p>Mai</p>
+    
+              </ion-label>
+    
+              <ion-label>
+
+                <h6>
+                  
+                  0019
+
+                  <span>-</span>
+                  
+                  Lucas Moraes
+                
+                </h6>
+
+                <p>
+                  
+                  Mesa 1
+
+                  <span>-</span>
+                
+                  R$ 10,00
+                
+                </p>
+
+                <p>Status: Concluído</p>
+
+              </ion-label>
+
+            </ion-item>
+
+          </ion-list>
+
+        </ion-card>
+
+      </ion-col>
+
+      <ion-col size-xs="12" size-sm="6">
+
+        <ion-card button="true" (click)="modalOrder()">
+          
+          <ion-list lines="none">
+
+            <ion-item>
+
+              <ion-label>
+
+                <h6>12</h6>
+    
+                <p>Mai</p>
+    
+              </ion-label>
+    
+              <ion-label>
+
+                <h6>
+                  
+                  0019
+
+                  <span>-</span>
+                  
+                  Lucas Moraes
+                
+                </h6>
+
+                <p>
+                  
+                  Mesa 1
+
+                  <span>-</span>
+                
+                  R$ 10,00
+                
+                </p>
+
+                <p>Status: Concluído</p>
+
+              </ion-label>
+
+            </ion-item>
+
+          </ion-list>
+
+        </ion-card>
+
+      </ion-col>
+
+      <ion-col size-xs="12" size-sm="6">
+
+        <ion-card button="true" (click)="modalOrder()">
+          
+          <ion-list lines="none">
+
+            <ion-item>
+
+              <ion-label>
+
+                <h6>12</h6>
+    
+                <p>Mai</p>
+    
+              </ion-label>
+    
+              <ion-label>
+
+                <h6>
+                  
+                  0019
+
+                  <span>-</span>
+                  
+                  Lucas Moraes
+                
+                </h6>
+
+                <p>
+                  
+                  Mesa 1
+
+                  <span>-</span>
+                
+                  R$ 10,00
+                
+                </p>
+
+                <p>Status: Concluído</p>
+
+              </ion-label>
+
+            </ion-item>
+
+          </ion-list>
+
+        </ion-card>
+
+      </ion-col>
+
+      <ion-col size-xs="12" size-sm="6">
+
+        <ion-card button="true" (click)="modalOrder()">
+          
+          <ion-list lines="none">
+
+            <ion-item>
+
+              <ion-label>
+
+                <h6>12</h6>
+    
+                <p>Mai</p>
+    
+              </ion-label>
+    
+              <ion-label>
+
+                <h6>
+                  
+                  0019
+
+                  <span>-</span>
+                  
+                  Lucas Moraes
+                
+                </h6>
+
+                <p>
+                  
+                  Mesa 1
+
+                  <span>-</span>
+                
+                  R$ 10,00
+                
+                </p>
+
+                <p>Status: Concluído</p>
+
+              </ion-label>
+
+            </ion-item>
+
+          </ion-list>
+
+        </ion-card>
 
       </ion-col>
 

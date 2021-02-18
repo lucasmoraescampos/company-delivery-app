@@ -1,0 +1,18 @@
+ion-content {
+    ion-list {
+        ion-list-header {
+            font-size: 16px;
+            font-weight: normal;
+            padding: 16px;
+        }
+
+        ion-thumbnail img {
+            object-fit: unset;
+            width: 30px;
+        }
+
+        ion-item:first-child {
+            --border-width: 0.55px 0 0.55px 0 !important;
+        }
+    }
+}

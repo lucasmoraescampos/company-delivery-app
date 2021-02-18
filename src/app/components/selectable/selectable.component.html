@@ -1,0 +1,3 @@
+<ion-input readonly (click)="options()" *ngIf="!value"></ion-input>
+
+<ion-input readonly (click)="options()" [(ngModel)]="value[label]" *ngIf="value"></ion-input>

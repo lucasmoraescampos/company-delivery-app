@@ -1,0 +1,32 @@
+ion-header {
+    ion-thumbnail {
+        --size: 60px;
+        --border-radius: 50%;
+        margin: 18px 100px 10px;
+    }
+
+    h6 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--ion-color-medium);
+    }
+
+    ion-button {
+        margin-top: 12px;
+    }
+}
+
+ion-content {
+    ion-list {
+        margin-top: 10px;
+
+        ion-item.current {
+            --background: rgba(var(--ion-color-primary-rgb), 0.05);
+        }
+    }
+}

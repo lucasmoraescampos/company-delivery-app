@@ -1,0 +1,461 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title *ngIf="slideActiveIndex == 0">Informações</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 1">Localização</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 2">Endereço</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 3">Configurações</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-slides class="swiper-no-swiping" [options]="options" (ionSlideDidChange)="slideChanged()">
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup1">
+
+        <ion-grid class="ion-padding-horizontal">
+
+          <ion-row>
+
+            <ion-col class="ion-text-center" size-xs="12" size-sm="6" offset-sm="3">
+
+              <app-choose-image [invalid]="submitAttempt1 && !blob" [rounded]="true" (changeImage)="changeImage($event)"></app-choose-image>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blob">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Selecione uma foto para o perfil do restaurante.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6" offset-sm="3">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.name.errors" class="stacked">Nome do restaurante</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.name.errors" formControlName="name" maxlength="150" enterkeyhint="go" (keyup.enter)="phone.setFocus()"></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.name.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Nome é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6" offset-sm="3">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.phone.errors" class="stacked">Telefone/Celular</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.phone.errors" formControlName="phone" [brmasker]="{ phone: true }" enterkeyhint="done" (keyup.enter)="document_number.setFocus()" #phone></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.phone.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Telefone/Celular é obrigatório.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.phone.errors?.minLength !== null && formControl1.phone.errors?.required == undefined">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Telefone/Celular inválido.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6" offset-sm="3">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.document_number.errors" class="stacked">CPF/CNPJ</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.document_number.errors" formControlName="document_number" [brmasker]="{ person: true }" enterkeyhint="done" (ionBlur)="checkDocumentNumber()" (keyup.enter)="next()" (keydown.Tab)="$event.preventDefault()" #document_number></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.document_number.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                CPF/CNPJ é obrigatório.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.document_number.errors?.document_number !== null && formControl1.document_number.errors?.required == undefined">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                CPF/CNPJ inválido.
+
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <ion-searchbar placeholder="Endereço e número" [(ngModel)]="search" (ngModelChange)="searchChanged()">
+      </ion-searchbar>
+
+      <ion-list class="address-complement" [hidden]="addresses?.length == 0">
+
+        <ion-item lines="full" detail="false" button="true" *ngFor="let address of addresses"
+          (click)="selectAddress(address)">
+
+          <ion-label class="ion-text-wrap">{{ address }}</ion-label>
+
+        </ion-item>
+
+      </ion-list>
+
+      <div class="map" #map></div>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+
+        <ion-fab-button color="light" (click)="locate()">
+
+          <ion-icon name="locate-outline"></ion-icon>
+
+        </ion-fab-button>
+
+      </ion-fab>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup2">
+
+        <ion-grid class="ion-padding-horizontal">
+
+          <ion-row>
+
+            <ion-col size-xs="12" size-sm="4">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.postal_code.errors" class="stacked">CEP</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.postal_code.errors" formControlName="postal_code" [brmasker]="{ mask: '99999-999', len: 9 }" enterkeyhint="go" (keyup.enter)="street_name.setFocus()"></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.postal_code.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                CEP é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="8">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.street_name.errors" class="stacked">Endereço</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.street_name.errors" formControlName="street_name" maxlength="255" enterkeyhint="go" (keyup.enter)="street_number.setFocus()" #street_name></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.street_name.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Endereço é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="4">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.street_number.errors" class="stacked">Número</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.street_number.errors" formControlName="street_number" maxlength="20" enterkeyhint="go" (keyup.enter)="district.setFocus()" #street_number></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.street_number.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Número é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="8">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.district.errors" class="stacked">Bairro</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.district.errors" formControlName="district" maxlength="20" (keydown.Tab)="$event.preventDefault();" #district></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.district.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Bairro é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="4">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.uf.errors" class="stacked">Estado</ion-label>
+
+              <app-selectable [class.invalid]="submitAttempt2 && formControl2.uf.errors" [data]="states" label="name" (changeSelectable)="changeUF($event)">
+              </app-selectable>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.uf.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Estado é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="8" *ngIf="formControl2.uf.value.length > 0">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.city.errors" class="stacked">Cidade</ion-label>
+
+              <app-selectable [class.invalid]="submitAttempt2 && formControl2.city.errors" [data]="cities" label="name" (changeSelectable)="changeCity($event)">
+              </app-selectable>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.city.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Cidade é obrigatória.
+
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup3">
+
+        <ion-grid class="ion-padding-horizontal">
+
+          <ion-row>
+
+            <ion-col size="12">
+
+              <ion-list>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir pagamento online</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_payment_online" (ionChange)="checkAllowPaymentOnline()"></ion-toggle>
+
+                </ion-item>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir pagamento na entrega</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_payment_delivery" (ionChange)="modalPaymentMethods()"></ion-toggle>
+
+                </ion-item>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir retirada do pedido no restaurante</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_withdrawal_local"></ion-toggle>
+
+                </ion-item>
+
+              </ion-list>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.min_order_value.errors" class="stacked">Pedido mínimo</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.min_order_value.errors" inputmode="numeric" formControlName="min_order_value" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="waiting_time.setFocus()"></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.min_order_value.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Pedido mínimo é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" class="stacked">Tempo de espera</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" inputmode="numeric" formControlName="waiting_time" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="go" (ionBlur)="checkWaitingTime()" (keyup.enter)="delivery_price.setFocus()" #waiting_time>
+                
+                <span>minutos</span>
+                
+              </ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.waiting_time.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Tempo de espera é obrigatório.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.waiting_time.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Informe um valor maior que zero.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" class="stacked">Valor da entrega</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" inputmode="numeric" formControlName="delivery_price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="radius.setFocus()" #delivery_price></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.delivery_price.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Pedido mínimo é obrigatório.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.radius.errors" class="stacked">Raio de cobertura</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.radius.errors" inputmode="numeric" formControlName="radius" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="done" (ionBlur)="checkRadius()" (keyup.enter)="next()" #radius>
+                
+                <span>km</span>
+              
+              </ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.radius.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Raio de cobertura é obrigatório.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.radius.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+                    
+                Informe um valor maior que zero.
+
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12" *ngIf="slideActiveIndex == 0">
+
+        <ion-button (click)="next()">
+
+          Continuar <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col size="6" *ngIf="slideActiveIndex > 0">
+
+        <ion-button fill="clear" (click)="previous()">
+
+          <ion-icon slot="start" name="arrow-back-outline"></ion-icon> Voltar
+
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex > 0 && slideActiveIndex < 3">
+
+        <ion-button (click)="next()">
+
+          Continuar <ion-icon slot="end" name="arrow-forward-outline"></ion-icon>
+
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex == 3">
+
+        <ion-button (click)="next()">
+
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,67 @@
+<ion-header class="ion-no-border ion-text-center">
+
+  <ion-toolbar>
+
+    <ion-thumbnail>
+
+      <img [src]="user.image ? user.image : '../../../../assets/image/avatar.png'">
+
+    </ion-thumbnail>
+
+    <h6>{{ user.name }}</h6>
+
+    <p>{{ user.email }}</p>
+
+    <ion-button size="small" shape="round" (click)="createCompany()">
+        
+      <ion-icon slot="start" name="add-outline"></ion-icon> Adicionar
+    
+    </ion-button>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-list>
+
+    <ion-item [class.current]="company.id == current.id" lines="none" [button]="company.id != current.id" detail="false" *ngFor="let company of companies">
+
+      <ion-avatar slot="start">
+
+        <img src="../assets/image/avatar.jpeg">
+  
+      </ion-avatar>
+
+      <ion-label>
+
+        <h6>{{ company.name }}</h6>
+
+        <p>{{ company.city }} - {{ company.uf }}</p>
+
+      </ion-label>
+
+    </ion-item>
+
+  </ion-list>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12">
+
+        <ion-button size="small" fill="clear" (click)="logout()">
+        
+          <ion-icon slot="start" name="log-out-outline"></ion-icon> Sair
+        
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>

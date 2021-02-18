@@ -1,8 +1,55 @@
 <ion-app>
 
-  <app-menu></app-menu>
+  <ion-split-pane contentId="main-content">
 
-  <ion-router-outlet id="content"></ion-router-outlet>
+    <ion-menu maxEdgeStart="0" contentId="main-content" type="overlay">
+
+      <ion-header class="ion-no-border ion-text-center">
+
+        <ion-toolbar>
+
+          <ion-thumbnail>
+
+            <img [src]="company?.image">
+
+          </ion-thumbnail>
+
+          <h6>{{ company?.name }}</h6>
+
+          <p>{{ company?.city }} - {{ company?.uf }}</p>
+
+        </ion-toolbar>
+
+      </ion-header>
+
+      <ion-content customScroll>
+
+        <ion-list>
+
+          <ion-menu-toggle auto-hide="false">
+
+            <ion-item (click)="selected_index = i" [routerLink]="[p.url]" lines="none" detail="false"
+              [class.selected]="selected_index == i" *ngFor="let p of appPages; let i = index">
+
+              <ion-icon slot="start" [name]="p.icon" *ngIf="p.icon"></ion-icon>
+
+              <ion-icon slot="start" [src]="p.src" *ngIf="p.src"></ion-icon>
+
+              <ion-label>{{ p.title }}</ion-label>
+
+            </ion-item>
+
+          </ion-menu-toggle>
+
+        </ion-list>
+
+      </ion-content>
+
+    </ion-menu>
+
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+
+  </ion-split-pane>
 
   <ngx-loading [show]="loading"></ngx-loading>
 

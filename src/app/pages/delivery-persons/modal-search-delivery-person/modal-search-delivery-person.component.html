@@ -1,0 +1,83 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Buscar entregador</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="search">
+
+    <ion-searchbar placeholder="Buscar entregador" (ionChange)="changedSearch($event)"></ion-searchbar>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [color]="results?.length > 0 && results?.length > 0 ? 'light' : ''" customScroll>
+
+  <ion-grid *ngIf="results?.length > 0 && results?.length > 0">
+
+    <ion-row>
+
+      <ion-col size-xs="12" size-sm="6" size-md="4" *ngFor="let result of results">
+
+        <ion-card class="animate__animated animate__fadeIn ion-text-center" button="true" (click)="options(result)">
+
+          <ion-card-header>
+
+            <ion-badge color="success" *ngIf="result.status == true">Ativo</ion-badge>
+
+            <ion-badge color="danger" *ngIf="result.status == false">Inativo</ion-badge>
+
+            <ion-thumbnail>
+
+              <img [src]="result.image ? result.image : '../../../assets/image/avatar.png'">
+  
+            </ion-thumbnail>
+
+          </ion-card-header>
+
+          <ion-card-content>
+
+            <ion-card-title>{{ result.name }}</ion-card-title>
+
+          </ion-card-content>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="deliveryPersons?.length == 0 && results?.length == 0">
+
+    <ion-icon src="../../../../assets/icon/delivery-person.svg"></ion-icon>
+
+    <p>Nenhum entregador cadastrado</p>
+
+  </ion-note>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="deliveryPersons?.length > 0 && results?.length == 0">
+
+    <ion-icon name="search-outline"></ion-icon>
+
+    <p>Nenhum entregador encontrado</p>
+
+  </ion-note>
+
+</ion-content>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,89 @@
+ion-input {
+    color: var(--ion-color-dark-tint);
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 5px;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+
+    input {
+        height: 44px;
+        padding: 0 12px !important;
+    }
+}
+
+ion-select {
+    color: var(--ion-color-dark-tint);
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 5px;
+    height: 44px;
+    padding: 0 12px !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+}
+
+ion-textarea.md {
+    color: var(--ion-color-dark-tint);
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 5px;
+    padding: 5px 7px !important;
+    margin-top: -1px !important;
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+}
+
+ion-textarea.ios {
+    color: var(--ion-color-dark-tint);
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 5px;
+    padding: 5px 15px !important;
+    background: var(--ion-background-color);
+    font-size: 0.9375rem !important;
+    font-weight: 500 !important;
+}
+
+ion-label.stacked {
+    color: var(--ion-color-medium-tint);
+    background: #fff;
+    padding: 0 1px !important;
+    position: relative !important;
+    top: 9px !important;
+    left: 12px !important;
+    z-index: 99 !important;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+ion-button {
+    --border-radius: 5px;
+    margin: 0;
+}
+
+ion-label.invalid {
+    color: var(--ion-color-danger) !important;
+}
+
+ion-input.invalid,
+ion-select.invalid,
+ion-textarea.invalid,
+app-selectable.invalid ion-input {
+    color: var(--ion-color-danger) !important;
+    border-color: var(--ion-color-danger) !important;
+}
+
+ion-note.validation-error {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+    font-weight: 500;
+    
+    ion-icon {
+        font-size: 14px;
+        margin-bottom: -3px;
+    }
+}
+
+@media only screen and (min-width: 960px) {
+    ion-input, ion-select, ion-textarea {
+        font-size: 1rem !important;
+        line-height: 20px !important;
+    }
+}

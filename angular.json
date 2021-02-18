@@ -74,7 +74,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "ssl": true,
+            "sslCert": "d:/ssl/cert.pem",
+            "sslKey": "d:/ssl/key.pem"
           },
           "configurations": {
             "production": {
@@ -128,9 +131,7 @@
               "tsconfig.spec.json",
               "e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -151,7 +152,10 @@
         "ionic-cordova-build": {
           "builder": "@ionic/angular-toolkit:cordova-build",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "ssl": true,
+            "sslCert": "d:/ssl/cert.pem",
+            "sslKey": "d:/ssl/key.pem"
           },
           "configurations": {
             "production": {
@@ -176,8 +180,7 @@
     }
   },
   "cli": {
-    "defaultCollection": "@ionic/angular-toolkit",
-    "analytics": "40c98909-3f38-4455-9513-8f4cdff49bd5"
+    "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {

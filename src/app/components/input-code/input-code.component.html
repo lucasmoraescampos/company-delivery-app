@@ -1,0 +1,13 @@
+<div [formGroup]="formGroup">
+
+  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d1" maxlength="1" (keyup)="send($event, null, d2)" #d1></ion-input>
+
+  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d2" maxlength="1" (keyup)="send($event, d1, d3)" #d2></ion-input>
+
+  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d3" maxlength="1" (keyup)="send($event, d2, d4)" #d3></ion-input>
+
+  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d4" maxlength="1" (keyup)="send($event, d3, d5)" #d4></ion-input>
+
+  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d5" maxlength="1" (keyup)="send($event, d4, null)" #d5></ion-input>
+
+</div>

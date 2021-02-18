@@ -1,0 +1,57 @@
+ion-content {
+    ion-slides {
+        height: 100%;
+
+        ion-slide {
+            text-align: left;
+
+            h6 {
+                font-weight: 500;
+            }
+
+            &.welcome {
+                ion-icon {
+                    font-size: 100px;
+                    margin: 0 auto;
+                }
+
+                ion-label {
+                    font-size: 16px;
+                }
+            }
+
+            &.plans {
+                overflow-y: auto;
+
+                ion-list {
+                    width: 100%;
+                    margin-top: 16px;
+    
+                    ion-item {
+                        --padding-start: 20px;
+                        --inner-padding-end: 20px;
+    
+                        &:first-child {
+                            --border-width: 0.55px 0 0.55px 0;
+                        }
+                    }
+                }
+            }
+
+            &.payment {
+                ion-input {
+                    img {
+                        position: absolute;
+                        right: 15px;
+                    }
+                }
+            }
+
+            &.payment-success {
+                ion-icon {
+                    font-size: 80px;
+                }
+            }
+        }
+    }
+}

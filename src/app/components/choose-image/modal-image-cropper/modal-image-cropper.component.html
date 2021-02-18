@@ -1,0 +1,62 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>Editar Imagem</ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content class="ion-padding" customScroll>
+
+  <image-cropper
+    [imageBase64]="image"
+    [imageQuality]="100"
+    [maintainAspectRatio]="true"
+    [aspectRatio]="aspectRatio"
+    [transform]="transform"
+    [roundCropper]="roundCropper"
+    format="png"
+    (imageCropped)="imageCropped($event)"
+    (imageLoaded)="imageLoaded()"
+    (cropperReady)="cropperReady()">
+  </image-cropper>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-range min="0.5" max="1.5" color="primary" step="0.1" value="1" (ionChange)="zoom($event)"></ion-range>
+
+      </ion-col>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" (click)="crop()">Cortar Imagem</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

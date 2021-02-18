@@ -1,0 +1,83 @@
+<ion-header>
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+
+      <ion-menu-button></ion-menu-button>
+
+    </ion-buttons>
+
+    <ion-title>Categorias</ion-title>
+
+    <ion-buttons slot="end">
+
+      <app-choose-company></app-choose-company>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content color="light" customScroll>
+
+  <ion-grid *ngIf="categories?.length > 0">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!reorder">
+
+          <ion-reorder *ngFor="let category of categories">
+
+            <ion-card class="animate__animated animate__fadeIn" lines="full" detail="true" button="true" (click)="options(category)">
+
+              <ion-card-content>
+
+                <ion-label color="dark">{{ category.name }}</ion-label>
+
+              </ion-card-content>
+
+            </ion-card>
+
+          </ion-reorder>
+
+        </ion-reorder-group>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="categories?.length == 0">
+
+    <ion-icon name="bookmark-outline"></ion-icon>
+
+    <p>Nenhuma categoria cadastrada</p>
+
+  </ion-note>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!reorder">
+
+    <ion-fab-button (click)="modalCategory()">
+
+      <ion-icon name="add-outline"></ion-icon>
+
+    </ion-fab-button>
+
+  </ion-fab>
+
+</ion-content>
+
+<ion-footer class="animate__animated animate__fadeIn" *ngIf="reorder">
+
+  <ion-button expand="full" (click)="save()">
+    
+    <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar Ordem
+  
+  </ion-button>
+
+</ion-footer>

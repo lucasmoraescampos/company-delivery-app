@@ -1,0 +1,71 @@
+<ion-header>
+
+  <ion-toolbar>
+
+    <ion-title>Restaurantes</ion-title>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content color="light" customScroll>
+
+  <ion-grid *ngIf="user.companies?.length > 0">
+
+    <ion-row>
+
+      <ion-col size-xs="12" size-sm="6" size-lg="4" size-xl="3" *ngFor="let company of user.companies">
+
+        <ion-card class="ion-text-center" button="true" (click)="options(company)">
+
+          <ion-card-header>
+
+            <ion-thumbnail>
+
+                <img [src]="company.image">
+    
+              </ion-thumbnail>
+
+          </ion-card-header>
+
+          <ion-card-content>
+
+            <ion-card-title>{{ company.name }}</ion-card-title>
+
+            <ion-label>
+              
+              <p>{{ company.city }} - {{ company.uf }}</p>
+
+              <p>({{ company.phone | slice:0:2 }}) {{ company.phone | slice:2:7 }}-{{ company.phone | slice:7 }}</p>
+            
+            </ion-label>
+
+          </ion-card-content>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="user.companies?.length == 0">
+
+    <ion-icon name="storefront-outline"></ion-icon>
+
+    <p>Nenhuma empresa cadastrada</p>
+
+  </ion-note>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+
+    <ion-fab-button (click)="modalCompany()">
+
+      <ion-icon name="add-outline"></ion-icon>
+
+    </ion-fab-button>
+
+  </ion-fab>
+
+</ion-content>

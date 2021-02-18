@@ -1,0 +1,94 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Entregador</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <form [formGroup]="formGroup">
+
+    <ion-grid class="ion-padding-horizontal">
+
+      <ion-row>
+
+        <ion-col class="ion-text-center" size="12">
+
+          <app-choose-image
+            [invalid]="submitAttempt && !blob && !deliveryPerson"
+            [rounded]="true" [aspectRatio]="3/2"
+            [image]="deliveryPerson?.image ? deliveryPerson.image : '../../../../assets/image/avatar.png'"
+            (changeImage)="changeImage($event)">
+          </app-choose-image>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-label [class.invalid]="submitAttempt && formControl.name.errors" class="stacked">Nome completo</ion-label>
+
+          <ion-input [class.invalid]="submitAttempt && formControl.name.errors" formControlName="name" maxlength="150" enterkeyhint="go" (keyup.enter)="additional_information.setFocus()"></ion-input>
+
+          <ion-note class="validation-error" *ngIf="submitAttempt && formControl.name.errors?.required">
+
+            <ion-icon name="information-circle-outline"></ion-icon>
+  
+            Nome é obrigatório.
+  
+          </ion-note>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-label class="stacked">Informações adicionais</ion-label>
+
+          <ion-textarea formControlName="additional_information" rows="3" maxlength="2000" placeholder="opcional" #additional_information></ion-textarea>
+
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+
+  </form>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" (click)="save()">
+          
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar
+        
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

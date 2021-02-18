@@ -4,27 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { OrdersPageRoutingModule } from './orders-routing.module';
 import { OrdersPage } from './orders.page';
-import { OrderCodeModule } from 'src/app/pipes/order-code/order-code.module';
-import { DistanceModule } from 'src/app/pipes/distance/distance.module';
-import { MoneyModule } from 'src/app/pipes/money/money.module';
-import { TimeModule } from 'src/app/pipes/time/time.module';
-import { OrderDetailsPageModule } from '../modal/order-details/order-details.module';
-import { OrderOptionsPageModule } from '../popover/order-options/order-options.module';
-import { SearchOrderPageModule } from '../modal/search-order/search-order.module';
+import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
+import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    OrderCodeModule,
-    DistanceModule,
-    MoneyModule,
-    TimeModule,
-    OrderDetailsPageModule,
     OrdersPageRoutingModule,
-    OrderOptionsPageModule,
-    SearchOrderPageModule
+    ChooseCompanyModule,
+    CustomScrollModule
   ],
   declarations: [OrdersPage]
 })

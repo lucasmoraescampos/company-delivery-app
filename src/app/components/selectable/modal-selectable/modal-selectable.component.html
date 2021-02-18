@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title>Selecione</ion-title>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="ion-margin-top">
+
+    <ion-searchbar placeholder="Buscar" [(ngModel)]="search" (ngModelChange)="searchChanged()">
+    </ion-searchbar>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-list class="ion-padding">
+
+    <ion-radio-group [(ngModel)]="value">
+
+      <ion-item lines="full" *ngFor="let result of results">
+
+        <ion-label>{{ result[label] }}</ion-label>
+
+        <ion-radio slot="end" [value]="result"></ion-radio>
+
+      </ion-item>
+
+    </ion-radio-group>
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col class="ion-no-padding" size="12">
+
+        <ion-button expand="block" (click)="confirm()" [disabled]="!value">Confirmar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

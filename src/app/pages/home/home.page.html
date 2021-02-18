@@ -1,22 +1,18 @@
-<ion-header class="ion-no-border" mode="ios">
+<ion-header>
 
   <ion-toolbar>
 
     <ion-buttons slot="start">
 
-      <ion-menu-button color="dark">
-
-        <ion-icon name="menu-outline"></ion-icon>
-
-      </ion-menu-button>
+      <ion-menu-button></ion-menu-button>
 
     </ion-buttons>
 
-    <img class="logo" src="../../../assets/images/logo.png">
+    <ion-title>Início</ion-title>
 
     <ion-buttons slot="end">
 
-      <ion-toggle color="primary" (ionChange)="changeStatus($event)" [checked]="company?.is_open == 1"></ion-toggle>
+      <app-choose-company></app-choose-company>
 
     </ion-buttons>
 
@@ -24,174 +20,186 @@
 
 </ion-header>
 
-<ion-content mode="ios">
+<ion-content color="light" customScroll>
 
-  <ion-refresher mode="md" slot="fixed" (ionRefresh)="refresh($event)">
+  <ion-grid>
 
-    <ion-refresher-content></ion-refresher-content>
+    <ion-row>
 
-  </ion-refresher>
+      <ion-col size-xs="12" size-sm="4">
 
-  <ion-list class="animated bounceInUp">
+        <ion-card class="new-order" color="primary" button="true" (click)="newOrder()">
 
-    <ion-card class="ion-padding balance" button="true" (click)="wallet()" *ngIf="company?.accept_payment_app">
+          <ion-icon name="add-circle-outline"></ion-icon>
 
-      <ion-card-subtitle>Pagamentos Online</ion-card-subtitle>
+          <p>Novo Pedido</p>
 
-      <ion-card-title>Carteira</ion-card-title>
-      
-      <h6>{{ company?.balance_available | money }}</h6>
+        </ion-card>
 
-    </ion-card>
+      </ion-col>
 
-    <ion-card *ngIf="company">
+      <ion-col size-xs="12" size-sm="4">
 
-      <ion-card-header>
+        <ion-card class="balance">
 
-        <ion-card-title>Resumo</ion-card-title>
+          <ion-card-header>
 
-      </ion-card-header>
+            <ion-toolbar>
 
-      <ion-card-content>
+              <ion-card-title>CAIXA</ion-card-title>
 
-        <ion-list>
+              <ion-buttons slot="end">
 
-          <ion-item lines="full">
+                <ion-button fill="clear" size="small" color="primary">
 
-            <h6>Status</h6>
+                  <ion-icon slot="start" name="file-tray-full-outline"></ion-icon>
 
-            <h6 class="ion-text-right">
+                  Fechar
 
-              <ion-badge color="success" *ngIf="company?.is_open == 1">Aberto</ion-badge>
+                </ion-button>
 
-              <ion-badge color="medium" *ngIf="company?.is_open == 0">Fechado</ion-badge>
+              </ion-buttons>
 
-            </h6>
+            </ion-toolbar>
 
-          </ion-item>
+          </ion-card-header>
 
-          <ion-item lines="full">
+          <ion-card-content>
 
-            <h6>Valor mínimo</h6>
+            <ion-list>
 
-            <h6 class="ion-text-right">{{ company?.min_value | money }}</h6>
+              <ion-item lines="full" button="true" detail="true">
 
-          </ion-item>
+                <ion-label>
 
-          <ion-item lines="full">
+                  <h6>R$ 243,76</h6>
 
-            <h6>
+                  <p>18 pedidos</p>
 
-              Tempo de espera
+                </ion-label>
 
-            </h6>
+              </ion-item>
 
-            <h6 class="ion-text-right">{{ company?.waiting_time }} min</h6>
+            </ion-list>
 
-          </ion-item>
+          </ion-card-content>
 
-          <ion-item lines="none">
+        </ion-card>
 
-            <h6>Avaliação</h6>
+      </ion-col>
 
-            <h6 class="ion-text-right" *ngIf="company?.feedback">
+      <ion-col size-xs="12" size-sm="4">
 
-              {{ company.feedback.replace('.', ',') }}
+        <ion-card class="chart-week">
 
-              <ion-icon name="star"></ion-icon>
+          <ngx-charts-bar-vertical
+            [view]="view"
+            [scheme]="colorScheme"
+            [results]="single"
+            [roundEdges]="false"
+            [xAxis]="true"
+            [yAxis]="false"
+            (select)="onSelect($event)">
+          </ngx-charts-bar-vertical>
 
-            </h6>
+        </ion-card>
 
-            <h6 class="ion-text-right" *ngIf="!company?.feedback">
+      </ion-col>
 
-              0 <ion-icon name="star" color="light"></ion-icon>
+      <ion-col size="12">
 
-            </h6>
+        <ion-card class="last-orders">
 
-          </ion-item>
+          <ion-card-header>
 
-        </ion-list>
+            <ion-toolbar>
 
-      </ion-card-content>
+              <ion-card-title>ÚLTIMOS PEDIDOS</ion-card-title>
 
-    </ion-card>
+              <ion-buttons slot="end">
 
-    <ion-card *ngIf="performance?.months || performance?.days">
+                <ion-button fill="clear" color="primary">
 
-      <ion-card-header>
+                  <ion-icon slot="start" name="list-outline"></ion-icon>
 
-        <ion-card-title>Desempenho</ion-card-title>
-        
-        <ion-segment (ionChange)="segmentChanged($event)" value="{{ segment }}" *ngIf="performance?.months && performance?.days">
+                  Ver todos
 
-          <ion-segment-button value="1">
+                </ion-button>
 
-            <ion-label>Últimos dias</ion-label>
+              </ion-buttons>
 
-          </ion-segment-button>
+            </ion-toolbar>
 
-          <ion-segment-button value="2">
+          </ion-card-header>
 
-            <ion-label>Últimos meses</ion-label>
+          <ion-card-content>
 
-          </ion-segment-button>
+            <ion-list>
 
-        </ion-segment>
+              <ion-item lines="full" detail="true" button="true">
 
-      </ion-card-header>
+                <ion-label>0019</ion-label>
 
-      <ion-card-content class="ion-no-padding">
+                <ion-label>Lucas Moraes</ion-label>
+                  
+                <ion-label>
 
-        <ngx-charts-bar-vertical
-          [view]="view"
-          [scheme]="colorScheme"
-          [legend]="false"
-          [showXAxisLabel]="true"
-          [xAxis]="true"
-          [results]="performance?.days"
-          [gradient]="true"
-          [roundEdges]="false"
-          [showGridLines]="false"
-          [xAxisTickFormatting]="formatDay"
-          *ngIf="performance?.days && segment == 1">
+                  <ion-badge>Mesa 1</ion-badge>
+                  
+                </ion-label>
 
-          <ng-template #tooltipTemplate let-model="model">
+                <ion-label>R$ 10,00</ion-label>
 
-            <h6>{{ model.value | money }}</h6>
+                <ion-label>Hoje às 20:00</ion-label>
 
-            <p>{{ formatDay(model.name) }}</p>
+              </ion-item>
 
-          </ng-template>
+              <ion-item lines="full" detail="true" button="true">
 
-        </ngx-charts-bar-vertical>
+                <ion-label>0019</ion-label>
 
-        <ngx-charts-bar-vertical
-          [view]="view"
-          [scheme]="colorScheme"
-          [legend]="false"
-          [showXAxisLabel]="true"
-          [xAxis]="true"
-          [results]="performance?.months"
-          [gradient]="true"
-          [roundEdges]="false"
-          [showGridLines]="false"
-          [xAxisTickFormatting]="formatMonth"
-          *ngIf="performance?.months && segment == 2">
+                <ion-label>Lucas Moraes</ion-label>
+                  
+                <ion-label>
 
-          <ng-template #tooltipTemplate let-model="model">
+                  <ion-badge>Mesa 2</ion-badge>
 
-            <h6>{{ model.value | money }}</h6>
+                </ion-label>
 
-            <p>{{ formatMonth(model.name) }}</p>
+                <ion-label>R$ 10,00</ion-label>
 
-          </ng-template>
+                <ion-label>Hoje às 20:00</ion-label>
 
-        </ngx-charts-bar-vertical>
+              </ion-item>
 
-      </ion-card-content>
+              <ion-item lines="full" detail="true" button="true">
 
-    </ion-card>
+                <ion-label>0019</ion-label>
 
-  </ion-list>
+                <ion-label>Lucas Moraes</ion-label>
+
+                <ion-label>
+
+                  <ion-badge>Mesa 3</ion-badge>
+
+                </ion-label>
+                  
+                <ion-label>R$ 10,00</ion-label>
+
+                <ion-label>Hoje às 20:00</ion-label>
+
+              </ion-item>
+
+            </ion-list>
+
+          </ion-card-content>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
 
 </ion-content>

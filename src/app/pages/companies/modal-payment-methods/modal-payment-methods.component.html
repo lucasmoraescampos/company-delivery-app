@@ -1,0 +1,51 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Métodos de Pagamento</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-list>
+
+    <ion-list-header>Selecione os métodos disponíveis para pagamento na entrega:</ion-list-header>
+
+    <ion-item lines="full" detail="false" *ngFor="let paymentMethod of paymentMethods">
+
+      <ion-thumbnail>
+
+        <img [src]="paymentMethod.icon" width="10px">
+
+      </ion-thumbnail>
+
+      <ion-label class="ion-text-wrap">{{ paymentMethod.name }}</ion-label>
+
+      <ion-checkbox slot="end" [value]="paymentMethod.id" (ionChange)="check($event)"></ion-checkbox>
+
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+
+  <ion-button expand="block" (click)="confirm()">Confirmar</ion-button>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,109 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Escolha os produtos</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="animate__animated animate__fadeIn search" *ngIf="products?.length > 0">
+
+    <ion-searchbar placeholder="Buscar produto" [(ngModel)]="search" (ionChange)="searchChanged()"></ion-searchbar>
+
+  </ion-toolbar>
+
+  <ion-toolbar class="animate__animated animate__fadeIn" mode="md" *ngIf="products?.length > 0">
+
+    <ion-segment scrollable="true" [(ngModel)]="segment" (ionChange)="segmentChanged()">
+
+      <ion-segment-button [value]="category.id" *ngFor="let category of categories">
+
+        <ion-label>{{ category.name }}</ion-label>
+
+      </ion-segment-button>
+
+    </ion-segment>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content color="light" customScroll>
+
+  <ion-grid *ngIf="products?.length > 0 && results?.length > 0">
+
+    <ion-row>
+
+      <ion-col size-xs="12" size-md="6" *ngFor="let result of results">
+
+        <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalProduct(result)">
+
+          <ion-badge color="primary" *ngIf="!result.status">Inativo</ion-badge>
+
+          <ion-thumbnail class="ion-float-left" [class.inactive]="!result.status">
+
+            <img [src]="result.image">
+
+          </ion-thumbnail>
+
+          <ion-item lines="none">
+
+            <ion-label>
+
+              <p class="ion-text-wrap">{{ result.name }}</p>
+
+              <p>{{ result.category.name }}</p>
+
+              <p>{{ result.price | money }}</p>
+
+            </ion-label>
+
+          </ion-item>
+
+        </ion-card>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="products?.length == 0 && results?.length == 0">
+
+    <ion-icon name="cube-outline"></ion-icon>
+
+    <p>Nenhum produto cadastrado</p>
+
+  </ion-note>
+
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="products?.length > 0 && results?.length == 0">
+
+    <ion-icon name="search-outline"></ion-icon>
+
+    <p>Nenhum produto encontrado com essa categoria</p>
+
+  </ion-note>
+
+</ion-content>
+
+<ion-footer class="animate__animated animate__fadeIn" *ngIf="order?.products.length > 0">
+
+  <ion-button expand="full" (click)="modalDetails()">
+    
+    Ver Sacola <ion-badge class="ion-margin-start" color="light">{{ total | money }}</ion-badge>
+  
+  </ion-button>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>
