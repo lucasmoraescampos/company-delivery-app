@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { IonMenu, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Subject } from 'rxjs';
@@ -19,6 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public loading: boolean = false;
 
+  public menu: boolean = false;
+
   public selected_index = 0;
 
   public company: any;
@@ -37,34 +39,22 @@ export class AppComponent implements OnInit, OnDestroy {
       src: false
     },
     {
-      title: 'Mesas',
-      url: '/tables',
-      icon: false,
-      src: '../assets/icon/table.svg'
-    },
-    {
-      title: 'Categorias',
-      url: '/categories',
-      icon: 'bookmark-outline',
+      title: 'Segmentos',
+      url: '/segments',
+      icon: 'grid-outline',
       src: false
     },
     {
       title: 'Produtos',
       url: '/products',
-      icon: 'cube-outline',
+      icon: 'bag-handle-outline',
       src: false
-    },
-    {
-      title: 'Atendentes',
-      url: '/attendants',
-      icon: false,
-      src: '../assets/icon/attendant.svg'
     },
     {
       title: 'Entregadores',
       url: '/delivery-persons',
-      icon: false,
-      src: '../assets/icon/delivery-person.svg'
+      icon: 'bicycle-outline',
+      src: false
     },
     {
       title: 'Relatórios',
@@ -103,14 +93,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router.events.pipe(takeUntil(this.unsubscribe))
       .subscribe(route => {
         if (route instanceof RoutesRecognized) {
-          const path = '/' + route.state.root.firstChild.routeConfig.path;
-          this.selected_index = this.appPages.findIndex(page => page.url === path);
-        }
-      });
 
-    this.loadingSrv.status.pipe(takeUntil(this.unsubscribe))
-      .subscribe(status => {
-        this.loading = status;
+          const path = '/' + route.state.root.firstChild.routeConfig.path;
+
+          this.selected_index = this.appPages.findIndex(page => page.url === path);
+
+          this.checkMenu(path);
+
+        }
       });
 
     this.companySrv.currentCompany.pipe(takeUntil(this.unsubscribe))
@@ -118,6 +108,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.company = company;
       });
 
+    this.loadingSrv.status.pipe(takeUntil(this.unsubscribe))
+      .subscribe(status => {
+        this.loading = status;
+      });
   }
 
   ngOnDestroy() {
@@ -125,4 +119,19 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
+  private checkMenu(path: string) {
+
+    const pathsWithoutMenu = [
+      '/signin', '/companies',
+    ];
+    
+    if (pathsWithoutMenu.indexOf(path) == -1) {
+      this.menu = true;
+    }
+
+    else {
+      this.menu = false;
+    }
+
+  }
 }

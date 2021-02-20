@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonSlides, MenuController, NavController } from '@ionic/angular';
+import { IonSlides, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UtilsHelper } from 'src/app/helpers/utils.helper';
@@ -41,7 +41,6 @@ export class SigninPage implements OnInit, OnDestroy {
   private unsubscribe = new Subject();
 
   constructor(
-    private menuCtrl: MenuController,
     private formBuilder: FormBuilder,
     private authSrv: AuthService,
     private alertSrv: AlertService,
@@ -51,8 +50,6 @@ export class SigninPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
-    this.menuCtrl.enable(false);
 
     this.formGroup = this.formBuilder.group({
       name: ['', Validators.required],

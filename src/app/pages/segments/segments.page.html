@@ -8,7 +8,7 @@
 
     </ion-buttons>
 
-    <ion-title>Categorias</ion-title>
+    <ion-title>Segmentos</ion-title>
 
     <ion-buttons slot="end">
 
@@ -22,7 +22,7 @@
 
 <ion-content color="light" customScroll>
 
-  <ion-grid *ngIf="categories?.length > 0">
+  <ion-grid *ngIf="segments?.length > 0">
 
     <ion-row>
 
@@ -30,13 +30,13 @@
 
         <ion-reorder-group (ionItemReorder)="doReorder($event)" [disabled]="!reorder">
 
-          <ion-reorder *ngFor="let category of categories">
+          <ion-reorder *ngFor="let segment of segments">
 
-            <ion-card class="animate__animated animate__fadeIn" lines="full" detail="true" button="true" (click)="options(category)">
+            <ion-card class="animate__animated animate__fadeIn" lines="full" detail="true" button="true" (click)="options(segment)">
 
               <ion-card-content>
 
-                <ion-label color="dark">{{ category.name }}</ion-label>
+                <ion-label color="dark">{{ segment.name }}</ion-label>
 
               </ion-card-content>
 
@@ -52,17 +52,17 @@
 
   </ion-grid>
 
-  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="categories?.length == 0">
+  <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="segments?.length == 0">
 
-    <ion-icon name="bookmark-outline"></ion-icon>
+    <ion-icon name="grid-outline"></ion-icon>
 
-    <p>Nenhuma categoria cadastrada</p>
+    <p>Nenhum segmento cadastrado</p>
 
   </ion-note>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="!reorder">
 
-    <ion-fab-button (click)="modalCategory()">
+    <ion-fab-button (click)="modalSegment()">
 
       <ion-icon name="add-outline"></ion-icon>
 
@@ -74,10 +74,6 @@
 
 <ion-footer class="animate__animated animate__fadeIn" *ngIf="reorder">
 
-  <ion-button expand="full" (click)="save()">
-    
-    <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar Ordem
-  
-  </ion-button>
+  <ion-button expand="full" (click)="save()">Salvar Ordem</ion-button>
 
 </ion-footer>

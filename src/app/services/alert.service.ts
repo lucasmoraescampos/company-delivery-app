@@ -6,19 +6,34 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
 })
 export class AlertService {
 
+  private customClass = {
+    container: 'alert-custom-container',
+    popup: 'alert-custom-popup',
+    header: 'alert-custom-header',
+    title: 'alert-custom-title',
+    closeButton: 'alert-custom-close-button',
+    icon: 'alert-custom-icon',
+    image: 'alert-custom-image',
+    content: 'alert-custom-content',
+    input: 'alert-custom-input',
+    actions: 'alert-custom-actions',
+    confirmButton: 'alert-custom-confirm-button',
+    cancelButton: 'alert-custom-cancel-button',
+    footer: 'alert-custom-footer'
+  }
+
   constructor() { }
 
   public show(options: AlertOptions) {
     Swal.fire({
       icon: options.icon,
-      iconColor: '#e60506',
       title: options.message,
       showCancelButton: options.showCancelButton !== undefined ? options.showCancelButton : true,
       confirmButtonText: options.confirmButtonText ? options.confirmButtonText : 'Confirmar',
       cancelButtonText: options.cancelButtonText ? options.cancelButtonText : 'Cancelar',
       heightAuto: false,
-      reverseButtons: true,
       allowOutsideClick: false,
+      customClass: this.customClass
     }).then(result => {
       if (result.value) {
         if (options.onConfirm) {
@@ -62,8 +77,8 @@ export class AlertService {
       confirmButtonText: options.confirmButtonText ? options.confirmButtonText : 'Confirmar',
       cancelButtonText: options.cancelButtonText ? options.cancelButtonText : 'Cancelar',
       heightAuto: false,
-      reverseButtons: true,
       allowOutsideClick: false,
+      customClass: this.customClass,
     }).then(result => {
       if (result.value) {
         options.onConfirm();

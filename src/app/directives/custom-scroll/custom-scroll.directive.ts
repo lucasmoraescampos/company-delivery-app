@@ -16,17 +16,15 @@ export class CustomScrollDirective {
     const elmt = elements[elements.length - 1];
 
     const stylesheet = `
-      @media (min-width: 768px) {
+      @media (pointer: fine) {
         ::-webkit-scrollbar {
           width: 4px;
         }
         ::-webkit-scrollbar-track {
-          background: #fff;
+          background: transparent;
         }
         ::-webkit-scrollbar-thumb {
           background: var(--ion-color-light-shade);
-        }
-        ::-webkit-scrollbar-thumb:hover {
         }
       }
     `;

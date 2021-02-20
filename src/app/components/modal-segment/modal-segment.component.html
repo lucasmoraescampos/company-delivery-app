@@ -2,7 +2,7 @@
 
   <ion-toolbar>
 
-    <ion-title>Categoria</ion-title>
+    <ion-title>Segmento</ion-title>
 
     <ion-buttons slot="end">
 
@@ -26,7 +26,7 @@
 
       <ion-col size="12">
 
-        <ion-label [class.invalid]="submitAttempt && name.length == 0" class="stacked">Nome da categoria</ion-label>
+        <ion-label [class.invalid]="submitAttempt && name.length == 0" class="stacked">Nome do segmento</ion-label>
 
         <ion-input [class.invalid]="submitAttempt && name.length == 0" maxlength="40" enterkeyhint="done" [(ngModel)]="name" (keyup.enter)="save()"></ion-input>
 
@@ -54,11 +54,7 @@
 
       <ion-col size="12">
 
-        <ion-button expand="block" (click)="save()">
-          
-          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Salvar
-        
-        </ion-button>
+        <ion-button expand="block" (click)="save()">Salvar</ion-button>
 
       </ion-col>
 

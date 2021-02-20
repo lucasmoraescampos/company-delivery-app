@@ -1,23 +1,23 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
-import { CategoryService } from 'src/app/services/category.service';
 import { CompanyService } from 'src/app/services/company.service';
+import { SegmentService } from 'src/app/services/segment.service';
 
 @Component({
-  selector: 'app-modal-category',
-  templateUrl: './modal-category.component.html',
-  styleUrls: ['./modal-category.component.scss'],
+  selector: 'app-modal-segment',
+  templateUrl: './modal-segment.component.html',
+  styleUrls: ['./modal-segment.component.scss'],
 })
-export class ModalCategoryComponent implements OnInit, OnDestroy {
+export class ModalSegmentComponent implements OnInit {
 
   public submitAttempt: boolean;
 
   public name: string;
 
-  public category: any;
+  public segment: any;
 
   public loading: boolean;
 
@@ -26,16 +26,16 @@ export class ModalCategoryComponent implements OnInit, OnDestroy {
   constructor(
     private modalCtrl: ModalController,
     private navParams: NavParams,
-    private categorySrv: CategoryService,
+    private segmentSrv: SegmentService,
     private alertSrv: AlertService,
     private companySrv: CompanyService
   ) { }
 
   ngOnInit() {
     
-    this.category = this.navParams.get('category');
+    this.segment = this.navParams.get('segment');
 
-    this.name = this.category ? this.category.name : '';
+    this.name = this.segment ? this.segment.name : '';
 
   }
 
@@ -59,9 +59,9 @@ export class ModalCategoryComponent implements OnInit, OnDestroy {
 
       this.loading = true;
 
-      if (this.category) {
+      if (this.segment) {
 
-        this.categorySrv.update(this.category.id, { name: this.name })
+        this.segmentSrv.update(this.segment.id, { name: this.name })
           .pipe(takeUntil(this.unsubscribe))
           .subscribe(res => {
 
@@ -84,7 +84,7 @@ export class ModalCategoryComponent implements OnInit, OnDestroy {
       
       else {
 
-        this.categorySrv.create({ name: this.name })
+        this.segmentSrv.create({ name: this.name })
           .pipe(takeUntil(this.unsubscribe))
           .subscribe(res => {
 

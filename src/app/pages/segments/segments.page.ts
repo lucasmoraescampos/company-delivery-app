@@ -1,30 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController, ModalController } from '@ionic/angular';
-import { ModalCategoryComponent } from './modal-category/modal-category.component';
-import { ItemReorderEventDetail } from '@ionic/core';
-import { CategoryService } from 'src/app/services/category.service';
+import { Component, OnInit } from '@angular/core';
+import { ModalController, ActionSheetController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LoadingService } from 'src/app/services/loading.service';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
 import { AlertService } from 'src/app/services/alert.service';
-
+import { LoadingService } from 'src/app/services/loading.service';
+import { SegmentService } from 'src/app/services/segment.service';
+import { ItemReorderEventDetail } from '@ionic/core';
+import { ModalSegmentComponent } from 'src/app/components/modal-segment/modal-segment.component';
 @Component({
-  selector: 'app-categories',
-  templateUrl: './categories.page.html',
-  styleUrls: ['./categories.page.scss'],
+  selector: 'app-segments',
+  templateUrl: './segments.page.html',
+  styleUrls: ['./segments.page.scss'],
 })
-export class CategoriesPage implements OnInit, OnDestroy {
+export class SegmentsPage implements OnInit {
 
   public reorder: boolean;
 
-  public categories: any[];
+  public segments: any[];
 
   private unsubscribe: Subject<void> = new Subject();
 
   constructor(
     private modalCtrl: ModalController,
-    private categorySrv: CategoryService,
+    private segmentSrv: SegmentService,
     private loadingSrv: LoadingService,
     private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService
@@ -32,7 +31,7 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.prepareCategories();
+    this.initSegments();
 
   }
 
@@ -45,22 +44,22 @@ export class CategoriesPage implements OnInit, OnDestroy {
   }
 
   public doReorder(ev: CustomEvent<ItemReorderEventDetail>) {
-    this.categories = ev.detail.complete(this.categories);
+    this.segments = ev.detail.complete(this.segments);
   }
 
-  public async options(category: any) {
+  public async options(segment: any) {
 
     const actionSheet = await this.actionSheetCtrl.create({
-      header: category.name,
+      header: segment.name,
       buttons: [{
         text: 'Editar',
         handler: () => {
-          this.modalCategory(category);
+          this.modalSegment(segment);
         }
       }, {
         text: 'Excluir',
         handler: () => {
-          this.deleteCategory(category);
+          this.deletesegment(segment);
         }
       }, {
         text: 'Reordenar',
@@ -77,14 +76,14 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
   }
 
-  public async modalCategory(category?: any) {
+  public async modalSegment(segment?: any) {
 
     const modal = await this.modalCtrl.create({
-      component: ModalCategoryComponent,
+      component: ModalSegmentComponent,
       backdropDismiss: false,
       cssClass: 'modal-sm',
       componentProps: {
-        category: category
+        segment: segment
       }
     });
 
@@ -93,17 +92,17 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
         if (res.data) {
 
-          if (category) {
+          if (segment) {
 
-            const index = ArrayHelper.getIndexByKey(this.categories, 'id', category.id);
+            const index = ArrayHelper.getIndexByKey(this.segments, 'id', segment.id);
 
-            this.categories[index] = res.data;
+            this.segments[index] = res.data;
 
           }
 
           else {
 
-            this.categories.push(res.data);
+            this.segments.push(res.data);
 
           }
 
@@ -117,13 +116,13 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
   public save() {
     this.loadingSrv.show();
-    this.categorySrv.reorder({ categories: this.categories })
+    this.segmentSrv.reorder({ segments: this.segments })
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         this.loadingSrv.hide();
         this.reorder = false;
         if (res.success) {
-          this.categories = res.data;
+          this.segments = res.data;
           this.alertSrv.toast({
             icon: 'success',
             message: res.message
@@ -132,16 +131,16 @@ export class CategoriesPage implements OnInit, OnDestroy {
       });
   }
 
-  private deleteCategory(category: any) {
+  private deletesegment(segment: any) {
     this.alertSrv.show({
       icon: 'question',
-      message: `Excluir a categoria ${category.name}?`,
+      message: `Excluir a categoria ${segment.name}?`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
         
         this.loadingSrv.show();
 
-        this.categorySrv.delete(category.id)
+        this.segmentSrv.delete(segment.id)
           .pipe(takeUntil(this.unsubscribe))
           .subscribe(res => {
 
@@ -149,9 +148,9 @@ export class CategoriesPage implements OnInit, OnDestroy {
 
             if (res.success) {
 
-              const index = ArrayHelper.getIndexByKey(this.categories, 'id', category.id);
+              const index = ArrayHelper.getIndexByKey(this.segments, 'id', segment.id);
               
-              this.categories = ArrayHelper.removeItem(this.categories, index);
+              this.segments = ArrayHelper.removeItem(this.segments, index);
 
               this.alertSrv.toast({
                 icon: 'success',
@@ -175,16 +174,15 @@ export class CategoriesPage implements OnInit, OnDestroy {
     });
   }
 
-  private prepareCategories() {
+  private initSegments() {
     this.loadingSrv.show();
-    this.categorySrv.getAll()
+    this.segmentSrv.getAll()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         this.loadingSrv.hide();
         if (res.success) {
-          this.categories = res.data;
+          this.segments = res.data;
         }
       });
   }
-
 }

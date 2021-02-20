@@ -79,4 +79,14 @@ export class AuthService {
       }));
   }
 
+  public logout() {
+    const token = localStorage.getItem(ConfigHelper.Storage.AccessToken);
+    return this.http.post<HttpResult>(`${this.url}/user/logout`, { token })
+      .pipe(map(res => {
+        if (res.success) {
+          localStorage.clear();
+        }
+        return res;
+      }));
+  }
 }

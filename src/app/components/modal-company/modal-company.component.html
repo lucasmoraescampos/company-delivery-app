@@ -1,0 +1,510 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title *ngIf="slideActiveIndex == 0">Informações</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 1">Localização</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 2">Endereço</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 3">Escolha seu plano</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 4">Configuração</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-slides class="swiper-no-swiping" [options]="{ initialSlide: 0 }">
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup1">
+
+        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 0">
+
+          <ion-row>
+
+            <ion-col class="ion-text-center" size="12">
+
+              <app-choose-image [aspectRatio]="10 / 2" [image]="'http://api.meupedido.localhost/assets/images/banner.png'"
+                (changeImage)="changeImage($event)"></app-choose-image>
+
+              <app-choose-image style="margin-top: -64px; background-color: #fff;" [invalid]="submitAttempt1 && !blobImage"
+                [rounded]="true" (changeImage)="changeImage($event)"></app-choose-image>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blobImage">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Selecione uma foto para o perfil do restaurante.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.name.errors" class="stacked">Nome do
+                restaurante</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.name.errors" formControlName="name"
+                maxlength="150" enterkeyhint="go" (keydown.Tab)="category.open()" (keyup.enter)="category.open()"></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.name.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o nome do restaurante.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.category_id.errors" class="stacked">Categoria
+              </ion-label>
+
+              <ion-select [class.invalid]="submitAttempt1 && formControl1.category_id.errors" interface="action-sheet"
+                formControlName="category_id" (ionChange)="changeCategory()" #category>
+
+                <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}
+                </ion-select-option>
+
+              </ion-select>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.category_id.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe a categoria.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.phone.errors" class="stacked">Telefone/Celular
+              </ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.phone.errors" formControlName="phone"
+                [brmasker]="{ phone: true }" maxlength="15" enterkeyhint="go" (keyup.enter)="document_number.setFocus()" #phone>
+              </ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.phone.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe um número de telefone/celular.
+
+              </ion-note>
+
+              <ion-note class="validation-error"
+                *ngIf="submitAttempt1 && formControl1.phone.errors?.minLength !== null && formControl1.phone.errors?.required == undefined">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Telefone/Celular inválido.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.document_number.errors" class="stacked">
+                CPF/CNPJ</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.document_number.errors"
+                formControlName="document_number" [brmasker]="{ person: true }" enterkeyhint="done"
+                (ionBlur)="checkDocumentNumber()" (keyup.enter)="next()" #document_number></ion-input>
+
+              <ion-note class="validation-error"
+                *ngIf="submitAttempt1 && formControl1.document_number.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe um CPF/CNPJ.
+
+              </ion-note>
+
+              <ion-note class="validation-error"
+                *ngIf="submitAttempt1 && formControl1.document_number.errors?.document_number !== null && formControl1.document_number.errors?.required == undefined">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                CPF/CNPJ inválido.
+
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <ion-searchbar placeholder="Endereço e número" [(ngModel)]="search" (ngModelChange)="searchChanged()"
+        *ngIf="slideActiveIndex == 1">
+      </ion-searchbar>
+
+      <ion-list class="address-complement" [hidden]="addresses?.length == 0">
+
+        <ion-item lines="full" detail="false" button="true" *ngFor="let address of addresses"
+          (click)="selectAddress(address)">
+
+          <ion-label class="ion-text-wrap">{{ address }}</ion-label>
+
+        </ion-item>
+
+      </ion-list>
+
+      <div class="map" #map [hidden]="slideActiveIndex != 1"></div>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="slideActiveIndex == 1">
+
+        <ion-fab-button color="light" (click)="locate()">
+
+          <ion-icon name="locate-outline"></ion-icon>
+
+        </ion-fab-button>
+
+      </ion-fab>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup2">
+
+        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 2">
+
+          <ion-row>
+
+            <ion-col size-xs="12" size-sm="8">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.street_name.errors" class="stacked">Rua
+              </ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.street_name.errors"
+                formControlName="street_name" maxlength="255" enterkeyhint="go" (keyup.enter)="street_number.setFocus()"
+                #street_name></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.street_name.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o nome da rua.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="4">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.street_number.errors" class="stacked">Número
+              </ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.street_number.errors"
+                formControlName="street_number" maxlength="20" enterkeyhint="go" (keyup.enter)="district.setFocus()"
+                #street_number></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.street_number.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o número da rua.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt2 && formControl2.district.errors" class="stacked">Bairro
+              </ion-label>
+
+              <ion-input [class.invalid]="submitAttempt2 && formControl2.district.errors" formControlName="district"
+                maxlength="20" enterkeyhint="go" (keyup.enter)="complement.setFocus()" #district></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.district.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o bairro.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="6">
+
+              <ion-label class="stacked">Complemento</ion-label>
+
+              <ion-input formControlName="complement" maxlength="200" enterkeyhint="done" (keyup.enter)="next()"
+                #complement></ion-input>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 3">
+
+        <ion-row>
+
+          <ion-col size="12">
+
+            <ion-list class="ion-padding-horizontal plans">
+
+              <ion-radio-group [(ngModel)]="selectedPlan">
+
+                <ion-item lines="full" *ngFor="let plan of plans">
+
+                  <ion-radio slot="start" mode="md" [value]="plan"></ion-radio>
+
+                  <ion-label class="ion-text-wrap">
+
+                    <h6>{{ plan.name }}</h6>
+
+                    <p *ngIf="plan.delivery_person">Entrega feita por entregadores parceiros do Meu Pedido</p>
+
+                    <p *ngIf="!plan.delivery_person">Entrega feita por sua empresa</p>
+
+                    <p>Comissão de {{ plan.fee }}% sobre o valor de todos os pedidos e mais {{ plan.online_payment_fee }}% em pedidos com pagamento online</p>
+
+                  </ion-label>
+
+                </ion-item>
+
+              </ion-radio-group>
+
+            </ion-list>
+
+          </ion-col>
+
+        </ion-row>
+
+      </ion-grid>
+      
+    </ion-slide>
+
+    <ion-slide>
+
+      <form [formGroup]="formGroup3">
+
+        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 4">
+
+          <ion-row>
+
+            <ion-col size="12">
+
+              <ion-list>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir pagamento online</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_payment_online" (ionChange)="checkAllowPaymentOnline()">
+                  </ion-toggle>
+
+                </ion-item>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir pagamento na entrega</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_payment_delivery" (ionChange)="modalPaymentMethods()">
+                  </ion-toggle>
+
+                </ion-item>
+
+                <ion-item lines="none">
+
+                  <ion-label class="ion-text-wrap">Permitir retirada do pedido no restaurante</ion-label>
+
+                  <ion-toggle mode="md" formControlName="allow_withdrawal_local"></ion-toggle>
+
+                </ion-item>
+
+              </ion-list>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.min_order_value.errors" class="stacked">Pedido
+                mínimo</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.min_order_value.errors" inputmode="numeric"
+                formControlName="min_order_value" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
+                (keyup.enter)="waiting_time.setFocus()"></ion-input>
+
+              <ion-note class="validation-error"
+                *ngIf="submitAttempt3 && formControl3.min_order_value.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o preço mínimo.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" class="stacked">Tempo de
+                espera</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" inputmode="numeric"
+                formControlName="waiting_time" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="go"
+                (ionBlur)="checkWaitingTime()" (keyup.enter)="delivery_price.setFocus()" #waiting_time>
+
+                <span>minutos</span>
+
+              </ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.waiting_time.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o tempo de espera.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.waiting_time.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe um valor maior que zero.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" class="stacked">Valor da
+                entrega</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" inputmode="numeric"
+                formControlName="delivery_price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
+                (keyup.enter)="radius.setFocus()" #delivery_price></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.delivery_price.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o valor da entrega.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="6" size-sm="6">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.radius.errors" class="stacked">Raio de
+                cobertura</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.radius.errors" inputmode="numeric"
+                formControlName="radius" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="done"
+                (ionBlur)="checkRadius()" (keyup.enter)="next()" #radius>
+
+                <span>km</span>
+
+              </ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.radius.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o raio de cobertura.
+
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.radius.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe um valor maior que zero.
+
+              </ion-note>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </form>
+
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid class="ion-padding">
+
+    <ion-row>
+
+      <ion-col class="ion-text-center" size="12" *ngIf="slideActiveIndex == 0">
+
+        <ion-button expand="block" (click)="next()">Continuar</ion-button>
+
+      </ion-col>
+
+      <ion-col size="6" *ngIf="slideActiveIndex > 0">
+
+        <ion-button fill="clear" (click)="previous()">Voltar</ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex > 0 && slideActiveIndex < 4">
+
+        <ion-button [disabled]="slideActiveIndex == 3 && selectedPlan === undefined" (click)="next()">Continuar</ion-button>
+
+      </ion-col>
+
+      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex == 4">
+
+        <ion-button (click)="next()">Salvar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigHelper } from 'src/app/helpers/config.helper';
 import { HttpResult } from 'src/app/models/http-result.model';
-import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,15 +17,10 @@ export class CompanyService {
   private url: string = ConfigHelper.Url;
 
   constructor(
-    private http: HttpClient,
-    private userSrv: UserService
+    private http: HttpClient
   ) {
     this.currentCompanySubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem(ConfigHelper.Storage.CurrentCompany)));
     this.currentCompany = this.currentCompanySubject.asObservable();
-  }
-
-  public getCurrentCompany() {
-    return this.currentCompanySubject.value;
   }
 
   public setCurrentCompany(data: any) {
@@ -34,13 +28,12 @@ export class CompanyService {
     this.currentCompanySubject.next(data);
   }
   
-  public create(data: any) {
+  public create(data: FormData) {
     return this.http.post<HttpResult>(`${this.url}/user/company`, data)
       .pipe(map(res => {
         if (res.success) {
           const current_user = JSON.parse(localStorage.getItem(ConfigHelper.Storage.CurrentUser));
           current_user.companies.push(res.data);
-          this.userSrv.setCurrentUser(current_user);
         }
         return res;
       }));

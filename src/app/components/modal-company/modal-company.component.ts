@@ -27,17 +27,11 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
   public slideActiveIndex: number = 0;
 
-  public options: any = {
-    initialSlide: 0
-  }
-
   public loading: boolean;
 
-  public blob: Blob;
+  public blobImage: Blob;
 
-  public map: any;
-
-  public latLng: any;
+  public blobBanner: Blob;
 
   public search: string;
 
@@ -55,15 +49,23 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
   public formGroup3: FormGroup;
 
-  public states: any[];
-
-  public cities: any[];
-
   public paymentMethods: any[] = [];
 
-  public onlinePaymentFee: number;
+  public categories: any[];
+
+  public plans: any[];
+
+  public selectedPlan: any;
+
+  private latLng: any;
 
   private marker: any;
+
+  private map: any;
+
+  private geocoder = new google.maps.Geocoder();
+
+  private infoWindow = new google.maps.InfoWindow();
 
   private googleAutocomplete = new google.maps.places.AutocompleteService();
 
@@ -82,6 +84,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
     this.formGroup1 = this.formBuilder.group({
       name: ['', Validators.required],
+      category_id: [null, Validators.required],
       phone: ['', [Validators.required, Validators.minLength(14)]],
       document_number: ['', Validators.required]
     });
@@ -92,22 +95,21 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       street_number: ['', Validators.required],
       district: ['', Validators.required],
       uf: ['', Validators.required],
-      city: ['', Validators.required]
+      city: ['', Validators.required],
+      complement: ['']
     });
 
     this.formGroup3 = this.formBuilder.group({
       allow_payment_online: [false, Validators.required],
       allow_payment_delivery: [false, Validators.required],
       allow_withdrawal_local: [false, Validators.required],
-      min_order_value: ['0,00', Validators.required],
+      min_order_value: ['', Validators.required],
       waiting_time: ['', Validators.required],
-      delivery_price: ['0,00', Validators.required],
+      delivery_price: ['', Validators.required],
       radius: ['', Validators.required]
     });
 
-    this.prepareStates();
-
-    this.prepareOnlinePaymentFee();
+    this.initCategories();
 
   }
 
@@ -146,10 +148,20 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     });
   }
 
+  public changeCategory() {
+    this.loading = true;
+    this.apiSrv.getPlans(this.formControl1.category_id.value)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(res => {
+        this.loading = false;
+        this.plans = res.data
+      });
+  }
+
   public checkDocumentNumber() {
 
     if (this.formControl1.document_number.value.length == 0) return;
-    
+
     this.formControl1.document_number.setErrors(null);
 
     if (!UtilsHelper.validateDocumentNumber(this.formControl1.document_number.value)) {
@@ -198,7 +210,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.alertSrv.show({
         icon: 'warning',
-        message: `Uma taxa de ${UtilsHelper.numberToMoney(this.onlinePaymentFee)}% será cobrada por cada pedido pago online.`,
+        message: `Uma taxa de ${UtilsHelper.numberToMoney(this.selectedPlan.online_payment_fee)}% será cobrada por cada pedido pago online.`,
         onConfirm: () => {
           this.formGroup3.patchValue({ allow_payment_online: true });
         },
@@ -217,27 +229,51 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.submitAttempt1 = true;
 
-      if (this.formGroup1.valid && this.blob) {
+      if (this.formGroup1.valid && this.blobImage) {
+
+        if (this.map == undefined) {
+          this.loadMap();
+        }
+
+        this.slideActiveIndex++;
+
         this.slides.slideNext();
+
       }
 
     }
 
-    if (this.slideActiveIndex == 1 && this.latLng) {
-        this.slides.slideNext();
+    else if (this.slideActiveIndex == 1) {
+
+      this.slideActiveIndex++;
+
+      this.slides.slideNext();
+
     }
 
-    if (this.slideActiveIndex == 2) {
+    else if (this.slideActiveIndex == 2) {
 
       this.submitAttempt2 = true;
 
       if (this.formGroup2.valid) {
+
+        this.slideActiveIndex++;
+
         this.slides.slideNext();
+
       }
 
     }
 
-    if (this.slideActiveIndex == 3) {
+    else if (this.slideActiveIndex == 3 && this.selectedPlan !== undefined) {
+
+      this.slideActiveIndex++;
+
+      this.slides.slideNext();
+
+    }
+
+    else if (this.slideActiveIndex == 4) {
 
       this.submitAttempt3 = true;
 
@@ -260,10 +296,12 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         const allow_payment_delivery = this.formControl3.allow_payment_delivery.value == true ? '1' : '0';
 
         const allow_withdrawal_local = this.formControl3.allow_withdrawal_local.value == true ? '1' : '0';
-        
+
         const formData = new FormData();
 
+        formData.append('image', this.blobImage);
         formData.append('name', this.formControl1.name.value);
+        formData.append('category_id', this.formControl1.category_id.value);
         formData.append('phone', phone);
         formData.append('document_number', document_number);
         formData.append('latitude', this.latLng.lat);
@@ -274,6 +312,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         formData.append('district', this.formControl2.district.value);
         formData.append('uf', this.formControl2.uf.value);
         formData.append('city', this.formControl2.city.value);
+        formData.append('plan_id', this.selectedPlan.id);
         formData.append('allow_payment_online', allow_payment_online);
         formData.append('allow_payment_delivery', allow_payment_delivery);
         formData.append('allow_withdrawal_local', allow_withdrawal_local);
@@ -281,7 +320,14 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         formData.append('waiting_time', this.formControl3.waiting_time.value);
         formData.append('delivery_price', String(delivery_price));
         formData.append('radius', this.formControl3.radius.value);
-        formData.append('image', this.blob);
+        
+        if (this.blobBanner) {
+          formData.append('banner', this.blobBanner);
+        }
+
+        if (this.formControl2.complement.value.length > 0) {
+          formData.append('complement', this.formControl2.complement.value);
+        }
 
         this.paymentMethods.forEach(element => {
           formData.append('payment_methods[]', element);
@@ -297,7 +343,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
               this.alertSrv.toast({
                 icon: 'success',
-                message: 'Restaurante cadastrado com sucesso'
+                message: 'Empresa cadastrada com sucesso'
               });
 
               this.modalCtrl.dismiss(res.data);
@@ -313,31 +359,20 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
   }
 
   public previous() {
+    this.slideActiveIndex--;
     this.slides.slidePrev();
   }
 
   public changeImage(event: any) {
-    this.blob = event;
+    this.blobImage = event;
   }
 
-  public slideChanged() {
-
-    this.slides.getActiveIndex().then((index: number) => {
-
-      this.slideActiveIndex = index;
-
-      if (index == 1 && this.map == undefined) {
-
-        this.loadMap();
-
-      }
-
-    });
-
+  public changeBanner(event: any) {
+    this.blobBanner = event;
   }
 
   public async loadMap() {
-    
+
     this.loading = true;
 
     try {
@@ -368,7 +403,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         position: this.latLng
       });
 
-      this.loading = false;
+      this.geocodeLatLng(this.latLng);
 
       this.marker.addListener('dragend', (data: any) => {
 
@@ -378,6 +413,8 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         };
 
         this.map.setCenter(this.latLng);
+
+        this.geocodeLatLng(this.latLng);
 
       });
 
@@ -389,7 +426,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         showCancelButton: false,
         onConfirm: () => {
           this.modalCtrl.dismiss();
-        } 
+        }
       });
 
     }
@@ -438,22 +475,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
     this.addresses = [];
 
-    const geocoder = new google.maps.Geocoder();
-
-    geocoder.geocode({ address: address }, (geocode: any) => {
-
-      geocode = Array.isArray(geocode) ? geocode[0] : geocode;
-
-      this.latLng = {
-        lat: geocode.geometry.location.lat(),
-        lng: geocode.geometry.location.lng()
-      }
-
-      this.marker.setPosition(this.latLng);
-
-      this.map.setCenter(this.latLng);
-
-    });
+    this.geocodeAddress(address);
 
   }
 
@@ -470,29 +492,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
     this.map.setCenter(this.latLng);
 
-  }
-
-  public changeUF(data: any) {
-
-    this.loading = true;
-
-    this.formGroup2.patchValue({ uf: data.uf });
-
-    this.apiSrv.getCities(data.uf)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(res => {
-
-        this.cities = res.data;
-
-        this.loading = false;
-
-      });
-
-  }
-
-  public changeCity(data: any) {
-
-    this.formGroup2.patchValue({ city: data.name });
+    this.geocodeLatLng(this.latLng);
 
   }
 
@@ -505,7 +505,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         backdropDismiss: false,
         cssClass: 'modal-sm'
       });
-  
+
       modal.onWillDismiss()
         .then(res => {
           if (res.data) {
@@ -523,23 +523,114 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
   }
 
-  private prepareOnlinePaymentFee() {
+  private geocodeLatLng(latLng: any) {
+
     this.loading = true;
-    this.apiSrv.getOnlinePaymentFee()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(res => {
-        this.loading = false;
-        this.onlinePaymentFee = res.data;
-      });
+
+    this.geocoder.geocode({ location: latLng }, (results: any) => {
+
+      this.loading = false;
+
+      this.serializeAddress(results[0].address_components);
+
+      setTimeout(() => {
+
+        this.infoWindow.setContent(results[0].formatted_address);
+
+        this.infoWindow.open(this.map, this.marker);
+
+      }, 500);
+
+    });
+
   }
 
-  private prepareStates() {
+  private geocodeAddress(address: any) {
+
     this.loading = true;
-    this.apiSrv.getStates()
+
+    this.geocoder.geocode({ address: address }, (results: any) => {
+
+      this.loading = false;
+
+      this.latLng = {
+        lat: results[0].geometry.location.lat(),
+        lng: results[0].geometry.location.lng()
+      }
+
+      this.marker.setPosition(this.latLng);
+
+      this.map.setCenter(this.latLng);
+
+      this.serializeAddress(results[0].address_components);
+
+      setTimeout(() => {
+
+        this.infoWindow.setContent(results[0].formatted_address);
+
+        this.infoWindow.open(this.map, this.marker);
+
+      }, 500);
+
+    });
+
+  }
+
+  private serializeAddress(address_components: any[]) {
+
+    address_components.forEach((component: any) => {
+
+      if (component.types.indexOf('street_number') != -1) {
+
+        this.formGroup2.patchValue({ street_number: component.long_name });
+
+      }
+
+      else if (component.types.indexOf('route') != -1) {
+
+        this.formGroup2.patchValue({ street_name: component.long_name });
+
+      }
+
+      else if (component.types.indexOf('sublocality_level_1') != -1) {
+
+        this.formGroup2.patchValue({ district: component.long_name });
+
+      }
+
+      else if (component.types.indexOf('administrative_area_level_2') != -1) {
+
+        this.formGroup2.patchValue({ city: component.long_name });
+
+      }
+
+      else if (component.types.indexOf('administrative_area_level_1') != -1) {
+
+        this.formGroup2.patchValue({ uf: component.short_name });
+
+      }
+
+      else if (component.types.indexOf('country') != -1) {
+
+      }
+
+      else if (component.types.indexOf('postal_code') != -1) {
+
+        this.formGroup2.patchValue({ postal_code: component.short_name });
+
+      }
+
+    });
+
+  }
+
+  private initCategories() {
+    this.loading = true;
+    this.apiSrv.getCategories()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
-        this.states = res.data
         this.loading = false;
+        this.categories = res.data
       });
   }
 

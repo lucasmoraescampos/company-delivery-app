@@ -2,7 +2,7 @@
 
   <ion-toolbar>
 
-    <ion-title>Restaurantes</ion-title>
+    <ion-title>Empresas</ion-title>
 
   </ion-toolbar>
 
@@ -19,6 +19,8 @@
         <ion-card class="ion-text-center" button="true" (click)="options(company)">
 
           <ion-card-header>
+
+            <img [src]="company.banner ? company.banner : 'http://api.meupedido.localhost/assets/images/banner.png'">
 
             <ion-thumbnail>
 

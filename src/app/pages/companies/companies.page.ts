@@ -1,9 +1,9 @@
-import { ModalFirstAccessComponent } from './modal-first-access/modal-first-access.component';
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, MenuController, ModalController, NavController } from '@ionic/angular';
-import { ModalCompanyComponent } from './modal-company/modal-company.component';
-import { UserService } from 'src/app/services/user.service';
+import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { ModalCompanyComponent } from '../../components/modal-company/modal-company.component';
 import { CompanyService } from 'src/app/services/company.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-companies',
@@ -15,28 +15,20 @@ export class CompaniesPage implements OnInit {
   public user: any;
 
   constructor(
-    private menuCtrl: MenuController,
     private modalCtrl: ModalController,
     private navCtrl: NavController,
-    private userSrv: UserService,
+    private authSrv: AuthService,
     private companySrv: CompanyService,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private alertSrv: AlertService
   ) { }
 
   ngOnInit() {
 
-    this.menuCtrl.enable(false);
+    this.user = this.authSrv.user;
 
-    this.user = this.userSrv.getCurrentUser();
+    this.checkCompanies();
 
-    if (this.user.plan_subscription == null) {
-      this.firstAccess();
-    }
-
-  }
-
-  ionViewWillLeave() {
-    this.menuCtrl.enable(true);
   }
 
   public async options(company: any) {
@@ -82,20 +74,18 @@ export class CompaniesPage implements OnInit {
 
   }
 
-  private async firstAccess() {
-
-    const modal = await this.modalCtrl.create({
-      component: ModalFirstAccessComponent,
-      backdropDismiss: false
-    });
-
-    modal.onDidDismiss()
-      .then(res => {
-        this.modalCompany();
+  private checkCompanies() {
+    if (this.user.companies?.length == 0) {
+      this.alertSrv.show({
+        icon: 'success',
+        message: 'Você já está cadastrado em nosso sistema, agora é a vez de cadastrar suas empresas para começarem os trabalhos.',
+        showCancelButton: false,
+        confirmButtonText: 'Cadastrar empresa',
+        onConfirm: () => {
+          this.modalCompany();
+        }
       });
-
-    return await modal.present();
-
+    }
   }
 
 }

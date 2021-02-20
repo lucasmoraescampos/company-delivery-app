@@ -1,11 +1,12 @@
 ion-button {
     height: 100px;
-    color: var(--ion-color-dark);
-    border: 1px dashed var(--ion-color-dark);
+    color: var(--ion-color-medium-tint);
+    border: 1px dashed var(--ion-color-medium-tint);
     width: 100%;
     border-radius: 10px;
     font-size: 13px;
-
+    font-weight: 500;
+    
     div {
         display: flex;
         flex-flow: column nowrap;
@@ -34,6 +35,7 @@ ion-button {
 ion-thumbnail {
     --size: 100%;
     --border-radius: 10px;
+    height: 128px;
     margin: 0 auto;
 
     img {
@@ -41,12 +43,12 @@ ion-thumbnail {
     }
 
     &:hover {
-        opacity: 0.5;
+        box-shadow: 0 0 10px var(--ion-color-medium);
         cursor: pointer;
     }
 
     &.rounded {
         --size: 128px;
-        border-radius: 100%;
+        --border-radius: 100%;
     }
 }

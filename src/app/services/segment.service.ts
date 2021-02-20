@@ -6,7 +6,7 @@ import { HttpResult } from '../models/http-result.model';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
+export class SegmentService {
 
   private url: string = ConfigHelper.Url;
 
@@ -20,23 +20,23 @@ export class CategoryService {
   }
 
   public getAll() {
-    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/category`);
+    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/segment`);
   }
 
   public create(data: any) {
-    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/category`, data);
+    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/segment`, data);
   }
 
   public reorder(data: any) {
-    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/category/reorder`, data);
+    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/segment/reorder`, data);
   }
 
   public update(id: number, data: any) {
-    return this.http.put<HttpResult>(`${this.url}/company/${this.companyId}/category/${id}`, data);
+    return this.http.put<HttpResult>(`${this.url}/company/${this.companyId}/segment/${id}`, data);
   }
 
   public delete(id: number) {
-    return this.http.delete<HttpResult>(`${this.url}/company/${this.companyId}/category/${id}`);
+    return this.http.delete<HttpResult>(`${this.url}/company/${this.companyId}/segment/${id}`);
   }
   
 }

@@ -14,20 +14,16 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  public getStates() {
-    return this.http.get<HttpResult>(`${this.url}/states`);
+  public getCategories() {
+    return this.http.get<HttpResult>(`${this.url}/categories`);
   }
 
-  public getCities(uf: string) {
-    return this.http.get<HttpResult>(`${this.url}/cities/${uf}`);
+  public getPlans(category_id: number) {
+    return this.http.get<HttpResult>(`${this.url}/category/${category_id}/plans`);
   }
 
   public getPaymentMethods() {
     return this.http.get<HttpResult>(`${this.url}/payment-methods`);
-  }
-  
-  public getOnlinePaymentFee() {
-    return this.http.get<HttpResult>(`${this.url}/online-payment-fee`);
   }
 
   public checkDuplicity(data: any) {

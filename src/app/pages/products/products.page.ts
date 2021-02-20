@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
 import { AlertService } from 'src/app/services/alert.service';
-import { CategoryService } from 'src/app/services/category.service';
+import { SegmentService } from 'src/app/services/segment.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ProductService } from 'src/app/services/product.service';
 import { ModalComplementsComponent } from './modal-complements/modal-complements.component';
@@ -26,7 +26,7 @@ export class ProductsPage implements OnInit, OnDestroy {
   
   constructor(
     private modalCtrl: ModalController,
-    private categorySrv: CategoryService,
+    private segmentSrv: SegmentService,
     private productSrv: ProductService,
     private loadingSrv: LoadingService,
     private actionSheetCtrl: ActionSheetController,
@@ -271,7 +271,7 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   private prepareCategories() {
     this.loadingSrv.show();
-    this.categorySrv.getAll()
+    this.segmentSrv.getAll()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         this.loadingSrv.hide();

@@ -66,15 +66,10 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
     this.formGroup1 = this.formBuilder.group({
       name: [this.product?.name, Validators.required],
-      category_id: [this.product?.category_id, Validators.required],
-      description: [this.product?.description, Validators.required]
-    });
-
-    this.formGroup2 = this.formBuilder.group({
+      segment_id: [this.product?.segment_id, Validators.required],
+      subcategory_id: [this.product?.subcategory_id, Validators.required],
       price: [this.product?.price, Validators.required],
-      qty: [this.product?.qty],
-      cost: [this.product?.cost],
-      rebate: [this.product?.rebate]
+      description: [this.product?.description, Validators.required]
     });
 
     this.formGroup3 = this.formBuilder.group({
@@ -109,10 +104,6 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
   public get formControl1() {
     return this.formGroup1.controls;
-  }
-
-  public get formControl2() {
-    return this.formGroup2.controls;
   }
 
   public get formControl3() {
@@ -223,7 +214,7 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
       const formData = new FormData();
 
-      const price = UtilsHelper.moneyToNumber(this.formControl2.price.value);
+      const price = UtilsHelper.moneyToNumber(this.formControl1.price.value);
 
       const has_sunday = this.formControl3.has_sunday.value == true ? '1' : '0';
       const has_monday = this.formControl3.has_monday.value == true ? '1' : '0';
@@ -247,20 +238,6 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
       if (this.blob) {
         formData.append('image', this.blob);
-      }
-
-      if (this.formControl2.qty.value.length) {
-        formData.append('qty', this.formControl2.qty.value);
-      }
-
-      if (this.formControl2.cost.value.length) {
-        const cost = UtilsHelper.moneyToNumber(this.formControl2.cost.value);
-        formData.append('cost', String(cost));
-      }
-
-      if (this.formControl2.rebate.value.length) {
-        const rebate = UtilsHelper.moneyToNumber(this.formControl2.rebate.value);
-        formData.append('rebate', String(rebate));
       }
 
       if (!this.allTimes) {
@@ -322,19 +299,19 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
   public checkPrice() {
 
-    if (!this.formControl2.price.errors) {
+    if (!this.formControl1.price.errors) {
 
-      const price = UtilsHelper.moneyToNumber(this.formControl2.price.value);
+      const price = UtilsHelper.moneyToNumber(this.formControl1.price.value);
 
       if (price == 0) {
 
-        this.formControl2.price.setErrors({ zero: true });
+        this.formControl1.price.setErrors({ zero: true });
 
       }
 
       else {
 
-        this.formControl2.price.setErrors(null);
+        this.formControl1.price.setErrors(null);
 
       }
 

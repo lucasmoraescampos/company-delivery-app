@@ -1,0 +1,111 @@
+ion-content {
+    ion-slides {
+        height: 100%;
+
+        ion-slide {
+            text-align: left;
+            overflow-y: auto;
+
+            .map {
+                width: 100%;
+                height: 100% !important;
+            }
+
+            form {
+                height: 100%;
+            }
+
+            ion-input {
+                span {
+                    position: absolute;
+                    right: 15px;
+                }
+            }
+
+            ion-searchbar {
+                --background: #ffffff;
+                --box-shadow: 0 2px 4px 1px var(--ion-color-medium);
+                position: absolute;
+                top: 0;
+                z-index: 999999999;
+                width: calc(100% - 18px);
+            }
+
+            ion-list {
+                &.address-complement {
+                    position: absolute;
+                    z-index: 99999;
+                    top: 60px;
+                    left: 15px;
+                    width: calc(100% - 30px);
+                    box-shadow: 0 0 10px var(--ion-color-medium);
+
+                    ion-item {
+                        font-size: 10pt;
+
+                        &:last-child {
+                            --border-width: 0;
+                        }
+                    }
+                }
+
+                &.plans {
+                    ion-item {
+                        --border-width: 0.55px;
+                        --border-radius: 5px;
+                        margin-bottom: 20px;
+
+                        &:last-child {
+                            margin: 0;
+                        }
+
+                        ion-radio {
+                            --border-width: 1px;
+                        }
+
+                        ion-label {
+                            h6 {
+                                font-size: 1rem;
+                                line-height: 1.125rem;
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                            }
+
+                            p {
+                                font-size: 0.875rem;
+                                line-height: 1rem;
+                                margin-bottom: 8px;
+                                font-weight: 400;
+                                color: var(--ion-color-dark);
+
+                                &:last-child {
+                                    margin: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (pointer: fine) {
+    ion-content {
+        ion-slides {
+            ion-slide {
+                &::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: #fff;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: var(--ion-color-light-shade);
+                }
+            }
+        }
+    }
+}

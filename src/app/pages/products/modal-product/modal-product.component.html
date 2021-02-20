@@ -32,7 +32,7 @@
 
             <ion-col class="ion-text-center" size="12">
 
-              <app-choose-image [invalid]="submitAttempt1 && !blob && !product" [aspectRatio]="3/2" [image]="product?.image" (changeImage)="changeImage($event)"></app-choose-image>
+              <app-choose-image [invalid]="submitAttempt1 && !blob && !product" [rounded]="true" [image]="product?.image" (changeImage)="changeImage($event)"></app-choose-image>
 
               <ion-note class="validation-error" *ngIf="submitAttempt1 && !blob && !product">
 
@@ -62,7 +62,7 @@
 
             <ion-col size="6">
 
-              <ion-label [class.invalid]="submitAttempt1 && formControl1.category_id.errors" class="stacked">Categoria</ion-label>
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.category_id.errors" class="stacked">Segmento</ion-label>
 
               <ion-select [class.invalid]="submitAttempt1 && formControl1.category_id.errors" interface="action-sheet" cancelText="Cancelar" formControlName="category_id" (keyup.enter)="description.setFocus()" #category>
 
@@ -74,7 +74,51 @@
 
                 <ion-icon name="information-circle-outline"></ion-icon>
       
+                Segmento é obrigatório.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.subcategory_id.errors" class="stacked">Categoria</ion-label>
+
+              <ion-select [class.invalid]="submitAttempt1 && formControl1.subcategory_id.errors" interface="action-sheet" cancelText="Cancelar" formControlName="subcategory_id" (keyup.enter)="price.setFocus()" #category>
+
+                <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}</ion-select-option>
+
+              </ion-select>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.subcategory_id.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
                 Categoria é obrigatória.
+      
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size="6">
+
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.price.errors" class="stacked">Preço de venda</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt1 && formControl1.price.errors" inputmode="numeric" formControlName="price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="description.setFocus()" (ionBlur)="checkPrice()" #price></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.price.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Preço é obrigatório.
+      
+              </ion-note>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.price.errors?.zero">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+      
+                Preço não pode ser igual a zero.
       
               </ion-note>
 
@@ -84,7 +128,7 @@
 
               <ion-label [class.invalid]="submitAttempt1 && formControl1.description.errors" class="stacked">Descrição</ion-label>
 
-              <ion-textarea [class.invalid]="submitAttempt1 && formControl1.description.errors" formControlName="description" maxlength="200" #description></ion-textarea>
+              <ion-textarea [class.invalid]="submitAttempt1 && formControl1.description.errors" formControlName="description" rows="3" maxlength="200" #description></ion-textarea>
 
               <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.description.errors?.required">
 
@@ -98,70 +142,6 @@
 
           </ion-row>
 
-        </ion-grid>
-
-      </form>
-
-    </ion-slide>
-
-    <ion-slide>
-      
-      <form [formGroup]="formGroup2" [hidden]="slideActiveIndex != 1">
-
-        <ion-grid class="ion-padding-horizontal">
-
-          <ion-row>
-
-            <ion-col size="6">
-
-              <ion-label class="stacked">Quantidade</ion-label>
-
-              <ion-input inputmode="numeric" formControlName="qty" placeholder="opcional" [brmasker]="{ type: 'num' }" enterkeyhint="go" (keyup.enter)="cost.setFocus()"></ion-input>
-
-            </ion-col>
-
-            <ion-col size="6">
-
-              <ion-label class="stacked">Preço de custo</ion-label>
-
-              <ion-input inputmode="numeric" formControlName="cost" placeholder="opcional" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="price.setFocus()" #cost></ion-input>
-              
-            </ion-col>
-
-            <ion-col size="6">
-
-              <ion-label [class.invalid]="submitAttempt2 && formControl2.price.errors" class="stacked">Preço de venda</ion-label>
-
-              <ion-input [class.invalid]="submitAttempt2 && formControl2.price.errors" inputmode="numeric" formControlName="price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go" (keyup.enter)="rebate.setFocus()" (ionBlur)="checkPrice()" #price></ion-input>
-
-              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.price.errors?.required">
-
-                <ion-icon name="information-circle-outline"></ion-icon>
-      
-                Preço é obrigatório.
-      
-              </ion-note>
-
-              <ion-note class="validation-error" *ngIf="submitAttempt2 && formControl2.price.errors?.zero">
-
-                <ion-icon name="information-circle-outline"></ion-icon>
-      
-                Preço não pode ser igual a zero.
-      
-              </ion-note>
-
-            </ion-col>
-
-            <ion-col size="6">
-
-              <ion-label class="stacked">Desconto</ion-label>
-
-              <ion-input inputmode="numeric" formControlName="rebate" placeholder="opcional" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="done" (keyup.enter)="next()" #rebate></ion-input>
-
-            </ion-col>
-
-          </ion-row>
-          
         </ion-grid>
 
       </form>
@@ -330,7 +310,7 @@
 
 <ion-footer>
 
-  <ion-grid class="ion-padding">
+  <ion-grid class="ion-padding-horizontal">
 
     <ion-row>
 

@@ -24,6 +24,8 @@ export class ChooseImageComponent implements OnInit {
 
   @Input() image: string = '';
 
+  @Input() style: string = '';
+
   @Output() changeImage = new EventEmitter<Blob>();
 
   public loading: boolean;

@@ -5,7 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { StringHelper } from 'src/app/helpers/string.helper';
 import { AlertService } from 'src/app/services/alert.service';
 import { AttendantService } from 'src/app/services/attendant.service';
-import { CategoryService } from 'src/app/services/category.service';
+import { SegmentService } from 'src/app/services/segment.service';
 import { OrderService } from 'src/app/services/order.service';
 import { ProductService } from 'src/app/services/product.service';
 import { TableService } from 'src/app/services/table.service';
@@ -43,7 +43,7 @@ export class ModalOrderMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalCtrl: ModalController,
-    private categorySrv: CategoryService,
+    private segmentSrv: SegmentService,
     private productSrv: ProductService,
     private alertSrv: AlertService,
     private orderSrv: OrderService,
@@ -157,7 +157,7 @@ export class ModalOrderMenuComponent implements OnInit, OnDestroy {
 
   private prepareCategories() {
     this.loading = true;
-    this.categorySrv.getAll()
+    this.segmentSrv.getAll()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         this.loading = false;
