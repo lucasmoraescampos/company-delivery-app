@@ -43,6 +43,10 @@ export class SegmentsPage implements OnInit {
 
   }
 
+  ionViewWillEnter() {
+    this.reorder = false;
+  }
+
   public doReorder(ev: CustomEvent<ItemReorderEventDetail>) {
     this.segments = ev.detail.complete(this.segments);
   }
@@ -133,8 +137,8 @@ export class SegmentsPage implements OnInit {
 
   private deletesegment(segment: any) {
     this.alertSrv.show({
-      icon: 'question',
-      message: `Excluir a categoria ${segment.name}?`,
+      icon: 'warning',
+      message: `Você está prestes a excluír a categoria "${segment.name}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
         
@@ -163,7 +167,8 @@ export class SegmentsPage implements OnInit {
 
               this.alertSrv.toast({
                 icon: 'error',
-                message: res.message
+                message: res.message,
+                duration: 6000
               });
 
             }

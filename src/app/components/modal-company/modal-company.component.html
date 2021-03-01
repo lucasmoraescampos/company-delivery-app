@@ -2,6 +2,16 @@
 
   <ion-toolbar>
 
+    <ion-buttons slot="start">
+
+      <ion-button class="back" (click)="previous()" *ngIf="slideActiveIndex > 0">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
     <ion-title *ngIf="slideActiveIndex == 0">Informações</ion-title>
 
     <ion-title *ngIf="slideActiveIndex == 1">Localização</ion-title>
@@ -14,9 +24,9 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()">
+      <ion-button class="close" (click)="dismiss()" *ngIf="slideActiveIndex == 0">
 
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
@@ -28,25 +38,27 @@
 
 <ion-content>
 
-  <ion-slides class="swiper-no-swiping" [options]="{ initialSlide: 0 }">
+  <ion-slides class="swiper-no-swiping">
 
     <ion-slide>
 
       <form [formGroup]="formGroup1">
 
-        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 0">
+        <ion-grid *ngIf="slideActiveIndex == 0">
 
           <ion-row>
 
             <ion-col class="ion-text-center" size="12">
 
-              <app-choose-image [aspectRatio]="10 / 2" [image]="'http://api.meupedido.localhost/assets/images/banner.png'"
+              <app-choose-image style="width: 100%;" [aspectRatio]="10 / 2"
+                [image]="company?.banner ? company.banner : 'http://api.meupedido.localhost/assets/images/banner.png'"
+                (changeImage)="changeBanner($event)"></app-choose-image>
+
+              <app-choose-image style="margin-top: -64px; background-color: #fff;"
+                [invalid]="submitAttempt1 && !blobImage && !company" [rounded]="true" [image]="company?.image"
                 (changeImage)="changeImage($event)"></app-choose-image>
 
-              <app-choose-image style="margin-top: -64px; background-color: #fff;" [invalid]="submitAttempt1 && !blobImage"
-                [rounded]="true" (changeImage)="changeImage($event)"></app-choose-image>
-
-              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blobImage">
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blobImage && !company">
 
                 <ion-icon name="information-circle-outline"></ion-icon>
 
@@ -62,7 +74,8 @@
                 restaurante</ion-label>
 
               <ion-input [class.invalid]="submitAttempt1 && formControl1.name.errors" formControlName="name"
-                maxlength="150" enterkeyhint="go" (keydown.Tab)="category.open()" (keyup.enter)="category.open()"></ion-input>
+                maxlength="150" enterkeyhint="go" (keydown.Tab)="category.open()" (keyup.enter)="category.open()">
+              </ion-input>
 
               <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.name.errors?.required">
 
@@ -103,7 +116,8 @@
               </ion-label>
 
               <ion-input [class.invalid]="submitAttempt1 && formControl1.phone.errors" formControlName="phone"
-                [brmasker]="{ phone: true }" maxlength="15" enterkeyhint="go" (keyup.enter)="document_number.setFocus()" #phone>
+                [brmasker]="{ phone: true }" maxlength="15" enterkeyhint="go" (keyup.enter)="document_number.setFocus()"
+                #phone>
               </ion-input>
 
               <ion-note class="validation-error" *ngIf="submitAttempt1 && formControl1.phone.errors?.required">
@@ -191,13 +205,15 @@
 
       </ion-fab>
 
+      <ion-button class="btn-map" (click)="next()" *ngIf="slideActiveIndex == 1">Continuar</ion-button>
+
     </ion-slide>
 
     <ion-slide>
 
       <form [formGroup]="formGroup2">
 
-        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 2">
+        <ion-grid *ngIf="slideActiveIndex == 2">
 
           <ion-row>
 
@@ -276,7 +292,7 @@
 
     <ion-slide>
 
-      <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 3">
+      <ion-grid *ngIf="slideActiveIndex == 3">
 
         <ion-row>
 
@@ -298,7 +314,8 @@
 
                     <p *ngIf="!plan.delivery_person">Entrega feita por sua empresa</p>
 
-                    <p>Comissão de {{ plan.fee }}% sobre o valor de todos os pedidos e mais {{ plan.online_payment_fee }}% em pedidos com pagamento online</p>
+                    <p>Comissão de {{ plan.fee }}% sobre o valor de todos os pedidos e mais {{ plan.online_payment_fee
+                      }}% em pedidos com pagamento online</p>
 
                   </ion-label>
 
@@ -313,14 +330,14 @@
         </ion-row>
 
       </ion-grid>
-      
+
     </ion-slide>
 
     <ion-slide>
 
       <form [formGroup]="formGroup3">
 
-        <ion-grid class="ion-padding-horizontal" *ngIf="slideActiveIndex == 4">
+        <ion-grid *ngIf="slideActiveIndex == 4">
 
           <ion-row>
 
@@ -358,7 +375,7 @@
 
             </ion-col>
 
-            <ion-col size-xs="6" size-sm="6">
+            <ion-col size-xs="12" size-sm="4">
 
               <ion-label [class.invalid]="submitAttempt3 && formControl3.min_order_value.errors" class="stacked">Pedido
                 mínimo</ion-label>
@@ -378,13 +395,32 @@
 
             </ion-col>
 
-            <ion-col size-xs="6" size-sm="6">
+            <ion-col size-xs="12" size-sm="4">
+
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" class="stacked">Valor da
+                entrega</ion-label>
+
+              <ion-input [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" inputmode="numeric"
+                formControlName="delivery_price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
+                #delivery_price></ion-input>
+
+              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.delivery_price.errors?.required">
+
+                <ion-icon name="information-circle-outline"></ion-icon>
+
+                Informe o valor da entrega.
+
+              </ion-note>
+
+            </ion-col>
+
+            <ion-col size-xs="12" size-sm="4">
 
               <ion-label [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" class="stacked">Tempo de
                 espera</ion-label>
 
               <ion-input [class.invalid]="submitAttempt3 && formControl3.waiting_time.errors" inputmode="numeric"
-                formControlName="waiting_time" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="go"
+                formControlName="waiting_time" maxlength="3" [brmasker]="{ type: 'num' }" enterkeyhint="go"
                 (ionBlur)="checkWaitingTime()" (keyup.enter)="delivery_price.setFocus()" #waiting_time>
 
                 <span>minutos</span>
@@ -409,37 +445,18 @@
 
             </ion-col>
 
-            <ion-col size-xs="6" size-sm="6">
+            <ion-col class="ion-margin-top ion-text-center" size="12">
 
-              <ion-label [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" class="stacked">Valor da
-                entrega</ion-label>
+              <ion-label [class.invalid]="submitAttempt3 && formControl3.radius.errors" class="ion-text-wrap">Raio de
+                cobertura: <b>{{ formControl3.radius.value }} km</b></ion-label>
 
-              <ion-input [class.invalid]="submitAttempt3 && formControl3.delivery_price.errors" inputmode="numeric"
-                formControlName="delivery_price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
-                (keyup.enter)="radius.setFocus()" #delivery_price></ion-input>
+              <ion-range min="0" max="30" formControlName="radius" (ionBlur)="checkRadius()">
 
-              <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.delivery_price.errors?.required">
+                <ion-label slot="start">0 km</ion-label>
 
-                <ion-icon name="information-circle-outline"></ion-icon>
+                <ion-label slot="end">30 km</ion-label>
 
-                Informe o valor da entrega.
-
-              </ion-note>
-
-            </ion-col>
-
-            <ion-col size-xs="6" size-sm="6">
-
-              <ion-label [class.invalid]="submitAttempt3 && formControl3.radius.errors" class="stacked">Raio de
-                cobertura</ion-label>
-
-              <ion-input [class.invalid]="submitAttempt3 && formControl3.radius.errors" inputmode="numeric"
-                formControlName="radius" [brmasker]="{ type: 'num', len: 3 }" enterkeyhint="done"
-                (ionBlur)="checkRadius()" (keyup.enter)="next()" #radius>
-
-                <span>km</span>
-
-              </ion-input>
+              </ion-range>
 
               <ion-note class="validation-error" *ngIf="submitAttempt3 && formControl3.radius.errors?.required">
 
@@ -453,7 +470,7 @@
 
                 <ion-icon name="information-circle-outline"></ion-icon>
 
-                Informe um valor maior que zero.
+                Informe um raio maior que 0 km.
 
               </ion-note>
 
@@ -471,33 +488,21 @@
 
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="slideActiveIndex != 1">
 
-  <ion-grid class="ion-padding">
+  <ion-grid>
 
     <ion-row>
 
-      <ion-col class="ion-text-center" size="12" *ngIf="slideActiveIndex == 0">
+      <ion-col class="ion-text-center" size="12">
 
-        <ion-button expand="block" (click)="next()">Continuar</ion-button>
+        <ion-button expand="block" [disabled]="slideActiveIndex == 3 && selectedPlan === undefined" (click)="next()">
 
-      </ion-col>
+          <span *ngIf="slideActiveIndex < 4">Continuar</span>
 
-      <ion-col size="6" *ngIf="slideActiveIndex > 0">
+          <span *ngIf="slideActiveIndex == 4">Salvar</span>
 
-        <ion-button fill="clear" (click)="previous()">Voltar</ion-button>
-
-      </ion-col>
-
-      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex > 0 && slideActiveIndex < 4">
-
-        <ion-button [disabled]="slideActiveIndex == 3 && selectedPlan === undefined" (click)="next()">Continuar</ion-button>
-
-      </ion-col>
-
-      <ion-col class="ion-text-end" size="6" *ngIf="slideActiveIndex == 4">
-
-        <ion-button (click)="next()">Salvar</ion-button>
+        </ion-button>
 
       </ion-col>
 

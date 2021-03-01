@@ -1,12 +1,6 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
-@import "alert";
-@import "font";
-@import "form";
-@import "modal";
-@import "utils";
-
 /** Ionic CSS Variables **/
 :root {
 
@@ -60,7 +54,7 @@
   --ion-color-warning-tint: #ffca22;
 
   /** danger **/
-  --ion-color-danger: #eb445a;
+  --ion-color-danger: #e60506;
   --ion-color-danger-rgb: 235, 68, 90;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;

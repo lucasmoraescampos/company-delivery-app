@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
-import { ModalOrderMenuComponent } from 'src/app/components/modal-order-menu/modal-order-menu.component';
 import { CompanyService } from 'src/app/services/company.service';
 
 @Component({
@@ -47,7 +46,7 @@ export class HomePage implements OnInit {
   view: any[];
 
   colorScheme = {
-    domain: ['#e60506']
+    domain: ['var(--ion-color-primary)']
   };
 
   constructor(
@@ -62,24 +61,14 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter() {
 
-    const chart: any = document.querySelector('.chart-week');
+    const chart: any = document.querySelector('.chart');
 
-    this.view = [chart.offsetWidth - 32, 150];
+    console.log(chart.offsetWidth)
+
+    this.view = [chart.offsetWidth - 32, 185];
     
   }
-
-  public async newOrder() {
-
-    const modal = await this.modalCtrl.create({
-      component: ModalOrderMenuComponent,
-      backdropDismiss: false,
-      cssClass: 'modal-lg'
-    });
-
-    return await modal.present();
-
-  }
-
+  
   public onSelect(event) {
     console.log(event);
   }

@@ -36,21 +36,23 @@
 
         <ion-card class="animate__animated animate__fadeIn" button="true" (click)="options(product)">
 
-          <ion-badge color="primary" *ngIf="!product.status">Inativo</ion-badge>
+          <ion-badge color="success" *ngIf="product.status == true">Ativo</ion-badge>
 
-          <ion-thumbnail class="ion-float-left" [class.inactive]="!product.status">
-
-            <img [src]="product.image">
-
-          </ion-thumbnail>
+          <ion-badge color="danger" *ngIf="product.status == false">Pausado</ion-badge>
 
           <ion-item lines="none">
+
+            <ion-thumbnail>
+
+              <img [src]="product.image">
+  
+            </ion-thumbnail>
 
             <ion-label>
 
               <p class="ion-text-wrap">{{ product.name }}</p>
 
-              <p>{{ product.category.name }}</p>
+              <p>{{ product.segment.name }}</p>
 
               <p>{{ product.price | money }}</p>
 

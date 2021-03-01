@@ -13,9 +13,9 @@ export class ConfigHelper {
     public static Loading = {
         backdropBorderRadius: '4px',
         backdropBackgroundColour: 'rgba(255, 255, 255, 0.5)',
-        primaryColour: '#428cff',
-        secondaryColour: '#428cff',
-        tertiaryColour: '#428cff',
+        primaryColour: '#18a4e0',
+        secondaryColour: '#18a4e0',
+        tertiaryColour: '#18a4e0',
         fullScreenBackdrop: true
     };
 }

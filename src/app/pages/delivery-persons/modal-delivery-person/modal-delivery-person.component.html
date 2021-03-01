@@ -6,9 +6,9 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()">
+      <ion-button class="close" (click)="dismiss()">
 
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
@@ -22,7 +22,7 @@
 
   <form [formGroup]="formGroup">
 
-    <ion-grid class="ion-padding-horizontal">
+    <ion-grid>
 
       <ion-row>
 
@@ -71,7 +71,7 @@
 
 <ion-footer>
 
-  <ion-grid class="ion-padding">
+  <ion-grid>
 
     <ion-row>
 

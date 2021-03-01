@@ -2,7 +2,8 @@
 
   <input type="file" accept="image/*" (change)="fileChangeEvent($event)" [hidden]="true" #inputfile>
 
-  <ion-button [style]="style" [ngClass]="{ invalid: invalid, rounded: rounded }" fill="clear" *ngIf="!image" (click)="chooseImage()">
+  <ion-button [style]="style" [ngClass]="{ invalid: invalid, rounded: rounded }" fill="clear" *ngIf="!image"
+    (click)="chooseImage()">
 
     <div>
 
@@ -14,7 +15,8 @@
 
   </ion-button>
 
-  <ion-thumbnail [style]="style" [ngClass]="{ invalid: invalid, rounded: rounded }" *ngIf="image" (click)="chooseImage()">
+  <ion-thumbnail [style]="style" [ngClass]="{ invalid: invalid, rounded: rounded }" *ngIf="image"
+    (click)="chooseImage()">
 
     <img [src]="image">
 

@@ -28,7 +28,21 @@ ion-content {
                 position: absolute;
                 top: 0;
                 z-index: 999999999;
-                width: calc(100% - 18px);
+                width: calc(100% - 4px);
+            }
+
+            ion-fab {
+                bottom: 70px;
+            }
+
+            ion-button.btn-map {
+                position: absolute;
+                bottom: 16px;
+                width: calc(100% - 32px);
+            }
+
+            ion-range {
+                padding: 0 10px;
             }
 
             ion-list {

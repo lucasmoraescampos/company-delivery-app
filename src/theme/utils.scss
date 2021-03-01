@@ -1,14 +1,3 @@
-ion-header {
-    ion-toolbar {
-        ion-buttons[slot="start"] {
-            margin-left: 12px;
-        }
-        ion-buttons[slot="end"] {
-            margin-right: 12px;
-        }
-    }
-}
-
 ion-item {
     --padding-start: 16px;
     --inner-padding-end: 16px;
@@ -24,6 +13,28 @@ ion-segment-button {
     font-size: 16px;
 }
 
+ion-searchbar {
+    --border-radius: 5px !important;
+}
+
+ion-button {
+    &.close {
+        margin-right: 6px !important;
+        
+        ion-icon {
+            font-size: 18px !important;
+        }
+    }
+
+    &.back {
+        margin-left: 2px !important;
+
+        ion-icon {
+            font-size: 18px !important;
+        }
+    }
+}
+
 ion-card {
     margin: 16px;
 }
@@ -32,8 +43,12 @@ ion-card-title {
     font-size: 16px;
 }
 
-.popover-content {
-    width: auto !important;
+app-choose-company {
+    margin-right: 5px;
+}
+
+ion-menu-button {
+    margin-left: 3px;
 }
 
 ion-note.note-center {
@@ -42,9 +57,10 @@ ion-note.note-center {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    color: var(--ion-color-medium-tint);
 
     ion-icon {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     p {
@@ -54,6 +70,52 @@ ion-note.note-center {
     }
 }
 
+ion-grid,
+ion-col {
+    padding: 8px;
+}
+
 ion-fab {
-    margin: 10px;
+    margin: 6px;
+}
+
+ion-backdrop {
+    cursor: auto;
+}
+
+@media (min-width: 768px) {
+    ion-modal.modal-sm .modal-wrapper {
+        width: 500px;
+        height: 400px;
+    }
+
+    ion-modal.modal-lg .modal-wrapper {
+        width: 700px;
+        height: 580px;
+    }
+
+    ion-modal.modal-xl .modal-wrapper {
+        width: calc(100% - 50px);
+        height: calc(100% - 50px);
+    }
+}
+
+@media (pointer: fine) {
+    ion-content {
+        ion-slides {
+            ion-slide {
+                &::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: #fff;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: var(--ion-color-light-shade);
+                }
+            }
+        }
+    }
 }

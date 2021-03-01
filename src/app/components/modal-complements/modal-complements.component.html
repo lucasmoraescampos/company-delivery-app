@@ -1,0 +1,139 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-buttons slot="start" *ngIf="slideActiveIndex == 1">
+
+      <ion-button class="back" (click)="prev()">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title *ngIf="slideActiveIndex == 0">Complementos</ion-title>
+
+    <ion-title *ngIf="slideActiveIndex == 1">
+
+      <h6 class="ion-text-wrap">{{ product.complements[complementActiveIndex].title }}</h6>
+
+    </ion-title>
+
+    <ion-buttons slot="end" *ngIf="slideActiveIndex == 0">
+
+      <ion-button class="close" color="medium" (click)="dismiss()">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="slideActiveIndex == 1">
+
+      <ion-button class="pencil" (click)="modalComplement(complementActiveIndex)">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/pencil.svg"></ion-icon>
+
+      </ion-button>
+
+      <ion-button class="trash" (click)="deleteComplement(complementActiveIndex)">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/trash.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-slides class="swiper-no-swiping">
+
+    <ion-slide class="complements">
+
+      <ion-list *ngIf="product.complements.length > 0">
+
+        <ion-item class="animate__animated animate__fadeIn" lines="full" button="true" detail="true" color="light"
+          *ngFor="let complement of product.complements; let i=index" (click)="next(i)">
+
+          <ion-label class="ion-text-wrap">{{ complement.title }}</ion-label>
+
+        </ion-item>
+
+      </ion-list>
+
+      <ion-note class="note-center animate__animated animate__fadeIn" *ngIf="product.complements.length == 0">
+
+        <ion-icon src="../../../../assets/icon/complement.svg"></ion-icon>
+
+        <p>Nenhum complemento cadastrado</p>
+
+      </ion-note>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+
+        <ion-fab-button (click)="modalComplement()">
+
+          <ion-icon name="add-outline"></ion-icon>
+
+        </ion-fab-button>
+
+      </ion-fab>
+
+    </ion-slide>
+
+    <ion-slide class="subcomplements">
+
+      <ion-list *ngIf="slideActiveIndex == 1 && product.complements[complementActiveIndex].subcomplements.length > 0">
+
+        <ion-item lines="full" button="true" detail="false"
+          *ngFor="let subcomplement of product.complements[complementActiveIndex].subcomplements; let i=index"
+          (click)="modalSubcomplement(i)">
+
+          <ion-label class="ion-text-wrap">{{ subcomplement.description }}</ion-label>
+
+          <ion-buttons slot="end" (click)="$event.stopPropagation()">
+
+            <ion-button (click)="deleteSubcomplement(i)">
+
+              <ion-icon slot="icon-only" src="../../../../assets/icon/trash.svg"></ion-icon>
+
+            </ion-button>
+
+          </ion-buttons>
+
+        </ion-item>
+
+      </ion-list>
+
+      <ion-note class="note-center animate__animated animate__fadeIn"
+        *ngIf="slideActiveIndex == 1 && product.complements[complementActiveIndex].subcomplements.length == 0">
+
+        <ion-icon src="../../../../assets/icon/subcomplement.svg"></ion-icon>
+
+        <p>Nenhuma opção cadastrada</p>
+
+      </ion-note>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+
+        <ion-fab-button (click)="modalSubcomplement()">
+
+          <ion-icon name="add-outline"></ion-icon>
+
+        </ion-fab-button>
+
+      </ion-fab>
+
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>
+
+<ngx-loading [show]="loading"></ngx-loading>

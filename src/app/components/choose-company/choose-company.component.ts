@@ -20,7 +20,7 @@ export class ChooseCompanyComponent implements OnInit {
     const popover = await this.popoverCtrl.create({
       component: PopoverCompaniesComponent,
       event: ev,
-      translucent: true
+      cssClass: 'popover-companies'
     });
 
     return await popover.present();

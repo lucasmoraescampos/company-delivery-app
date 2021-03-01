@@ -1,0 +1,104 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Opção</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button class="close" color="medium" (click)="dismiss()">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-grid [formGroup]="formGroup">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-label [class.invalid]="submitAttempt && formControl.description.errors" class="stacked">Descrição
+        </ion-label>
+
+        <ion-textarea [class.invalid]="submitAttempt && formControl.description.errors" formControlName="description"
+          maxlength="200" rows="3"></ion-textarea>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.description.errors?.required">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Descreva a opção.
+
+        </ion-note>
+
+      </ion-col>
+
+      <ion-col size-xs="12" *ngIf="!isSubcomplementFree">
+
+        <ion-label [class.invalid]="submitAttempt && formControl.price.errors" class="stacked">Preço</ion-label>
+
+        <ion-input [class.invalid]="submitAttempt && formControl.price.errors" inputmode="numeric"
+          formControlName="price" enterkeyhint="done" [brmasker]="{ money: true, thousand: '.' }"
+          (ionBlur)="checkPrice()" (keyup.enter)="save()"></ion-input>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.price.errors?.required">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Informe o preço.
+
+        </ion-note>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.price.errors?.zero">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Preço não pode ser igual à zero.
+
+        </ion-note>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-item class="ion-margin-top" lines="none">
+
+    <ion-checkbox slot="start" mode="md" [checked]="isSubcomplementFree" (ionChange)="changeSubcomplementFree($event)">
+    </ion-checkbox>
+
+    <ion-label>Grátis</ion-label>
+
+  </ion-item>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" (click)="save()">Salvar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

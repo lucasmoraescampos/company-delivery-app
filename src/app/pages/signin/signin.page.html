@@ -64,9 +64,9 @@
 
         <ion-card-header>
 
-          <ion-button class="btn-prev" fill="clear" *ngIf="slideActiveIndex == 1" (click)="prev()">
+          <ion-button class="back" fill="clear" *ngIf="slideActiveIndex == 1" (click)="prev()">
     
-            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
     
           </ion-button>
       
@@ -74,7 +74,7 @@
 
         </ion-card-header>
 
-        <ion-card-content>
+        <ion-card-content class="ion-no-padding">
 
           <ion-grid class="ion-margin-top" *ngIf="slideActiveIndex == 1">
 
@@ -115,9 +115,9 @@
 
         <ion-card-header>
 
-          <ion-button class="btn-prev" fill="clear" *ngIf="slideActiveIndex == 2" (click)="prev()">
+          <ion-button class="back"  fill="clear" *ngIf="slideActiveIndex == 2" (click)="prev()">
     
-            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
     
           </ion-button>
       
@@ -125,7 +125,7 @@
 
         </ion-card-header>
 
-        <ion-card-content>
+        <ion-card-content class="ion-no-padding">
 
           <ion-grid class="ion-margin-top" *ngIf="slideActiveIndex == 2">
 
@@ -201,9 +201,9 @@
 
         <ion-card-header>
 
-          <ion-button class="btn-prev" fill="clear" *ngIf="slideActiveIndex == 3" (click)="prev()">
+          <ion-button class="back" fill="clear" *ngIf="slideActiveIndex == 3" (click)="prev()">
     
-            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
     
           </ion-button>
       
@@ -211,7 +211,7 @@
 
         </ion-card-header>
 
-        <ion-card-content>
+        <ion-card-content class="ion-no-padding">
 
           <ion-grid class="ion-margin-top" [formGroup]="formGroup" *ngIf="slideActiveIndex == 3">
 
@@ -283,9 +283,9 @@
 
         <ion-card-header>
 
-          <ion-button class="btn-prev" fill="clear" *ngIf="slideActiveIndex == 4" (click)="prev()">
+          <ion-button class="back" fill="clear" *ngIf="slideActiveIndex == 4" (click)="prev()">
     
-            <ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+            <ion-icon slot="icon-only" src="../../../../assets/icon/chevron-back.svg"></ion-icon>
     
           </ion-button>
       
@@ -293,7 +293,7 @@
 
         </ion-card-header>
 
-        <ion-card-content>
+        <ion-card-content class="ion-no-padding">
 
           <ion-grid class="ion-margin-top" *ngIf="slideActiveIndex == 4">
 

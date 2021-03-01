@@ -6,9 +6,9 @@
 
     <ion-buttons slot="end">
 
-      <ion-button (click)="dismiss()">
+      <ion-button class="close" color="medium" (click)="dismiss()">
 
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
 
       </ion-button>
 
@@ -34,7 +34,7 @@
 
         <ion-card class="animate__animated animate__fadeIn" button="true" (click)="options(result)">
 
-          <ion-badge color="primary" *ngIf="!result.status">Inativo</ion-badge>
+          <ion-badge color="danger" *ngIf="!result.status">Inativo</ion-badge>
 
           <ion-thumbnail class="ion-float-left" [class.inactive]="!result.status">
 
@@ -48,7 +48,7 @@
 
               <p class="ion-text-wrap">{{ result.name }}</p>
 
-              <p>{{ result.category.name }}</p>
+              <p>{{ result.segment.name }}</p>
 
               <p>{{ result.price | money }}</p>
 

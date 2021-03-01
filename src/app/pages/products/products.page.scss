@@ -10,57 +10,51 @@ ion-header {
 }
 
 ion-content {
-    ion-grid {
-        padding: 8px;
-
-        ion-col {
-            padding: 16px;
-        }
-    }
-
     ion-card {
         margin: 0;
 
         ion-badge {
             position: absolute;
-            top: 40.5px;
-            left: 21.07px;
-            z-index: 99999;
+            top: 0;
+            right: 0;
+            border-radius: 0;
+            border-bottom-left-radius: 8px;
+            font-size: 10px;
+            z-index: 9999999;
         }
 
-        ion-thumbnail {
-            --size: 100px;
+        ion-item {
+            --padding-top: 16px;
+            --padding-bottom: 16px;
 
-            &.inactive {
-                background: rgba(0, 0, 0, 0.4);
-                
-                img {
-                    opacity: 0.4;
+            ion-thumbnail {
+                --border-radius: 5px;
+                width: 86px;
+                height: 86px;
+                margin: 0 16px 0 0;
+            }
+
+            ion-label {
+                margin: 0;
+
+                p:first-child {
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    font-weight: bold;
+                    font-size: 16px;
+                    line-height: 18px;
                 }
-            }
-        }
 
-        ion-label {
-            margin: 10px 0;
+                p:nth-child(2) {
+                    margin: 5px 0;
+                }
 
-            p:first-child {
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                font-weight: bold;
-                font-size: 16px;
-                line-height: 18px;
-                height: 36px;
-            }
-
-            p:nth-child(2) {
-                margin: 5px 0;
-            }
-
-            p:last-child {
-                color: var(--ion-color-success);
-                font-weight: 500;
+                p:last-child {
+                    color: var(--ion-color-success);
+                    font-weight: 500;
+                }
             }
         }
     }

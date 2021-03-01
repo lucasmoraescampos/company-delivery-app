@@ -4,9 +4,9 @@ ion-input {
     border-radius: 5px;
     font-size: 0.9375rem !important;
     font-weight: 500 !important;
+    height: 44px;
 
     input {
-        height: 44px;
         padding: 0 12px !important;
     }
 }
@@ -74,7 +74,7 @@ ion-note.validation-error {
     color: var(--ion-color-danger);
     font-size: 12px;
     font-weight: 500;
-    
+
     ion-icon {
         font-size: 14px;
         margin-bottom: -3px;
@@ -82,7 +82,9 @@ ion-note.validation-error {
 }
 
 @media only screen and (min-width: 992px) {
-    ion-input, ion-select, ion-textarea {
+    ion-input,
+    ion-select,
+    ion-textarea {
         font-size: 1rem !important;
         line-height: 20px !important;
     }

@@ -30,6 +30,11 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  public setCurrentUser(data: any) {
+    localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(data));
+    this.currentUserSubject.next(data);
+  }
+
   public signInWithFacebook() {
     const provider = new firebase.auth.FacebookAuthProvider();
     return this.angularFireAuth.signInWithPopup(provider);
@@ -41,6 +46,17 @@ export class AuthService {
       provider.setCustomParameters({ login_hint: email });
     }
     return this.angularFireAuth.signInWithPopup(provider);
+  }
+
+  public auth() {
+    return this.http.get<HttpResult>(`${this.url}/user/auth`)
+      .pipe(map(res => {
+        if (res.success) {
+          localStorage.setItem(ConfigHelper.Storage.CurrentUser, JSON.stringify(res.data));
+          this.currentUserSubject.next(res.data);
+        }
+        return res;
+      }));
   }
 
   public signUp(data: any) {

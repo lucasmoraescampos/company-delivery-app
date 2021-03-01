@@ -14,9 +14,9 @@
 
     <ion-row>
 
-      <ion-col size-xs="12" size-sm="6" size-lg="4" size-xl="3" *ngFor="let company of user.companies">
+      <ion-col size-xs="12" size-sm="6" size-lg="4" size-xl="3" *ngFor="let company of user.companies; let i=index">
 
-        <ion-card class="ion-text-center" button="true" (click)="options(company)">
+        <ion-card class="ion-text-center" button="true" (click)="options(i)">
 
           <ion-card-header>
 

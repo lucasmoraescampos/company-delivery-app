@@ -29,14 +29,16 @@ export class CompanyService {
   }
   
   public create(data: FormData) {
-    return this.http.post<HttpResult>(`${this.url}/user/company`, data)
-      .pipe(map(res => {
-        if (res.success) {
-          const current_user = JSON.parse(localStorage.getItem(ConfigHelper.Storage.CurrentUser));
-          current_user.companies.push(res.data);
-        }
-        return res;
-      }));
+    return this.http.post<HttpResult>(`${this.url}/user/company`, data);
+  }
+
+  public update(id: number, data: FormData) {
+    data.append('_method', 'put');
+    return this.http.post<HttpResult>(`${this.url}/user/company/${id}`, data);
+  }
+
+  public delete(id: number) {
+    return this.http.delete<HttpResult>(`${this.url}/user/company/${id}`);
   }
 
 }

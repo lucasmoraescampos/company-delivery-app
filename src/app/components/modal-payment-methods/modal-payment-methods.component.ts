@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
@@ -15,6 +15,8 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
 
   public loading: boolean;
 
+  public company: any;
+
   public paymentMethods: any[];
 
   public selecteds: any[] = [];
@@ -24,10 +26,13 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
   constructor(
     private apiSrv: ApiService,
     private modalCtrl: ModalController,
-    private alertSrv: AlertService
+    private alertSrv: AlertService,
+    private navParams: NavParams
   ) { }
 
   ngOnInit() {
+
+    this.company = this.navParams.get('company');
 
     this.preparePaymentMethods();
 
@@ -128,6 +133,15 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.loading = false;
         this.paymentMethods = res.data;
+        this.paymentMethods.forEach((paymentMethod) => {
+          if (ArrayHelper.exist(this.company.payment_methods, 'id', paymentMethod.id)) {
+            this.selecteds.push(paymentMethod.id);
+            paymentMethod.checked = true;
+          }
+          else {
+            paymentMethod.checked = false;
+          }
+        });
       });
   }
 

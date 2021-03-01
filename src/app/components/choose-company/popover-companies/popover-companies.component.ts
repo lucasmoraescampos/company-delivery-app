@@ -56,7 +56,7 @@ export class PopoverCompaniesComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.alertSrv.show({
-      icon: 'question',
+      icon: 'warning',
       message: 'Deseja realmente sair?',
       confirmButtonText: 'Sair',
       onConfirm: () => {

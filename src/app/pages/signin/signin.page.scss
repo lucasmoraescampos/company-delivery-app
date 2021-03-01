@@ -12,10 +12,10 @@ ion-content {
                 margin: 0;
 
                 ion-card-header {
-                    ion-button.btn-prev {
+                    ion-button.back {
                         position: absolute;
                         top: 8px;
-                        left: 4px;
+                        left: -6px;
                         float: left;
                         z-index: 999999999;
                     }
@@ -36,7 +36,7 @@ ion-content {
                 }
 
                 ion-card-content {
-                    height: calc(100% - 72px);
+                    height: calc(100% - 66px);
 
                     h6 {
                         font-size: 1rem;
@@ -57,8 +57,8 @@ ion-content {
 
                     ion-row.footer {
                         position: fixed;
-                        bottom: 20px;
-                        width: calc(100% - 50px);
+                        bottom: 8px;
+                        width: calc(100% - 16px);
                     }
                 }
 

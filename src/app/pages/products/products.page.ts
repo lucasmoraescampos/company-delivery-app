@@ -7,9 +7,9 @@ import { AlertService } from 'src/app/services/alert.service';
 import { SegmentService } from 'src/app/services/segment.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ProductService } from 'src/app/services/product.service';
-import { ModalComplementsComponent } from './modal-complements/modal-complements.component';
-import { ModalProductComponent } from './modal-product/modal-product.component';
-import { ModalSearchProductComponent } from './modal-search-product/modal-search-product.component';
+import { ModalComplementsComponent } from '../../components/modal-complements/modal-complements.component';
+import { ModalProductComponent } from '../../components/modal-product/modal-product.component';
+import { ModalSearchProductComponent } from '../../components/modal-search-product/modal-search-product.component';
 
 @Component({
   selector: 'app-products',
@@ -18,7 +18,7 @@ import { ModalSearchProductComponent } from './modal-search-product/modal-search
 })
 export class ProductsPage implements OnInit, OnDestroy {
 
-  public categories: any[];
+  public segments: any[];
 
   public products: any[];
 
@@ -36,7 +36,7 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.prepareCategories();
+    this.prepareSegments();
 
     this.prepareProducts();
 
@@ -55,14 +55,19 @@ export class ProductsPage implements OnInit, OnDestroy {
     const actionSheet = await this.actionSheetCtrl.create({
       header: product.name,
       buttons: [{
-        text: product.status ? 'Inativar' : 'Ativar',
-        handler: () => {
-          this.updateStatus(product);
-        }
-      }, {
         text: 'Editar',
         handler: () => {
           this.modalProduct(product);
+        }
+      }, {
+        text: 'Complementos',
+        handler: () => {
+          this.modalComplements(product);
+        }
+      }, {
+        text: product.status ? 'Pausar' : 'Ativar',
+        handler: () => {
+          this.updateStatus(product);
         }
       }, {
         text: 'Excluir',
@@ -81,13 +86,14 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   public async modalProduct(product?: any) {
 
-    if (this.categories?.length > 0) {
+    if (this.segments?.length > 0) {
 
       const modal = await this.modalCtrl.create({
         component: ModalProductComponent,
         backdropDismiss: false,
+        cssClass: 'modal-lg',
         componentProps: {
-          categories: this.categories,
+          segments: this.segments,
           product: product
         }
       });
@@ -123,10 +129,10 @@ export class ProductsPage implements OnInit, OnDestroy {
 
       this.alertSrv.show({
         icon: 'warning',
-        message: 'Antes de cadastrar produtos você precisa cadastrar as categorias.',
-        confirmButtonText: 'Categorias',
+        message: 'Antes de cadastrar seus produtos você precisa cadastrar seus segmentos.',
+        confirmButtonText: 'Segmentos',
         onConfirm: () => {
-          this.navCtrl.navigateForward('/categories');
+          this.navCtrl.navigateForward('/segments');
         }
       });
 
@@ -139,7 +145,7 @@ export class ProductsPage implements OnInit, OnDestroy {
     const modal = await this.modalCtrl.create({
       component: ModalSearchProductComponent,
       backdropDismiss: false,
-      cssClass: 'modal-lg',
+      cssClass: 'modal-xl',
       componentProps: {
         products: this.products
       }
@@ -170,15 +176,15 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   private updateStatus(product: any) {
 
-    const action = product.status ? 'Inativar' : 'Ativar';
+    const action = product.status ? 'Pausar' : 'Ativar';
 
     const formData = new FormData();
 
     formData.append('status', product.status ? '0' : '1');
 
     this.alertSrv.show({
-      icon: 'question',
-      message: `${action} ${product.name}?`,
+      icon: 'warning',
+      message: `Você está prestes a ${action.toLowerCase()} o produto "${product.name}"`,
       confirmButtonText: action,
       onConfirm: () => {
 
@@ -199,7 +205,7 @@ export class ProductsPage implements OnInit, OnDestroy {
               }
 
               else {
-                message = 'Produto inativado com sucesso';
+                message = 'Produto pausado com sucesso';
               }
 
               this.alertSrv.toast({
@@ -224,8 +230,8 @@ export class ProductsPage implements OnInit, OnDestroy {
   private deleteProduct(product: any) {
 
     this.alertSrv.show({
-      icon: 'question',
-      message: `Excluir o produto ${product.name}?`,
+      icon: 'warning',
+      message: `Você esta prestes a excluir o produto "${product.name}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
         
@@ -269,14 +275,14 @@ export class ProductsPage implements OnInit, OnDestroy {
       });
   }
 
-  private prepareCategories() {
+  private prepareSegments() {
     this.loadingSrv.show();
     this.segmentSrv.getAll()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
         this.loadingSrv.hide();
         if (res.success) {
-          this.categories = res.data;
+          this.segments = res.data;
         }
       });
   }

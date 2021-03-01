@@ -6,7 +6,6 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
-import { ModalOrderMenuModule } from 'src/app/components/modal-order-menu/modal-order-menu.module';
 import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 
 @NgModule({
@@ -16,7 +15,6 @@ import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scro
     IonicModule,
     HomePageRoutingModule,
     NgxChartsModule,
-    ModalOrderMenuModule,
     ChooseCompanyModule,
     CustomScrollModule
   ],

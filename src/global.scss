@@ -26,3 +26,10 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 @import "../node_modules/animate.css/animate.min.css";
+
+@import "theme/alert.scss";
+@import "theme/font.scss";
+@import "theme/form.scss";
+@import "theme/modal.scss";
+@import "theme/popover.scss";
+@import "theme/utils.scss";

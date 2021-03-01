@@ -3,10 +3,10 @@ ion-button {
     color: var(--ion-color-medium-tint);
     border: 1px dashed var(--ion-color-medium-tint);
     width: 100%;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
-    
+
     div {
         display: flex;
         flex-flow: column nowrap;
@@ -31,24 +31,22 @@ ion-button {
     }
 }
 
-
 ion-thumbnail {
-    --size: 100%;
-    --border-radius: 10px;
-    height: 128px;
+    --border-radius: 8px;
+    --size: 128px;
     margin: 0 auto;
 
     img {
-        height: 128px;
+        width: 100%;
+        height: 100%;
+    }
+
+    &.rounded {
+        --border-radius: 100%;
     }
 
     &:hover {
         box-shadow: 0 0 10px var(--ion-color-medium);
         cursor: pointer;
-    }
-
-    &.rounded {
-        --size: 128px;
-        --border-radius: 100%;
     }
 }

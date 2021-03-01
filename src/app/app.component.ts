@@ -7,6 +7,7 @@ import { LoadingService } from './services/loading.service';
 import { takeUntil } from 'rxjs/operators';
 import { Router, RoutesRecognized } from '@angular/router';
 import { CompanyService } from './services/company.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,11 @@ import { CompanyService } from './services/company.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  private unsubscribe: Subject<void> = new Subject();
+  private unsubscribe = new Subject();
 
-  public loading: boolean = false;
+  public loading = false;
 
-  public menu: boolean = false;
+  public menu = false;
 
   public selected_index = 0;
 
@@ -32,12 +33,12 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: 'home-outline',
       src: false
     },
-    {
-      title: 'Pedidos',
-      url: '/orders',
-      icon: 'receipt-outline',
-      src: false
-    },
+    // {
+    //   title: 'Pedidos',
+    //   url: '/orders',
+    //   icon: 'receipt-outline',
+    //   src: false
+    // },
     {
       title: 'Segmentos',
       url: '/segments',
@@ -50,24 +51,24 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: 'bag-handle-outline',
       src: false
     },
-    {
-      title: 'Entregadores',
-      url: '/delivery-persons',
-      icon: 'bicycle-outline',
-      src: false
-    },
-    {
-      title: 'Relatórios',
-      url: '/reports',
-      icon: 'bar-chart-outline',
-      src: false
-    },
-    {
-      title: 'Configurações',
-      url: '/settings',
-      icon: 'settings-outline',
-      src: false
-    }
+    // {
+    //   title: 'Entregadores',
+    //   url: '/delivery-persons',
+    //   icon: 'bicycle-outline',
+    //   src: false
+    // },
+    // {
+    //   title: 'Relatórios',
+    //   url: '/reports',
+    //   icon: 'bar-chart-outline',
+    //   src: false
+    // },
+    // {
+    //   title: 'Configurações',
+    //   url: '/settings',
+    //   icon: 'settings-outline',
+    //   src: false
+    // }
   ];
 
   constructor(
@@ -76,7 +77,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private statusBar: StatusBar,
     private loadingSrv: LoadingService,
     private router: Router,
-    private companySrv: CompanyService
+    private companySrv: CompanyService,
+    private authSrv: AuthService
   ) {
     this.initializeApp();
   }
@@ -100,6 +102,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
           this.checkMenu(path);
 
+          this.reloadAuth(path);
+
         }
       });
 
@@ -121,16 +125,28 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private checkMenu(path: string) {
 
-    const pathsWithoutMenu = [
-      '/signin', '/companies',
-    ];
+    const disabledPaths = ['/signin', '/companies'];
     
-    if (pathsWithoutMenu.indexOf(path) == -1) {
+    if (disabledPaths.indexOf(path) == -1) {
       this.menu = true;
     }
 
     else {
       this.menu = false;
+    }
+
+  }
+
+  private reloadAuth(path: string) {
+
+    const disabledPaths = ['/signin'];
+
+    if (disabledPaths.indexOf(path) == -1) {
+
+      this.authSrv.auth()
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe();
+
     }
 
   }

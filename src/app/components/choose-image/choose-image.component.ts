@@ -115,6 +115,8 @@ export class ChooseImageComponent implements OnInit {
 
     else {
 
+      this.inputfile.nativeElement.value = null;
+
       this.inputfile.nativeElement.click();
 
     }
@@ -144,7 +146,7 @@ export class ChooseImageComponent implements OnInit {
 
           this.image = res.data;
 
-          this.blob = UtilsHelper.base64toBlob(imageBase64);
+          this.blob = UtilsHelper.base64toBlob(this.image);
 
           this.changeImage.emit(this.blob);
 

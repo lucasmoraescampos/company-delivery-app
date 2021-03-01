@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, ModalController } from '@ionic/angular';
+import { IonSlides, ModalController, NavParams } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { takeUntil } from 'rxjs/operators';
 import { ModalPaymentMethodsComponent } from '../modal-payment-methods/modal-payment-methods.component';
 import { CompanyService } from 'src/app/services/company.service';
+import { ArrayHelper } from 'src/app/helpers/array.helper';
 
 const { Geolocation } = Plugins;
 
@@ -28,6 +29,8 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
   public slideActiveIndex: number = 0;
 
   public loading: boolean;
+
+  public company: any;
 
   public blobImage: Blob;
 
@@ -77,36 +80,39 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     private alertSrv: AlertService,
     private formBuilder: FormBuilder,
     private apiSrv: ApiService,
-    private companySrv: CompanyService
+    private companySrv: CompanyService,
+    private navParams: NavParams
   ) { }
 
   ngOnInit() {
 
+    this.company = this.navParams.get('company');
+
     this.formGroup1 = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: [this.company?.name ?? '', Validators.required],
       category_id: [null, Validators.required],
-      phone: ['', [Validators.required, Validators.minLength(14)]],
-      document_number: ['', Validators.required]
+      phone: [this.company?.phone ?? '', [Validators.required, Validators.minLength(14)]],
+      document_number: [this.company?.document_number ?? '', Validators.required]
     });
 
     this.formGroup2 = this.formBuilder.group({
       postal_code: ['', Validators.required],
-      street_name: ['', Validators.required],
-      street_number: ['', Validators.required],
-      district: ['', Validators.required],
+      street_name: [this.company?.street_name ?? '', Validators.required],
+      street_number: [this.company?.street_number ?? '', Validators.required],
+      district: [this.company?.district ?? '', Validators.required],
       uf: ['', Validators.required],
       city: ['', Validators.required],
-      complement: ['']
+      complement: [this.company?.complement ?? '']
     });
 
     this.formGroup3 = this.formBuilder.group({
-      allow_payment_online: [false, Validators.required],
-      allow_payment_delivery: [false, Validators.required],
-      allow_withdrawal_local: [false, Validators.required],
-      min_order_value: ['', Validators.required],
-      waiting_time: ['', Validators.required],
-      delivery_price: ['', Validators.required],
-      radius: ['', Validators.required]
+      allow_payment_online: [this.company?.allow_payment_online ?? false, Validators.required],
+      allow_payment_delivery: [this.company?.allow_payment_delivery ?? false, Validators.required],
+      allow_withdrawal_local: [this.company?.allow_withdrawal_local ?? false, Validators.required],
+      min_order_value: [this.company ? UtilsHelper.numberToMoney(this.company.min_order_value) : '', Validators.required],
+      waiting_time: [String(this.company?.waiting_time) ?? '', Validators.required],
+      delivery_price: [this.company ? UtilsHelper.numberToMoney(this.company.delivery_price) : '' ?? '', Validators.required],
+      radius: [this.company ? String(this.company?.radius) : 0, Validators.required]
     });
 
     this.initCategories();
@@ -138,14 +144,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
   }
 
   public dismiss() {
-    this.alertSrv.show({
-      icon: 'warning',
-      message: 'Todos os dados informados serão esquecidos se você sair. Deseja sair?',
-      confirmButtonText: 'Sair',
-      onConfirm: () => {
-        this.modalCtrl.dismiss();
-      }
-    });
+    this.modalCtrl.dismiss();
   }
 
   public changeCategory() {
@@ -153,8 +152,19 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     this.apiSrv.getPlans(this.formControl1.category_id.value)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
+
         this.loading = false;
+
         this.plans = res.data
+        
+        if (this.company && this.company.category_id == this.formControl1.category_id.value) {
+
+          const index = ArrayHelper.getIndexByKey(this.plans, 'id', this.company.plan_id);
+
+          this.selectedPlan = this.plans[index];
+
+        }
+
       });
   }
 
@@ -210,7 +220,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.alertSrv.show({
         icon: 'warning',
-        message: `Uma taxa de ${UtilsHelper.numberToMoney(this.selectedPlan.online_payment_fee)}% será cobrada por cada pedido pago online.`,
+        message: `Uma taxa de ${Number(this.selectedPlan.online_payment_fee)}% será cobrada por cada pagamento online.`,
         onConfirm: () => {
           this.formGroup3.patchValue({ allow_payment_online: true });
         },
@@ -229,7 +239,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.submitAttempt1 = true;
 
-      if (this.formGroup1.valid && this.blobImage) {
+      if (this.formGroup1.valid && (this.blobImage || this.company)) {
 
         if (this.map == undefined) {
           this.loadMap();
@@ -299,7 +309,6 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
         const formData = new FormData();
 
-        formData.append('image', this.blobImage);
         formData.append('name', this.formControl1.name.value);
         formData.append('category_id', this.formControl1.category_id.value);
         formData.append('phone', phone);
@@ -320,6 +329,10 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         formData.append('waiting_time', this.formControl3.waiting_time.value);
         formData.append('delivery_price', String(delivery_price));
         formData.append('radius', this.formControl3.radius.value);
+
+        if (this.blobImage) {
+          formData.append('image', this.blobImage);
+        }
         
         if (this.blobBanner) {
           formData.append('banner', this.blobBanner);
@@ -333,24 +346,51 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
           formData.append('payment_methods[]', element);
         });
 
-        this.companySrv.create(formData)
-          .pipe(takeUntil(this.unsubscribe))
-          .subscribe(res => {
+        if (this.company) {
 
-            this.loading = false;
+          this.companySrv.update(this.company.id, formData)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(res => {
 
-            if (res.success) {
+              this.loading = false;
 
-              this.alertSrv.toast({
-                icon: 'success',
-                message: 'Empresa cadastrada com sucesso'
-              });
+              if (res.success) {
 
-              this.modalCtrl.dismiss(res.data);
+                this.alertSrv.toast({
+                  icon: 'success',
+                  message: res.message
+                });
 
-            }
+                this.modalCtrl.dismiss(res.data);
 
-          });
+              }
+
+            });
+
+        }
+
+        else {
+
+          this.companySrv.create(formData)
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe(res => {
+
+              this.loading = false;
+
+              if (res.success) {
+
+                this.alertSrv.toast({
+                  icon: 'success',
+                  message: res.message
+                });
+
+                this.modalCtrl.dismiss(res.data);
+
+              }
+
+            });
+
+        }
 
       }
 
@@ -377,12 +417,25 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
     try {
 
-      const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+      if (this.company) {
 
-      this.latLng = {
-        lat: coordinates.coords.latitude,
-        lng: coordinates.coords.longitude
-      };
+        this.latLng = {
+          lat: Number(this.company.latitude),
+          lng: Number(this.company.longitude)
+        };
+
+      }
+
+      else {
+
+        const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
+
+        this.latLng = {
+          lat: coordinates.coords.latitude,
+          lng: coordinates.coords.longitude
+        };
+
+      }
 
       const mapOptions = {
         center: this.latLng,
@@ -503,7 +556,10 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       const modal = await this.modalCtrl.create({
         component: ModalPaymentMethodsComponent,
         backdropDismiss: false,
-        cssClass: 'modal-sm'
+        cssClass: 'modal-sm',
+        componentProps: {
+          company: this.company
+        }
       });
 
       modal.onWillDismiss()
@@ -582,19 +638,31 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       if (component.types.indexOf('street_number') != -1) {
 
-        this.formGroup2.patchValue({ street_number: component.long_name });
+        if (!this.company) {
+
+          this.formGroup2.patchValue({ street_number: component.long_name });
+
+        }
 
       }
 
       else if (component.types.indexOf('route') != -1) {
 
-        this.formGroup2.patchValue({ street_name: component.long_name });
+        if (!this.company) {
+
+          this.formGroup2.patchValue({ street_name: component.long_name });
+
+        }
 
       }
 
       else if (component.types.indexOf('sublocality_level_1') != -1) {
 
-        this.formGroup2.patchValue({ district: component.long_name });
+        if (!this.company) {
+
+          this.formGroup2.patchValue({ district: component.long_name });
+
+        }
 
       }
 
@@ -631,6 +699,9 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.loading = false;
         this.categories = res.data
+        if (this.company) {
+          this.formGroup1.patchValue({ category_id: this.company.category_id});
+        }
       });
   }
 

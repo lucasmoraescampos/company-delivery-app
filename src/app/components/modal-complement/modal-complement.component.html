@@ -1,0 +1,133 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Complemento</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button class="close" color="medium" (click)="dismiss()">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content customScroll>
+
+  <ion-grid [formGroup]="formGroup">
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-label [class.invalid]="submitAttempt && formControl.title.errors" class="stacked">Título</ion-label>
+
+        <ion-input [class.invalid]="submitAttempt && formControl.title.errors" formControlName="title" maxlength="100" enterkeyhint="go" (keyup.enter)="qty_min.setFocus()" #title>
+        </ion-input>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.title.errors?.required">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Informe o título.
+
+        </ion-note>
+
+      </ion-col>
+
+      <ion-col size-xs="12">
+
+        <ion-label [class.invalid]="submitAttempt && formControl.qty_max.errors" class="stacked">Quantidade máxima</ion-label>
+
+        <ion-input [class.invalid]="submitAttempt && formControl.qty_max.errors" inputmode="numeric" formControlName="qty_max" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMax()" (keyup.enter)="qty_min.setFocus()" enterkeyhint="go" #qty_max>
+        </ion-input>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_max.errors?.required">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Informe a quantidade máxima.
+
+        </ion-note>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_max.errors?.zero">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Quantidade máxima não pode ser igual à zero.
+
+        </ion-note>
+
+      </ion-col>
+
+      <ion-col size-xs="12" *ngIf="formControl.required.value == true">
+
+        <ion-label [class.invalid]="submitAttempt && formControl.qty_min.errors" class="stacked">Quantidade mínima</ion-label>
+
+        <ion-input [class.invalid]="submitAttempt && formControl.qty_min.errors" inputmode="numeric" formControlName="qty_min" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMin()" enterkeyhint="go" #qty_min></ion-input>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_min.errors?.required">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Informe a quantidade mínima.
+
+        </ion-note>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_min.errors?.zero">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Quantidade mínima não pode ser igual à zero.
+
+        </ion-note>
+
+        <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_min.errors?.limit">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          Quantidade mínima não pode ser maior que a máxima.
+
+        </ion-note>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+  <ion-item class="ion-margin-top" lines="none">
+
+    <ion-checkbox slot="start" mode="md" [checked]="complement?.required" (ionChange)="changeRequired($event)"></ion-checkbox>
+
+    <ion-label>Obrigatório</ion-label>
+
+  </ion-item>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block" (click)="save()">Salvar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

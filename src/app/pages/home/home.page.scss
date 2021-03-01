@@ -1,45 +1,51 @@
 ion-content {
     ion-card {
-        ion-card-title {
-            font-size: 14px;
+        margin: 0;
+
+        &:not(:first-child) {
+            margin-top: 16px;
         }
 
-        &.new-order {
-            cursor: pointer;
-            padding: 48.5px 16px;
-            text-align: center;
+        &.chart {
+            padding: 16px;
+        }
 
-            ion-icon {
-                font-size: 48px;
-            }
+        ion-card-header {
+            padding: 16px;
 
-            p {
-                text-transform: uppercase;
-                font-weight: 500;
-                font-size: 20px;
-                margin: 10px 0 0;
+            ion-card-title {
+                font-size: 1rem;
+                font-weight: 600;
             }
         }
-        
-        &.balance {
-            ion-card-header {
-                padding: 0;
 
-                ion-toolbar {
-                    padding: 9.165px 16px;
-                }
-
-                ion-button {
-                    font-size: 14px;
-                }
-
-                ion-icon {
-                    font-size: 18px;
-                }
+        ion-card-content {
+            &:not(.ion-no-padding) {
+                padding: 16px;
             }
+            
+            ion-item {
+                &[lines="full"]  {
+                    --border-width: 0.55px 0 0;
+                }
 
-            ion-card-content {
-                padding: 0;
+                &.balance {
+                    --min-height: 60px;
+                    
+                    h6 {
+                        font-size: 1.5rem;
+                    }
+
+                    p {
+                        font-weight: 500;
+                    }
+                }
+
+                &.see-all {
+                    text-align: center;
+                    font-weight: 500;
+                    font-size: 1rem;
+                }
 
                 ion-label {
                     h6 {
@@ -48,56 +54,36 @@ ion-content {
                     }
                 }
 
-                ion-item {
-                    --border-width: 0.55px 0 0 0;
-                    --min-height: 118.7px;
-                }
-            }
-        }
+                ion-badge {
+                    font-size: 11px;
+                    font-weight: 500;
+                    margin-top: 2px;
 
-        &.chart-week {
-            padding: 16px;
-        }
-
-        &.last-orders {
-            ion-card-header {
-                padding: 0;
-
-                ion-toolbar {
-                    padding: 0 16px;
-                }
-
-                ion-button {
-                    font-size: 14px;
-                }
-
-                ion-icon {
-                    font-size: 18px;
-                }
-            }
-
-            ion-card-content {
-                padding: 0;
-                overflow-x: auto;
-                
-                ion-list {
-                    padding: 0;
-                    min-width: 660px;
-
-                    ion-item {
-                        &:first-child {
-                            --border-width: 0.55px 0 0.55px 0;
-                        }
-
-                        &:last-child {
-                            --border-width: 0;
-                        }
-
-                        ion-label {
-                            text-align: center;
-                        }
+                    &.status {
+                        font-size: 1rem;
                     }
                 }
+
+                ion-toggle {
+                    --handle-height: 22px;
+                    --handle-width: 22px;
+                    height: 26px;
+                }
+            }
+
+            input.link {
+                text-align: center;
+                font-size: 0.9rem !important;
+                height: 35px;
+                background: var(--ion-color-light-shade);
+                color: var(--ion-color-dark);
+                font-weight: 700 !important;
+                width: calc(100% - 32px);
+                margin: 0 16px 16px;
+                border: none;
+                border-radius: 5px;
+                outline: none;
+                cursor: pointer;
             }
         }
     }

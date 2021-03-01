@@ -1,0 +1,9 @@
+.popover-content {
+    width: auto !important;
+}
+
+ion-popover.popover-companies .popover-content {
+    --ion-safe-area-right: 4px;
+    overflow: hidden;
+    min-width: 250px !important;
+}
