@@ -67,6 +67,56 @@ export class AlertService {
     });
   }
 
+  public options(options: AlertOptions) {
+
+    let html = document.createElement('div');
+
+    options.buttons.forEach(button => {
+      
+      const el = document.createElement('ion-button');
+
+      el.style.marginTop = '10px';
+      
+      el.setAttribute('expand', 'block');
+
+      if (button.color) {
+        el.setAttribute('color', button.color);
+      }
+
+      if (button.fill) {
+        el.setAttribute('fill', button.fill);
+      }
+
+      if (button.icon) {
+        el.innerHTML = `<ion-icon slot="start" name="${button.icon}"></ion-icon> ${button.text}`;
+      }
+
+      else {
+        el.innerText = button.text;
+      }
+
+      el.onclick = () => {
+        Swal.close();
+        button.callback();
+      };
+      
+      html.appendChild(el);
+
+    });
+
+    Swal.fire({
+      title: options.title,
+      html: html,
+      cancelButtonText: 'Cancelar',
+      showConfirmButton: false,
+      showCancelButton: true,
+      showCloseButton: true,
+      heightAuto: false,
+      allowOutsideClick: false,
+      customClass: this.customClass
+    });
+  }
+
   public terms(options: AlertOptions) {
     Swal.fire({
       imageUrl: '../../../assets/icon/terms.svg',
@@ -88,7 +138,8 @@ export class AlertService {
 
 }
 
-export interface AlertOptions {
+interface AlertOptions {
+  title?: string;
   message?: string;
   confirmButtonText?: string;
   cancelButtonText?: string;
@@ -97,4 +148,11 @@ export interface AlertOptions {
   onCancel?: Function;
   duration?: number;
   icon?: SweetAlertIcon;
+  buttons?: Array<{
+    icon?: string;
+    color?: string;
+    fill?: string; 
+    text: string;
+    callback: Function
+  }>
 }

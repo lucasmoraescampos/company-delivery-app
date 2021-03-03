@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonMenu, Platform } from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Subject } from 'rxjs';
@@ -19,8 +19,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private unsubscribe = new Subject();
 
   public loading = false;
-
-  public menu = false;
 
   public selected_index = 0;
 
@@ -92,6 +90,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.auth();
+
     this.router.events.pipe(takeUntil(this.unsubscribe))
       .subscribe(route => {
         if (route instanceof RoutesRecognized) {
@@ -99,10 +99,6 @@ export class AppComponent implements OnInit, OnDestroy {
           const path = '/' + route.state.root.firstChild.routeConfig.path;
 
           this.selected_index = this.appPages.findIndex(page => page.url === path);
-
-          this.checkMenu(path);
-
-          this.reloadAuth(path);
 
         }
       });
@@ -123,31 +119,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
-  private checkMenu(path: string) {
-
-    const disabledPaths = ['/signin', '/companies'];
-    
-    if (disabledPaths.indexOf(path) == -1) {
-      this.menu = true;
-    }
-
-    else {
-      this.menu = false;
-    }
-
-  }
-
-  private reloadAuth(path: string) {
-
-    const disabledPaths = ['/signin'];
-
-    if (disabledPaths.indexOf(path) == -1) {
-
+  private auth() {
+    if (location.pathname != '/signin') {
       this.authSrv.auth()
         .pipe(takeUntil(this.unsubscribe))
         .subscribe();
-
     }
-
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IonSlides, NavController } from '@ionic/angular';
+import { IonSlides, MenuController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UtilsHelper } from 'src/app/helpers/utils.helper';
@@ -46,7 +46,8 @@ export class SigninPage implements OnInit, OnDestroy {
     private alertSrv: AlertService,
     private apiSrv: ApiService,
     private loadingSrv: LoadingService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
@@ -62,6 +63,10 @@ export class SigninPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
   }
 
   ionViewDidEnter() {

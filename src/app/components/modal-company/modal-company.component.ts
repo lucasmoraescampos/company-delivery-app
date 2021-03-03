@@ -287,6 +287,8 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.submitAttempt3 = true;
 
+      this.checkRadius();
+
       if (this.formGroup3.valid) {
 
         this.loading = true;
@@ -379,9 +381,11 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
               if (res.success) {
 
-                this.alertSrv.toast({
+                this.alertSrv.show({
                   icon: 'success',
-                  message: res.message
+                  message: 'Pronto! Sua empresa está sendo analisada por nossa equipe, e um de nossos consultores entrará em contato com você para finalizar o cadastro.',
+                  showCancelButton: false,
+                  confirmButtonText: 'Entendi'
                 });
 
                 this.modalCtrl.dismiss(res.data);

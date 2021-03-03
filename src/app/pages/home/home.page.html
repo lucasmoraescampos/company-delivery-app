@@ -26,9 +26,9 @@
 
     <ion-row>
 
-      <ion-col size-xs="12" size-sm="4">
+      <ion-col size-xs="12" size-sm="4" *ngIf="company">
 
-        <ion-card>
+        <ion-card class="animate__animated animate__fadeIn">
 
           <ion-card-content class="ion-no-padding">
 
@@ -40,11 +40,13 @@
 
                   <p>Status:</p>
 
-                  <ion-badge class="status" color="primary">Aberto</ion-badge>
+                  <ion-badge class="status" color="primary" *ngIf="company.open">Aberto</ion-badge>
+
+                  <ion-badge class="status" color="medium" *ngIf="!company.open">Fechado</ion-badge>
                 
                 </ion-label>
 
-                <ion-toggle></ion-toggle>
+                <ion-toggle [checked]="company.open" (ionChange)="changeOpen($event)"></ion-toggle>
 
               </ion-item>
 
@@ -54,7 +56,7 @@
 
         </ion-card>
 
-        <ion-card button="true" color="primary">
+        <ion-card class="animate__animated animate__fadeIn" button="true" color="primary">
 
           <ion-card-header>
 
@@ -70,7 +72,7 @@
 
                 <ion-label>
 
-                  <h6>R$ 243,76</h6>
+                  <h6>{{ company.balance | money }}</h6>
 
                   <p>Pagamentos online</p>
 
@@ -92,17 +94,17 @@
 
         </ion-card>
 
-        <ion-card button="true">
+        <ion-card button="true" (click)="share()">
 
           <ion-card-header>
 
-            <ion-card-title class="ion-text-center">Link para compartilhamento</ion-card-title>
+            <ion-card-title class="ion-text-center">Link de compartilhamento</ion-card-title>
 
           </ion-card-header>
 
           <ion-card-content class="ion-no-padding">
 
-            <input class="link" value="https://meupedido.org/ki-barato-sushi" readonly>
+            <input class="link" value="https://meupedido.org/{{ company.slug }}" readonly>
 
           </ion-card-content>
 

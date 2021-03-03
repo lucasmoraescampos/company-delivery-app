@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, MenuController, ModalController, NavController } from '@ionic/angular';
 import { ModalCompanyComponent } from '../../components/modal-company/modal-company.component';
 import { CompanyService } from 'src/app/services/company.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -27,7 +27,8 @@ export class CompaniesPage implements OnInit, OnDestroy {
     private companySrv: CompanyService,
     private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService,
-    private loadingSrv: LoadingService
+    private loadingSrv: LoadingService,
+    private menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
@@ -43,33 +44,64 @@ export class CompaniesPage implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
+  ionViewWillEnter() {
+    this.menuCtrl.enable(false);
+  }
+
   public async options(index: number) {
 
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Opções',
-      buttons: [{
-        text: 'Entrar',
-        handler: () => {
-          this.companySrv.setCurrentCompany(this.user.companies[index]);
-          this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
-        }
-      }, {
-        text: 'Editar',
-        handler: () => {
-          this.modalCompany(index);
-        }
-      }, {
-        text: 'Excluir',
-        handler: () => {
-          this.deleteCompany(index);
-        }
-      }, {
-        text: 'Cancelar',
-        role: 'cancel'
-      }]
-    });
+    const company = this.user.companies[index];
 
-    await actionSheet.present();
+    if (company.status == 0) {
+
+      this.alertSrv.show({
+        icon: 'info',
+        message: 'Falta pouco! Estamos analisando sua empresa, e um de nossos consultores entrará em contato com você para finalizar o cadastro.',
+        showCancelButton: false,
+        confirmButtonText: 'Entendi'
+      });
+
+    }
+
+    else if (company.status == 1) {
+
+      const actionSheet = await this.actionSheetCtrl.create({
+        header: 'Opções',
+        buttons: [{
+          text: 'Entrar',
+          handler: async () => {
+            this.companySrv.setCurrentCompany(company);
+            this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
+          }
+        }, {
+          text: 'Editar',
+          handler: () => {
+            this.modalCompany(index);
+          }
+        }, {
+          text: 'Excluir',
+          handler: () => {
+            this.deleteCompany(index);
+          }
+        }, {
+          text: 'Cancelar',
+          role: 'cancel'
+        }]
+      });
+
+      return await actionSheet.present();
+
+    }
+
+    else if (company.status == 2) {
+
+      this.alertSrv.show({
+        icon: 'error',
+        message: 'Empresa suspensa por falta de pagamento! Pague agora mesmo sua fatura e volte a usar nossos serviços.',
+        confirmButtonText: 'Pagamento'
+      });
+
+    }
 
   }
 

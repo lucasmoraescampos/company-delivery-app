@@ -1,0 +1,59 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Link de compartilhamento</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button class="close" color="medium" (click)="dismiss()">
+
+        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-label class="stacked">Nome de usuário</ion-label>
+
+        <ion-input [(ngModel)]="slug"></ion-input>
+
+        <ion-note>https://meupedido.org/{{ slug }}</ion-note>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12">
+
+        <ion-button expand="block">Salvar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>

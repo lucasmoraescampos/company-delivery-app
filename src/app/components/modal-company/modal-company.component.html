@@ -450,7 +450,7 @@
               <ion-label [class.invalid]="submitAttempt3 && formControl3.radius.errors" class="ion-text-wrap">Raio de
                 cobertura: <b>{{ formControl3.radius.value }} km</b></ion-label>
 
-              <ion-range min="0" max="30" formControlName="radius" (ionBlur)="checkRadius()">
+              <ion-range min="0" max="30" formControlName="radius" (ionChange)="checkRadius()">
 
                 <ion-label slot="start">0 km</ion-label>
 

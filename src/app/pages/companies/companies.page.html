@@ -34,13 +34,13 @@
 
             <ion-card-title>{{ company.name }}</ion-card-title>
 
-            <ion-label>
-              
-              <p>{{ company.city }} - {{ company.uf }}</p>
+            <p>{{ company.city }} - {{ company.uf }}</p>
 
-              <p>({{ company.phone | slice:0:2 }}) {{ company.phone | slice:2:7 }}-{{ company.phone | slice:7 }}</p>
-            
-            </ion-label>
+            <ion-badge color="medium" *ngIf="company.status == 0">Em análise</ion-badge>
+
+            <ion-badge color="success" *ngIf="company.status == 1">Ativo</ion-badge>
+
+            <ion-badge color="danger" *ngIf="company.status == 2">Suspenso</ion-badge>
 
           </ion-card-content>
 

@@ -32,9 +32,14 @@ export class CompanyService {
     return this.http.post<HttpResult>(`${this.url}/user/company`, data);
   }
 
-  public update(id: number, data: FormData) {
-    data.append('_method', 'put');
-    return this.http.post<HttpResult>(`${this.url}/user/company/${id}`, data);
+  public update(id: number, data: any) {
+    if (data instanceof FormData) {
+      data.append('_method', 'put');
+      return this.http.post<HttpResult>(`${this.url}/user/company/${id}`, data);
+    }
+    else {
+      return this.http.put<HttpResult>(`${this.url}/user/company/${id}`, data);
+    }
   }
 
   public delete(id: number) {
