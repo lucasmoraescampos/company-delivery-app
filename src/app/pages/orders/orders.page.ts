@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ModalOrderComponent } from './modal-order/modal-order.component';
+import { ModalOrderComponent } from '../../components/modal-order/modal-order.component';
 
 @Component({
   selector: 'app-orders',

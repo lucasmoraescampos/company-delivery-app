@@ -88,7 +88,7 @@ export class AlertService {
       }
 
       if (button.icon) {
-        el.innerHTML = `<ion-icon slot="start" name="${button.icon}"></ion-icon> ${button.text}`;
+        el.innerHTML = `<ion-icon slot="start" name="${button.icon}" src="${button.icon}"></ion-icon> ${button.text}`;
       }
 
       else {

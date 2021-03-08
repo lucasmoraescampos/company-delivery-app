@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController, MenuController, ModalController, NavController } from '@ionic/angular';
+import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { ModalCompanyComponent } from '../../components/modal-company/modal-company.component';
 import { CompanyService } from 'src/app/services/company.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -25,7 +25,6 @@ export class CompaniesPage implements OnInit, OnDestroy {
     private navCtrl: NavController,
     private authSrv: AuthService,
     private companySrv: CompanyService,
-    private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService,
     private loadingSrv: LoadingService,
     private menuCtrl: MenuController
@@ -48,7 +47,7 @@ export class CompaniesPage implements OnInit, OnDestroy {
     this.menuCtrl.enable(false);
   }
 
-  public async options(index: number) {
+  public options(index: number) {
 
     const company = this.user.companies[index];
 
@@ -65,31 +64,33 @@ export class CompaniesPage implements OnInit, OnDestroy {
 
     else if (company.status == 1) {
 
-      const actionSheet = await this.actionSheetCtrl.create({
-        header: 'Opções',
-        buttons: [{
-          text: 'Entrar',
-          handler: async () => {
-            this.companySrv.setCurrentCompany(company);
-            this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
+      this.alertSrv.options({
+        title: company.name,
+        buttons: [
+          {
+            text: 'Entrar',
+            icon: 'open-outline',
+            callback: () => {
+              this.companySrv.setCurrentCompany(company);
+              this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
+            }
+          },
+          {
+            text: 'Editar',
+            icon: 'create-outline',
+            callback: () =>  {
+              this.modalCompany(index);
+            }
+          },
+          {
+            text: 'Excluir',
+            icon: 'trash-outline',
+            callback: () =>  {
+              this.deleteCompany(index);
+            }
           }
-        }, {
-          text: 'Editar',
-          handler: () => {
-            this.modalCompany(index);
-          }
-        }, {
-          text: 'Excluir',
-          handler: () => {
-            this.deleteCompany(index);
-          }
-        }, {
-          text: 'Cancelar',
-          role: 'cancel'
-        }]
+        ]
       });
-
-      return await actionSheet.present();
 
     }
 

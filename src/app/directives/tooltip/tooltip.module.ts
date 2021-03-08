@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from './tooltip.directive';
+import { PopoverTooltipComponent } from './popover-tooltip/popover-tooltip.component';
+import { IonicModule } from '@ionic/angular';
 
 @NgModule({
-  declarations: [TooltipDirective],
+  declarations: [TooltipDirective, PopoverTooltipComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    IonicModule
   ],
   exports: [TooltipDirective]
 })

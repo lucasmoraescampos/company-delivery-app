@@ -150,16 +150,16 @@ export class HomePage implements OnInit, OnDestroy {
     const modal = await this.modalCtrl.create({
       component: ModalShareLinkComponent,
       backdropDismiss: false,
-      cssClass: 'modal-sm',
       componentProps: {
-        slug: this.company.slug
+        company: this.company
       }
     });
 
     modal.onWillDismiss()
       .then(res => {
         if (res.data) {
-
+          this.company.slug = res.data;
+          this.companySrv.setCurrentCompany(this.company);
         }
       });
 

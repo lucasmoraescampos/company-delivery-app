@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InputCodeComponent } from './input-code.component';
 import { IonicModule } from '@ionic/angular';
+import { ModalOrderComponent } from './modal-order.component';
 
 @NgModule({
-  declarations: [InputCodeComponent],
+  declarations: [ModalOrderComponent],
   imports: [
     CommonModule,
     IonicModule
-  ],
-  exports: [InputCodeComponent]
+  ]
 })
-export class InputCodeModule { }
+export class ModalOrderModule { }

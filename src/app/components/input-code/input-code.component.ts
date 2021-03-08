@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IonInput } from '@ionic/angular';
 
 @Component({
@@ -9,53 +8,80 @@ import { IonInput } from '@ionic/angular';
 })
 export class InputCodeComponent implements OnInit {
 
-  public formGroup: FormGroup;
+  @ViewChild('input1', { static: true }) input1: IonInput;
 
-  private last: string;
+  @ViewChild('input2', { static: true }) input2: IonInput;
 
-  @Input() value: string;
+  @ViewChild('input3', { static: true }) input3: IonInput;
+
+  @ViewChild('input4', { static: true }) input4: IonInput;
+
+  @ViewChild('input5', { static: true }) input5: IonInput;
+
+  @Input() value: string = '';
 
   @Input() invalid: boolean;
 
   @Output() result = new EventEmitter();
 
-  constructor(
-    private formBuilder: FormBuilder
-  ) { }
+  private last: string;
+
+  constructor() { }
 
   ngOnInit() {
 
-    if (this.value == undefined) {
-      this.value = '';
-    }
+  }
 
-    this.formGroup = this.formBuilder.group({
-      d1: [this.value.length == 5 ? this.value[0] : '', Validators.required],
-      d2: [this.value.length == 5 ? this.value[1] : '', Validators.required],
-      d3: [this.value.length == 5 ? this.value[2] : '', Validators.required],
-      d4: [this.value.length == 5 ? this.value[3] : '', Validators.required],
-      d5: [this.value.length == 5 ? this.value[4] : '', Validators.required]
-    });
+  public change(ev: CustomEvent, inputNumber: number) {
+    if (ev.detail.value == '') {
+      this.prev(inputNumber);
+    }
+  }
+
+  public send(ev: CustomEvent, inputNumber: number) {
+    // if (String('1234567890').indexOf(ev.detail.value) != -1) {
+    //   console.log('entrouuuuuuu')
+      this.next(inputNumber);
+    // }
+
+    this.last = this.code;
+
+    this.result.emit(this.code);
 
   }
 
-  public send(ev: any, inputPrev: IonInput, inputNext: IonInput) {
+  private get code() {
+    return `${this.input1.value}${this.input2.value}${this.input3.value}${this.input4.value}${this.input5.value}`;
+  }
 
-    const value = this.formGroup.value;
-
-    const code = `${value.d1}${value.d2}${value.d3}${value.d4}${value.d5}`;
-
-    if (inputNext != null && !isNaN(Number(ev.key))) {
-      inputNext.setFocus();
+  private prev(inputNumber: number) {
+    if (inputNumber == 2) {
+      this.input1.setFocus();
     }
-    else if (inputPrev != null && ev.key == 'Backspace' && code == this.last) {
-      inputPrev.setFocus();
+    else if (inputNumber == 3) {
+      this.input2.setFocus();
     }
+    else if (inputNumber == 4) {
+      this.input3.setFocus();
+    }
+    else if (inputNumber == 5) {
+      this.input4.setFocus();
+    }
+  }
 
-    this.last = code;
-
-    this.result.emit(code);
-
+  private next(inputNumber: number) {
+    if (inputNumber == 1) {
+      this.input2.setFocus();
+    }
+    else if (inputNumber == 2) {
+      this.input3.setFocus();
+    }
+    else if (inputNumber == 3) {
+      this.input4.setFocus();
+    }
+    else if (inputNumber == 4) {
+      this.input5.setFocus();
+    }
   }
 
 }

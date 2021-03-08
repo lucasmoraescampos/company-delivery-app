@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActionSheetController, ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
@@ -29,7 +29,6 @@ export class ProductsPage implements OnInit, OnDestroy {
     private segmentSrv: SegmentService,
     private productSrv: ProductService,
     private loadingSrv: LoadingService,
-    private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService,
     private navCtrl: NavController
   ) { }
@@ -50,37 +49,41 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   }
 
-  public async options(product: any) {
+  public options(product: any) {
 
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: product.name,
-      buttons: [{
-        text: 'Editar',
-        handler: () => {
-          this.modalProduct(product);
+    this.alertSrv.options({
+      title: product.name,
+      buttons: [
+        {
+          text: 'Editar',
+          icon: 'create-outline',
+          callback: () => {
+            this.modalProduct(product);
+          }
+        },
+        {
+          text: 'Complementos',
+          icon: '../../../assets/icon/complement.svg',
+          callback: () =>  {
+            this.modalComplements(product);
+          }
+        },
+        {
+          text: product.status ? 'Pausar' : 'Ativar',
+          icon: product.status ? 'pause-outline' : 'play-outline',
+          callback: () =>  {
+            this.updateStatus(product);
+          }
+        },
+        {
+          text: 'Excluir',
+          icon: 'trash-outline',
+          callback: () =>  {
+            this.deleteProduct(product);
+          }
         }
-      }, {
-        text: 'Complementos',
-        handler: () => {
-          this.modalComplements(product);
-        }
-      }, {
-        text: product.status ? 'Pausar' : 'Ativar',
-        handler: () => {
-          this.updateStatus(product);
-        }
-      }, {
-        text: 'Excluir',
-        handler: () => {
-          this.deleteProduct(product);
-        }
-      }, {
-        text: 'Cancelar',
-        role: 'cancel'
-      }]
+      ]
     });
-
-    await actionSheet.present();
 
   }
 

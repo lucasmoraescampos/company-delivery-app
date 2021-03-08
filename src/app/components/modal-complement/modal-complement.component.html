@@ -28,7 +28,7 @@
 
         <ion-label [class.invalid]="submitAttempt && formControl.title.errors" class="stacked">Título</ion-label>
 
-        <ion-input [class.invalid]="submitAttempt && formControl.title.errors" formControlName="title" maxlength="100" enterkeyhint="go" (keyup.enter)="qty_min.setFocus()" #title>
+        <ion-input [class.invalid]="submitAttempt && formControl.title.errors" formControlName="title" maxlength="100" enterkeyhint="go" #title>
         </ion-input>
 
         <ion-note class="validation-error" *ngIf="submitAttempt && formControl.title.errors?.required">
@@ -45,7 +45,7 @@
 
         <ion-label [class.invalid]="submitAttempt && formControl.qty_max.errors" class="stacked">Quantidade máxima</ion-label>
 
-        <ion-input [class.invalid]="submitAttempt && formControl.qty_max.errors" inputmode="numeric" formControlName="qty_max" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMax()" (keyup.enter)="qty_min.setFocus()" enterkeyhint="go" #qty_max>
+        <ion-input [class.invalid]="submitAttempt && formControl.qty_max.errors" inputmode="numeric" formControlName="qty_max" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMax()" enterkeyhint="go" #qty_max>
         </ion-input>
 
         <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_max.errors?.required">
@@ -70,7 +70,7 @@
 
         <ion-label [class.invalid]="submitAttempt && formControl.qty_min.errors" class="stacked">Quantidade mínima</ion-label>
 
-        <ion-input [class.invalid]="submitAttempt && formControl.qty_min.errors" inputmode="numeric" formControlName="qty_min" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMin()" enterkeyhint="go" #qty_min></ion-input>
+        <ion-input [class.invalid]="submitAttempt && formControl.qty_min.errors" inputmode="numeric" formControlName="qty_min" maxlength="2" [brmasker]="{ type: 'num' }" (ionBlur)="checkQtyMin()" enterkeyhint="go"></ion-input>
 
         <ion-note class="validation-error" *ngIf="submitAttempt && formControl.qty_min.errors?.required">
 

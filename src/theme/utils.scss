@@ -83,6 +83,18 @@ ion-backdrop {
     cursor: auto;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield !important;
+}
+
 @media (min-width: 768px) {
     ion-modal.modal-sm .modal-wrapper {
         width: 500px;

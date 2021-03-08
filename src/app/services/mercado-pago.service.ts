@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigHelper } from 'src/app/helpers/config.helper';
+import { environment } from 'src/environments/environment';
 
 declare const Mercadopago: any;
 
@@ -10,7 +10,7 @@ export class MercadoPagoService {
 
   constructor() {
 
-    Mercadopago.setPublishableKey(ConfigHelper.Mercadopago.publicKeyTest);
+    Mercadopago.setPublishableKey(environment.mercadopago.publicKey);
 
   }
 

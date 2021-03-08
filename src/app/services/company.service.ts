@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ConfigHelper } from 'src/app/helpers/config.helper';
 import { HttpResult } from 'src/app/models/http-result.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class CompanyService {
 
   private currentCompanySubject: BehaviorSubject<any>;
 
-  private url: string = ConfigHelper.Url;
+  private url: string = environment.apiUrl;
 
   constructor(
     private http: HttpClient

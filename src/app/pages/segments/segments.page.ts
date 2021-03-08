@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, ActionSheetController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
@@ -25,7 +25,6 @@ export class SegmentsPage implements OnInit {
     private modalCtrl: ModalController,
     private segmentSrv: SegmentService,
     private loadingSrv: LoadingService,
-    private actionSheetCtrl: ActionSheetController,
     private alertSrv: AlertService
   ) { }
 
@@ -51,32 +50,34 @@ export class SegmentsPage implements OnInit {
     this.segments = ev.detail.complete(this.segments);
   }
 
-  public async options(segment: any) {
+  public options(segment: any) {
 
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: segment.name,
-      buttons: [{
-        text: 'Editar',
-        handler: () => {
-          this.modalSegment(segment);
+    this.alertSrv.options({
+      title: segment.name,
+      buttons: [
+        {
+          text: 'Editar',
+          icon: 'create-outline',
+          callback: () => {
+            this.modalSegment(segment);
+          }
+        },
+        {
+          text: 'Excluir',
+          icon: 'trash-outline',
+          callback: () =>  {
+            this.deleteSegment(segment);
+          }
+        },
+        {
+          text: 'Reordenar',
+          icon: 'swap-vertical-outline',
+          callback: () =>  {
+            this.reorder = true;
+          }
         }
-      }, {
-        text: 'Excluir',
-        handler: () => {
-          this.deletesegment(segment);
-        }
-      }, {
-        text: 'Reordenar',
-        handler: () => {
-          this.reorder = true;
-        }
-      }, {
-        text: 'Cancelar',
-        role: 'cancel'
-      }]
+      ]
     });
-
-    await actionSheet.present();
 
   }
 
@@ -135,7 +136,7 @@ export class SegmentsPage implements OnInit {
       });
   }
 
-  private deletesegment(segment: any) {
+  private deleteSegment(segment: any) {
     this.alertSrv.show({
       icon: 'warning',
       message: `Você está prestes a excluír a categoria "${segment.name}"`,

@@ -6,6 +6,7 @@ import { OrdersPageRoutingModule } from './orders-routing.module';
 import { OrdersPage } from './orders.page';
 import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
 import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
+import { ModalOrderModule } from 'src/app/components/modal-order/modal-order.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scro
     IonicModule,
     OrdersPageRoutingModule,
     ChooseCompanyModule,
-    CustomScrollModule
+    CustomScrollModule,
+    ModalOrderModule
   ],
   declarations: [OrdersPage]
 })

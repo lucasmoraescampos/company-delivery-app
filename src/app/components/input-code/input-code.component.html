@@ -1,13 +1,13 @@
-<div [formGroup]="formGroup">
+<div>
 
-  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d1" maxlength="1" (keyup)="send($event, null, d2)" #d1></ion-input>
+  <ion-input type="number" clearOnEdit="true" [class.invalid]="invalid" (ionInput)="send($event, 1)" (ionChange)="change($event, 1)" #input1></ion-input>
 
-  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d2" maxlength="1" (keyup)="send($event, d1, d3)" #d2></ion-input>
+  <ion-input type="number" clearOnEdit="true" [class.invalid]="invalid" (ionInput)="send($event, 2)" (ionChange)="change($event, 2)" #input2></ion-input>
 
-  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d3" maxlength="1" (keyup)="send($event, d2, d4)" #d3></ion-input>
+  <ion-input type="number" clearOnEdit="true" [class.invalid]="invalid" (ionInput)="send($event, 3)" (ionChange)="change($event, 3)" #input3></ion-input>
 
-  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d4" maxlength="1" (keyup)="send($event, d3, d5)" #d4></ion-input>
+  <ion-input type="number" clearOnEdit="true" [class.invalid]="invalid" (ionInput)="send($event, 4)" (ionChange)="change($event, 4)" #input4></ion-input>
 
-  <ion-input [class.invalid]="invalid" inputmode="numeric" formControlName="d5" maxlength="1" (keyup)="send($event, d4, null)" #d5></ion-input>
+  <ion-input type="number" clearOnEdit="true" [class.invalid]="invalid" (ionInput)="send($event, 5)" (ionChange)="change($event, 5)" #input5></ion-input>
 
 </div>

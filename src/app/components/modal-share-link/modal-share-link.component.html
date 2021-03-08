@@ -18,7 +18,7 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content customScroll>
 
   <ion-grid>
 
@@ -26,11 +26,43 @@
 
       <ion-col size="12">
 
+        <ion-list>
+
+          <ion-item lines="none" color="light">
+
+            <ion-label class="ion-text-wrap">
+
+              <h6>Regras:</h6>
+
+              <p>Você pode usar letras, números e traços.</p>
+
+              <p>O primeiro caractere deve ser uma letra (a - z) ou um número (0 - 9).</p>
+
+              <p>O último caractere deve ser uma letra (a - z) ou um número (0 - 9).</p>
+
+            </ion-label>
+
+          </ion-item>
+
+        </ion-list>
+
+      </ion-col>
+
+      <ion-col size="12">
+
         <ion-label class="stacked">Nome de usuário</ion-label>
 
-        <ion-input [(ngModel)]="slug"></ion-input>
+        <ion-input debounce="400" [(ngModel)]="slug" (ionChange)="changeSlug($event)"></ion-input>
 
-        <ion-note>https://meupedido.org/{{ slug }}</ion-note>
+        <ion-note class="link">https://meupedido.org/{{ slug }}</ion-note>
+
+        <ion-note class="validation-error" *ngIf="error">
+
+          <ion-icon name="information-circle-outline"></ion-icon>
+
+          {{ error }}
+
+        </ion-note>
 
       </ion-col>
 
@@ -48,7 +80,7 @@
 
       <ion-col size="12">
 
-        <ion-button expand="block">Salvar</ion-button>
+        <ion-button expand="block" [disabled]="error || slug == company.slug" (click)="save()">Salvar</ion-button>
 
       </ion-col>
 
@@ -57,3 +89,5 @@
   </ion-grid>
 
 </ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>
