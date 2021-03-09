@@ -24,52 +24,62 @@ export class InputCodeComponent implements OnInit {
 
   @Output() result = new EventEmitter();
 
-  private last: string;
-
   constructor() { }
 
   ngOnInit() {
 
   }
 
-  public change(ev: CustomEvent, inputNumber: number) {
-    if (ev.detail.value == '') {
-      this.prev(inputNumber);
-    }
-  }
-
-  public send(ev: CustomEvent, inputNumber: number) {
-    // if (String('1234567890').indexOf(ev.detail.value) != -1) {
-    //   console.log('entrouuuuuuu')
-      this.next(inputNumber);
-    // }
-
-    this.last = this.code;
-
-    this.result.emit(this.code);
-
-  }
-
-  private get code() {
+  public get code() {
     return `${this.input1.value}${this.input2.value}${this.input3.value}${this.input4.value}${this.input5.value}`;
   }
 
-  private prev(inputNumber: number) {
-    if (inputNumber == 2) {
-      this.input1.setFocus();
-    }
-    else if (inputNumber == 3) {
-      this.input2.setFocus();
-    }
-    else if (inputNumber == 4) {
-      this.input3.setFocus();
-    }
-    else if (inputNumber == 5) {
-      this.input4.setFocus();
+  public backspace(ev: KeyboardEvent, inputNumber: number) {
+    if (ev.key == 'Backspace' || ev.code == 'Backspace' || ev.keyCode == 8 || ev.which == 8) {
+      ev.preventDefault();
+      if (inputNumber == 5) {
+        if (this.input5.value == '') {
+          this.input4.value = '';
+          this.input4.setFocus();
+        }
+        else {
+          this.input5.value = '';
+        }
+      }
+      else if (inputNumber == 4) {
+        if (this.input4.value == '') {
+          this.input3.value = '';
+          this.input3.setFocus();
+        }
+        else {
+          this.input4.value = '';
+        }
+      }
+      else if (inputNumber == 3) {
+        if (this.input3.value == '') {
+          this.input2.value = '';
+          this.input2.setFocus();
+        }
+        else {
+          this.input3.value = '';
+        }
+      }
+      else if (inputNumber == 2) {
+        if (this.input2.value == '') {
+          this.input1.value = '';
+          this.input1.setFocus();
+        }
+        else {
+          this.input2.value = '';
+        }
+      }
+      else if (inputNumber == 1) {
+        this.input1.value = '';
+      }
     }
   }
 
-  private next(inputNumber: number) {
+  public next(inputNumber: number) {
     if (inputNumber == 1) {
       this.input2.setFocus();
     }
@@ -84,4 +94,8 @@ export class InputCodeComponent implements OnInit {
     }
   }
 
+  public emit() {
+    this.result.emit(this.code);
+    console.log(this.code)
+  }
 }
