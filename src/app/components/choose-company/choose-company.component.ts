@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
 import { PopoverCompaniesComponent } from './popover-companies/popover-companies.component';
 
 @Component({
@@ -9,11 +10,16 @@ import { PopoverCompaniesComponent } from './popover-companies/popover-companies
 })
 export class ChooseCompanyComponent implements OnInit {
 
+  public user: any;
+
   constructor(
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private authSrv: AuthService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user = this.authSrv.user;
+  }
 
   public async companies(ev: any) {
     

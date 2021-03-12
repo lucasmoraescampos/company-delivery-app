@@ -12,9 +12,9 @@
 
     <p>{{ user.email }}</p>
 
-    <ion-button size="small" fill="outline" shape="round" (click)="companies()">Gerenciar empresas</ion-button>
+    <ion-button size="small" fill="outline" shape="round" (click)="managerCompanies()">Gerenciar empresas</ion-button>
 
-    <ion-button size="small" fill="clear" (click)="logout()">
+    <ion-button class="logout" size="small" fill="clear" (click)="logout()">
 
       <ion-icon slot="start" name="log-out-outline"></ion-icon> Sair
 
@@ -29,7 +29,7 @@
   <ion-list>
 
     <ion-item [class.current]="company.id == current.id" lines="none" [button]="company.id != current.id" detail="false"
-      (click)="enterCompany(company)" *ngFor="let company of user.companies">
+      (click)="enterCompany(company)" *ngFor="let company of companies">
 
       <ion-avatar slot="start">
 

@@ -30,7 +30,7 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
   public product: any;
 
-  public blob: Blob;
+  public uploadedImage: string;
 
   public allTimes: boolean;
 
@@ -145,7 +145,7 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
       this.submitAttempt1 = true;
 
-      if ((this.formGroup1.valid && this.blob) || (this.formGroup1.valid && !this.blob && this.product)) {
+      if ((this.formGroup1.valid && this.uploadedImage) || (this.formGroup1.valid && !this.uploadedImage && this.product)) {
 
         this.slideActiveIndex++;
 
@@ -179,44 +179,34 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
       this.loading = true;
 
-      const formData = new FormData();
+      const data: any = {
+        name: this.formControl1.name.value,
+        segment_id: this.formControl1.segment_id.value,
+        price: UtilsHelper.moneyToNumber(this.formControl1.price.value),
+        description: this.formControl1.description.value,
+        has_sunday: this.formControl2.has_sunday.value,
+        has_monday: this.formControl2.has_monday.value,
+        has_tuesday: this.formControl2.has_tuesday.value,
+        has_wednesday: this.formControl2.has_wednesday.value,
+        has_thursday: this.formControl2.has_thursday.value,
+        has_friday: this.formControl2.has_friday.value,
+        has_saturday: this.formControl2.has_saturday.value,
+      }
 
-      const price = UtilsHelper.moneyToNumber(this.formControl1.price.value);
-
-      const has_sunday = this.formControl2.has_sunday.value == true ? '1' : '0';
-      const has_monday = this.formControl2.has_monday.value == true ? '1' : '0';
-      const has_tuesday = this.formControl2.has_tuesday.value == true ? '1' : '0';
-      const has_wednesday = this.formControl2.has_wednesday.value == true ? '1' : '0';
-      const has_thursday = this.formControl2.has_thursday.value == true ? '1' : '0';
-      const has_friday = this.formControl2.has_friday.value == true ? '1' : '0';
-      const has_saturday = this.formControl2.has_saturday.value == true ? '1' : '0';
-      
-      formData.append('name', this.formControl1.name.value);
-      formData.append('segment_id', this.formControl1.segment_id.value);
-      formData.append('price', String(price));
-      formData.append('description', this.formControl1.description.value);
-      formData.append('has_sunday', has_sunday);
-      formData.append('has_monday', has_monday);
-      formData.append('has_tuesday', has_tuesday);
-      formData.append('has_wednesday', has_wednesday);
-      formData.append('has_thursday', has_thursday);
-      formData.append('has_friday', has_friday);
-      formData.append('has_saturday', has_saturday);
-
-      if (this.blob) {
-        formData.append('image', this.blob);
+      if (this.uploadedImage) {
+        data.image = this.uploadedImage;
       }
 
       if (!this.allTimes) {
-        formData.append('start_time', this.formControl3.start_time.value);
-        formData.append('end_time', this.formControl3.end_time.value);
+        data.start_time = this.formControl3.start_time.value;
+        data.end_time = this.formControl3.end_time.value;
       }
 
       if (this.product) {
 
         const id = this.product.id;
 
-        this.productSrv.update(id, formData)
+        this.productSrv.update(id, data)
           .pipe(takeUntil(this.unsubscribe))
           .subscribe(res => {
 
@@ -239,7 +229,7 @@ export class ModalProductComponent implements OnInit, OnDestroy {
 
       else {
 
-        this.productSrv.create(formData)
+        this.productSrv.create(data)
           .pipe(takeUntil(this.unsubscribe))
           .subscribe(res => {
 
@@ -366,7 +356,7 @@ export class ModalProductComponent implements OnInit, OnDestroy {
   }
 
   public changeImage(event: any) {
-    this.blob = event;
+    this.uploadedImage = event;
   }
 
 }

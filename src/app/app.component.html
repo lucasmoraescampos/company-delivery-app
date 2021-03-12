@@ -28,8 +28,8 @@
 
           <ion-menu-toggle auto-hide="false">
 
-            <ion-item (click)="selected_index = i" [routerLink]="[p.url]" lines="none" detail="false"
-              [class.selected]="selected_index == i" *ngFor="let p of appPages; let i = index">
+            <ion-item lines="none" button="true" detail="false" [class.selected]="pageActiveIndex == i"
+              (click)="selectPage(i)" *ngFor="let p of pages; let i = index">
 
               <ion-icon slot="start" [name]="p.icon" *ngIf="p.icon"></ion-icon>
 

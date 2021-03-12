@@ -15,6 +15,8 @@ export class PopoverCompaniesComponent implements OnInit, OnDestroy {
 
   public user: any;
 
+  public companies: any[] = [];
+
   public current: any;
 
   private unsubscribe: Subject<void> = new Subject();
@@ -31,6 +33,12 @@ export class PopoverCompaniesComponent implements OnInit, OnDestroy {
 
     this.user = this.authSrv.user;
 
+    this.user.companies.forEach((company: any) => {
+      if (company.status == 1) {
+        this.companies.push(company);
+      }
+    });
+
     this.companySrv.currentCompany.pipe(takeUntil(this.unsubscribe))
       .subscribe(company => {
         this.current = company;
@@ -43,7 +51,7 @@ export class PopoverCompaniesComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
   }
 
-  public companies() {
+  public managerCompanies() {
     this.navCtrl.navigateForward('/companies');
     this.popoverCtrl.dismiss();
   }

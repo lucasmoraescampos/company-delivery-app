@@ -51,18 +51,19 @@
             <ion-col class="ion-text-center" size="12">
 
               <app-choose-image style="width: 100%;" [aspectRatio]="10 / 2"
-                [image]="company?.banner ? company.banner : 'http://api.meupedido.localhost/assets/images/banner.png'"
-                (changeImage)="changeBanner($event)"></app-choose-image>
+                [image]="uploadedBanner ? uploadedBanner : company?.banner ? company.banner : bannerDefault"
+                (changeImage)="changeBanner($event)">
+              </app-choose-image>
 
               <app-choose-image style="margin-top: -64px; background-color: #fff;"
-                [invalid]="submitAttempt1 && !blobImage && !company" [rounded]="true" [image]="company?.image"
-                (changeImage)="changeImage($event)"></app-choose-image>
+                [invalid]="submitAttempt1 && !uploadedImage && !company" [rounded]="true"
+                [image]="uploadedImage ? uploadedImage : company?.image" (changeImage)="changeImage($event)"></app-choose-image>
 
-              <ion-note class="validation-error" *ngIf="submitAttempt1 && !blobImage && !company">
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !uploadedImage && !company">
 
                 <ion-icon name="information-circle-outline"></ion-icon>
 
-                Selecione uma foto para o perfil do restaurante.
+                Selecione uma foto para o perfil da empresa.
 
               </ion-note>
 
@@ -70,8 +71,7 @@
 
             <ion-col size-xs="12" size-sm="6">
 
-              <ion-label [class.invalid]="submitAttempt1 && formControl1.name.errors" class="stacked">Nome do
-                restaurante</ion-label>
+              <ion-label [class.invalid]="submitAttempt1 && formControl1.name.errors" class="stacked">Nome da empresa</ion-label>
 
               <ion-input [class.invalid]="submitAttempt1 && formControl1.name.errors" formControlName="name"
                 maxlength="150" enterkeyhint="go" (keydown.Tab)="category.open()" (keyup.enter)="category.open()">
@@ -81,7 +81,7 @@
 
                 <ion-icon name="information-circle-outline"></ion-icon>
 
-                Informe o nome do restaurante.
+                Informe o nome do empresa.
 
               </ion-note>
 
@@ -365,7 +365,7 @@
 
                 <ion-item lines="none">
 
-                  <ion-label class="ion-text-wrap">Permitir retirada do pedido no restaurante</ion-label>
+                  <ion-label class="ion-text-wrap">Permitir que o cliente retire o pedido na empresa</ion-label>
 
                   <ion-toggle mode="md" formControlName="allow_withdrawal_local"></ion-toggle>
 

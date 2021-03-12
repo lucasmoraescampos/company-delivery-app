@@ -44,10 +44,11 @@
 
           <ion-col class="ion-text-center" size="12">
 
-            <app-choose-image [invalid]="submitAttempt1 && !blob && !product"
-              [image]="product?.image" (changeImage)="changeImage($event)"></app-choose-image>
+            <app-choose-image [invalid]="submitAttempt1 && !uploadedImage && !product"
+              [image]="uploadedImage ? uploadedImage : product?.image" (changeImage)="changeImage($event)">
+            </app-choose-image>
 
-            <ion-note class="validation-error" *ngIf="submitAttempt1 && !blob && !product">
+            <ion-note class="validation-error" *ngIf="submitAttempt1 && !uploadedImage && !product">
 
               <ion-icon name="information-circle-outline"></ion-icon>
 
@@ -290,7 +291,7 @@
           <ion-checkbox class="times" slot="start" [checked]="allTimes" (ionChange)="changeTimes($event)">
           </ion-checkbox>
 
-          <ion-label class="ion-text-wrap">Disponível sempre que o restaurante estiver aberto</ion-label>
+          <ion-label class="ion-text-wrap">Disponível sempre que a empresa estiver aberta</ion-label>
 
         </ion-item>
 

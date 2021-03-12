@@ -1,7 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CameraResultType, CameraSource, DeviceInfo, Plugins } from '@capacitor/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CameraResultType, CameraSource, Capacitor, DeviceInfo, Plugins } from '@capacitor/core';
 import { ModalController } from '@ionic/angular';
-import { UtilsHelper } from 'src/app/helpers/utils.helper';
 import { AlertService } from 'src/app/services/alert.service';
 import { ModalImageCropperComponent } from './modal-image-cropper/modal-image-cropper.component';
 
@@ -14,8 +13,6 @@ const { Camera, Device } = Plugins;
 })
 export class ChooseImageComponent implements OnInit {
 
-  @ViewChild('inputfile', { static: true }) inputfile: ElementRef;
-
   @Input() invalid: boolean = false;
 
   @Input() rounded: boolean = false;
@@ -26,13 +23,15 @@ export class ChooseImageComponent implements OnInit {
 
   @Input() style: string = '';
 
-  @Output() changeImage = new EventEmitter<Blob>();
+  @Input() maxSize: number = 8000000;
+
+  @Output() changeImage = new EventEmitter<string>();
 
   public loading: boolean;
 
   public blob: Blob;
 
-  public device: DeviceInfo;
+  public webUseInput: boolean;
 
   constructor(
     private modalCtrl: ModalController,
@@ -41,89 +40,48 @@ export class ChooseImageComponent implements OnInit {
 
   ngOnInit() {
 
-    Device.getInfo().then(device => this.device = device);
-
-  }
-
-  public fileChangeEvent(event: any) {
-
-    const file = event.target.files[0];
-
-    const reader  = new FileReader();
-
-    if (file) {
-      
-      reader.onloadend = (data: any) => {
-        
-        this.blob = UtilsHelper.base64toBlob(data.target.result);
-
-        if (this.blob.type.substr(0, 5) != 'image') {
-
-          this.blob = null;
-
-          this.alertSrv.toast({
-            icon: 'error',
-            message: 'O arquivo enviado não é uma imagem'
-          });
-
-        }
-
-        else {
-
-          this.modalImageCropper(data.target.result);  
-
-        }
-
-      }
-
-      reader.readAsDataURL(file);
-      
-    }
+    Device.getInfo().then(device => this.webUseInput = device.platform === 'web');
 
   }
 
   public async chooseImage() {
 
-    if (this.device.platform ==  'android' || this.device.platform == 'ios') {
+    const image = await Camera.getPhoto({
+      quality: 100,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Photos,
+      webUseInput: this.webUseInput
+    });
 
-      const image = await Camera.getPhoto({
-        quality: 100,
-        resultType: CameraResultType.DataUrl,
-        source: CameraSource.Photos
+    const allowTypes = ['gif', 'png', 'jpeg', 'bmp', 'webp'];
+
+    if (allowTypes.indexOf(image.format) == -1) {
+      
+      this.alertSrv.toast({
+        icon: 'error',
+        message: 'O arquivo enviado não é uma imagem'
       });
 
-      this.blob = UtilsHelper.base64toBlob(image.dataUrl);
+    }
 
-      if (this.blob.type.substr(0, 5) != 'image') {
-
-        this.blob = null;
-
-        this.alertSrv.toast({
-          icon: 'error',
-          message: 'O arquivo enviado não é uma imagem'
-        });
-
-      }
-
-      else {
-
-        this.modalImageCropper(image.dataUrl);       
-
-      }
+    else if (image.dataUrl.length > this.maxSize) {
+      
+      this.alertSrv.toast({
+        icon: 'error',
+        message: 'A imagem enviada deve ter no máximo ' + (this.maxSize / 1000000) + 'MB'
+      });
 
     }
 
     else {
 
-      this.inputfile.nativeElement.value = null;
-
-      this.inputfile.nativeElement.click();
+      this.modalImageCropper(image.dataUrl);
 
     }
 
   }
 
-  private async modalImageCropper(imageBase64: string) {
+  private async modalImageCropper(dataUrl: string) {
 
     this.loading = true;
 
@@ -131,7 +89,7 @@ export class ChooseImageComponent implements OnInit {
       component: ModalImageCropperComponent,
       backdropDismiss: false,
       componentProps: {
-        image: imageBase64,
+        image: dataUrl,
         roundCropper: this.rounded,
         aspectRatio: this.aspectRatio
       }
@@ -141,14 +99,10 @@ export class ChooseImageComponent implements OnInit {
       .then(res => {
 
         this.loading = false;
-        
+
         if (res.data) {
 
-          this.image = res.data;
-
-          this.blob = UtilsHelper.base64toBlob(this.image);
-
-          this.changeImage.emit(this.blob);
+          this.changeImage.emit(res.data);
 
         }
 

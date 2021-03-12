@@ -92,19 +92,27 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   public changeOpen(event: CustomEvent) {
+
     const open = event.detail.checked;
-    this.loadingSrv.show();
-    this.companySrv.update(this.company.id, { open })
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(res => {
-        this.loadingSrv.hide();
-        this.company = res.data;
-        this.companySrv.setCurrentCompany(this.company);
-        this.alertSrv.toast({
-          icon: 'success',
-          message: this.company.open ? 'Empresa aberta com sucesso' : 'Empresa fechada com sucesso'
+
+    if (this.company.open != open) {
+
+      this.loadingSrv.show();
+
+      this.companySrv.update(this.company.id, { open })
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe(res => {
+          this.loadingSrv.hide();
+          this.company = res.data;
+          this.companySrv.setCurrentCompany(this.company);
+          this.alertSrv.toast({
+            icon: 'success',
+            message: this.company.open ? 'Empresa aberta com sucesso' : 'Empresa fechada com sucesso'
+          });
         });
-      });
+
+    }
+
   }
 
   public share() {

@@ -22,6 +22,10 @@ ion-header {
         width: 176px;
         display: block;
         margin: 5px auto;
+
+        &.logout {
+            margin-top: 10px;
+        }
     }
 }
 

@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-companies',
@@ -18,7 +19,9 @@ export class CompaniesPage implements OnInit, OnDestroy {
 
   public user: any;
 
-  public unsubscribe = new Subject();
+  public bannerDefault: string;
+
+  private unsubscribe = new Subject();
 
   constructor(
     private modalCtrl: ModalController,
@@ -35,6 +38,8 @@ export class CompaniesPage implements OnInit, OnDestroy {
     this.initUser();
 
     this.checkCompanies();
+
+    this.bannerDefault = environment.imagesUrl + '/banner.png';
 
   }
 

@@ -45,7 +45,7 @@ const ionicConfig: IonicConfig = {
     CustomScrollModule,
     AngularFireAuthModule,
     AngularFireModule.initializeApp(environment.firebase),
-    NgxLoadingModule.forRoot(loadingConfig),    
+    NgxLoadingModule.forRoot(loadingConfig),
     IonicModule.forRoot(ionicConfig)
   ],
   providers: [

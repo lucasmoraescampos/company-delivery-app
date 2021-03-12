@@ -28,9 +28,8 @@ export class ProductService {
     return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/product`, data);
   }
 
-  public update(id: number, data: FormData) {
-    data.append('_method', 'put');
-    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/product/${id}`, data);
+  public update(id: number, data: any) {
+    return this.http.put<HttpResult>(`${this.url}/company/${this.companyId}/product/${id}`, data);
   }
 
   public delete(id: number) {

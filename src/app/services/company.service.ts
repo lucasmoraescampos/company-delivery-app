@@ -28,18 +28,12 @@ export class CompanyService {
     this.currentCompanySubject.next(data);
   }
   
-  public create(data: FormData) {
+  public create(data: any) {
     return this.http.post<HttpResult>(`${this.url}/user/company`, data);
   }
 
   public update(id: number, data: any) {
-    if (data instanceof FormData) {
-      data.append('_method', 'put');
-      return this.http.post<HttpResult>(`${this.url}/user/company/${id}`, data);
-    }
-    else {
-      return this.http.put<HttpResult>(`${this.url}/user/company/${id}`, data);
-    }
+    return this.http.put<HttpResult>(`${this.url}/user/company/${id}`, data);
   }
 
   public delete(id: number) {

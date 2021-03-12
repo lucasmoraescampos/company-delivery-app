@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ModalPaymentMethodsComponent } from '../modal-payment-methods/modal-payment-methods.component';
 import { CompanyService } from 'src/app/services/company.service';
 import { ArrayHelper } from 'src/app/helpers/array.helper';
+import { environment } from 'src/environments/environment';
 
 const { Geolocation } = Plugins;
 
@@ -26,15 +27,17 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
   @ViewChild(IonSlides) slides: IonSlides;
 
+  public bannerDefault: string;
+
   public slideActiveIndex: number = 0;
 
   public loading: boolean;
 
   public company: any;
 
-  public blobImage: Blob;
+  public uploadedImage: string;
 
-  public blobBanner: Blob;
+  public uploadedBanner: string;
 
   public search: string;
 
@@ -116,6 +119,8 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     });
 
     this.initCategories();
+
+    this.bannerDefault = environment.imagesUrl + '/banner.png';
 
   }
 
@@ -239,7 +244,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.submitAttempt1 = true;
 
-      if (this.formGroup1.valid && (this.blobImage || this.company)) {
+      if (this.formGroup1.valid && (this.uploadedImage || this.company)) {
 
         if (this.map == undefined) {
           this.loadMap();
@@ -293,64 +298,48 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
         this.loading = true;
 
-        const phone = this.formControl1.phone.value.replace(/[^0-9]/g, '');
+        const data: any = {
+          name: this.formControl1.name.value,
+          category_id: this.formControl1.category_id.value,
+          phone: this.formControl1.phone.value.replace(/[^0-9]/g, ''),
+          document_number: this.formControl1.document_number.value.replace(/[^0-9]/g, ''),
+          latitude: String(this.latLng.lat),
+          longitude: String(this.latLng.lng),
+          postal_code: this.formControl2.postal_code.value.replace(/[^0-9]/g, ''),
+          street_name: this.formControl2.street_name.value,
+          street_number: this.formControl2.street_number.value,
+          district: this.formControl2.district.value,
+          uf: this.formControl2.uf.value,
+          city: this.formControl2.city.value,
+          plan_id: this.selectedPlan.id,
+          allow_payment_online: this.formControl3.allow_payment_online.value,
+          allow_payment_delivery: this.formControl3.allow_payment_delivery.value,
+          allow_withdrawal_local: this.formControl3.allow_withdrawal_local.value,
+          min_order_value: UtilsHelper.moneyToNumber(this.formControl3.min_order_value.value),
+          waiting_time: this.formControl3.waiting_time.value,
+          delivery_price: UtilsHelper.moneyToNumber(this.formControl3.delivery_price.value),
+          radius: this.formControl3.radius.value,
+        }
 
-        const document_number = this.formControl1.document_number.value.replace(/[^0-9]/g, '');
-
-        const postal_code = this.formControl2.postal_code.value.replace(/[^0-9]/g, '');
-
-        const min_order_value = UtilsHelper.moneyToNumber(this.formControl3.min_order_value.value);
-
-        const delivery_price = UtilsHelper.moneyToNumber(this.formControl3.delivery_price.value);
-
-        const allow_payment_online = this.formControl3.allow_payment_online.value == true ? '1' : '0';
-
-        const allow_payment_delivery = this.formControl3.allow_payment_delivery.value == true ? '1' : '0';
-
-        const allow_withdrawal_local = this.formControl3.allow_withdrawal_local.value == true ? '1' : '0';
-
-        const formData = new FormData();
-
-        formData.append('name', this.formControl1.name.value);
-        formData.append('category_id', this.formControl1.category_id.value);
-        formData.append('phone', phone);
-        formData.append('document_number', document_number);
-        formData.append('latitude', this.latLng.lat);
-        formData.append('longitude', this.latLng.lng);
-        formData.append('postal_code', postal_code);
-        formData.append('street_name', this.formControl2.street_name.value);
-        formData.append('street_number', this.formControl2.street_number.value);
-        formData.append('district', this.formControl2.district.value);
-        formData.append('uf', this.formControl2.uf.value);
-        formData.append('city', this.formControl2.city.value);
-        formData.append('plan_id', this.selectedPlan.id);
-        formData.append('allow_payment_online', allow_payment_online);
-        formData.append('allow_payment_delivery', allow_payment_delivery);
-        formData.append('allow_withdrawal_local', allow_withdrawal_local);
-        formData.append('min_order_value', String(min_order_value));
-        formData.append('waiting_time', this.formControl3.waiting_time.value);
-        formData.append('delivery_price', String(delivery_price));
-        formData.append('radius', this.formControl3.radius.value);
-
-        if (this.blobImage) {
-          formData.append('image', this.blobImage);
+        if (this.uploadedImage) {
+          data.image = this.uploadedImage;
         }
         
-        if (this.blobBanner) {
-          formData.append('banner', this.blobBanner);
+        if (this.uploadedBanner) {
+          data.banner = this.uploadedBanner;
         }
 
         if (this.formControl2.complement.value.length > 0) {
-          formData.append('complement', this.formControl2.complement.value);
+          data.complement = this.formControl2.complement.value;
         }
 
-        this.paymentMethods.forEach(element => {
-          formData.append('payment_methods[]', element);
-        });
+        if (this.paymentMethods.length > 0) {
+          data.payment_methods = this.paymentMethods;
+        }
 
         if (this.company) {
 
-          this.companySrv.update(this.company.id, formData)
+          this.companySrv.update(this.company.id, data)
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(res => {
 
@@ -373,7 +362,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
         else {
 
-          this.companySrv.create(formData)
+          this.companySrv.create(data)
             .pipe(takeUntil(this.unsubscribe))
             .subscribe(res => {
 
@@ -407,12 +396,12 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     this.slides.slidePrev();
   }
 
-  public changeImage(event: any) {
-    this.blobImage = event;
+  public changeImage(dataUrl: string) {
+    this.uploadedImage = dataUrl;
   }
 
-  public changeBanner(event: any) {
-    this.blobBanner = event;
+  public changeBanner(dataUrl: string) {
+    this.uploadedBanner = dataUrl;
   }
 
   public async loadMap() {
@@ -480,9 +469,11 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       this.alertSrv.show({
         icon: 'error',
         message: 'Não foi possível obter localização, verifique se o seu GPS está ativado ou se o sistema possui permissão para acessar sua localização.',
+        confirmButtonText: 'Entendi',
         showCancelButton: false,
         onConfirm: () => {
-          this.modalCtrl.dismiss();
+          this.loading = false;
+          this.previous();
         }
       });
 

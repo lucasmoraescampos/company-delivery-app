@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Subject } from 'rxjs';
@@ -20,11 +20,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public loading = false;
 
-  public selected_index = 0;
+  public pageActiveIndex = 0;
 
   public company: any;
 
-  public appPages = [
+  public pages = [
     {
       title: 'Início',
       url: '/home',
@@ -76,7 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private loadingSrv: LoadingService,
     private router: Router,
     private companySrv: CompanyService,
-    private authSrv: AuthService
+    private authSrv: AuthService,
+    private navCtrl: NavController
   ) {
     this.initializeApp();
   }
@@ -98,7 +99,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
           const path = '/' + route.state.root.firstChild.routeConfig.path;
 
-          this.selected_index = this.appPages.findIndex(page => page.url === path);
+          this.pageActiveIndex = this.pages.findIndex(page => page.url === path);
 
         }
       });
@@ -117,6 +118,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  public selectPage(index: number) {
+    this.pageActiveIndex = index;
+    this.navCtrl.navigateRoot(this.pages[index].url, { animationDirection: 'forward' });
   }
 
   private auth() {

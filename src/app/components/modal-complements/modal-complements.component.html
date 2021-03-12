@@ -75,16 +75,6 @@
 
       </ion-note>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-
-        <ion-fab-button (click)="modalComplement()">
-
-          <ion-icon name="add-outline"></ion-icon>
-
-        </ion-fab-button>
-
-      </ion-fab>
-
     </ion-slide>
 
     <ion-slide class="subcomplements">
@@ -120,19 +110,29 @@
 
       </ion-note>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-
-        <ion-fab-button (click)="modalSubcomplement()">
-
-          <ion-icon name="add-outline"></ion-icon>
-
-        </ion-fab-button>
-
-      </ion-fab>
-
     </ion-slide>
 
   </ion-slides>
+
+  <ion-fab class="animate__animated animate__fadeIn" vertical="bottom" horizontal="end" slot="fixed" *ngIf="slideActiveIndex == 0">
+
+    <ion-fab-button (click)="modalComplement()">
+
+      <ion-icon name="add-outline"></ion-icon>
+
+    </ion-fab-button>
+
+  </ion-fab>
+
+  <ion-fab class="animate__animated animate__fadeIn" vertical="bottom" horizontal="end" slot="fixed" *ngIf="slideActiveIndex == 1">
+
+    <ion-fab-button (click)="modalSubcomplement()">
+
+      <ion-icon name="add-outline"></ion-icon>
+
+    </ion-fab-button>
+
+  </ion-fab>
 
 </ion-content>
 

@@ -1,7 +1,5 @@
 <div class="ion-text-center">
 
-  <input type="file" accept="image/*" (change)="fileChangeEvent($event)" [hidden]="true" #inputfile>
-
   <ion-button [style]="style" [ngClass]="{ invalid: invalid, rounded: rounded }" fill="clear" *ngIf="!image"
     (click)="chooseImage()">
 

@@ -1,5 +1,11 @@
 <ion-button (click)="companies($event)">
 
-  <ion-icon slot="icon-only" name="storefront-outline"></ion-icon>
+  <ion-avatar>
+
+    <img [src]="user?.image" *ngIf="user?.image">
+
+    <img src="../../../assets/image/avatar.png" *ngIf="!user?.image">
+
+  </ion-avatar>
 
 </ion-button>
