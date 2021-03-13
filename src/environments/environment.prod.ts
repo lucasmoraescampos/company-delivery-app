@@ -6,6 +6,8 @@ export const environment = {
 
   imagesUrl: 'https://images.meupedido.org',
 
+  siteUrl: 'https://meupedido.org',
+
   firebase: {
     apiKey: "AIzaSyD4MqNZ5Mu42i3Spt_QytbJqnf0cDoB1OM",
     authDomain: "meu-pedido-2a14c.firebaseapp.com",

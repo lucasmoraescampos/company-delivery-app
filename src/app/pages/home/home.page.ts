@@ -8,6 +8,7 @@ import { CompanyService } from 'src/app/services/company.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Plugins } from '@capacitor/core';
 import { ModalShareLinkComponent } from 'src/app/components/modal-share-link/modal-share-link.component';
+import { environment } from 'src/environments/environment';
 
 const { Browser, Clipboard  } = Plugins;
 
@@ -19,6 +20,8 @@ const { Browser, Clipboard  } = Plugins;
 export class HomePage implements OnInit, OnDestroy {
 
   public company: any;
+
+  public siteUrl: string = environment.siteUrl;
 
   private unsubscribe = new Subject();
 
@@ -129,11 +132,18 @@ export class HomePage implements OnInit, OnDestroy {
           }
         },
         {
+          text: 'Abrir link',
+          icon: 'open-outline',
+          callback: () =>  {
+            Browser.open({ url: this.siteUrl + '/' + this.company.slug });
+          }
+        },
+        {
           text: 'Copiar link',
           icon: 'copy-outline',
           callback: () =>  {
             Clipboard.write({
-              string: 'https://meupedido.org/' + this.company.slug
+              string: this.siteUrl + '/' + this.company.slug
             });
 
             this.alertSrv.toast({

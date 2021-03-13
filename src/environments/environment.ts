@@ -10,6 +10,8 @@ export const environment = {
 
   imagesUrl: 'http://images.meupedido.localhost',
 
+  siteUrl: 'https://localhost:8101',
+
   firebase: {
     apiKey: "AIzaSyD4MqNZ5Mu42i3Spt_QytbJqnf0cDoB1OM",
     authDomain: "meu-pedido-2a14c.firebaseapp.com",

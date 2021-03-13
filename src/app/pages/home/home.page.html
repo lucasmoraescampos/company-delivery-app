@@ -104,7 +104,7 @@
 
           <ion-card-content class="ion-no-padding">
 
-            <input class="link" value="https://meupedido.org/{{ company.slug }}" readonly>
+            <input class="link" [value]="siteUrl + '/' + company.slug" readonly>
 
           </ion-card-content>
 
