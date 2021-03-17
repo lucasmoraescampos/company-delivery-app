@@ -130,7 +130,7 @@ export class ModalComplementsComponent implements OnInit, OnDestroy {
 
     this.alertSrv.show({
       icon: 'warning',
-      message: `Você está prestes a excluír a opção "${subcomplements[index].description}"`,
+      message: `Você está prestes a excluir a opção "${subcomplements[index].description}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
 
@@ -160,7 +160,7 @@ export class ModalComplementsComponent implements OnInit, OnDestroy {
 
     this.alertSrv.show({
       icon: 'warning',
-      message: `Você está prestes a excluír o complemento "${complement.title}"`,
+      message: `Você está prestes a excluir o complemento "${complement.title}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
 

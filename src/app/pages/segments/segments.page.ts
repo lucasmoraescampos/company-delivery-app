@@ -139,7 +139,7 @@ export class SegmentsPage implements OnInit {
   private deleteSegment(segment: any) {
     this.alertSrv.show({
       icon: 'warning',
-      message: `Você está prestes a excluír a categoria "${segment.name}"`,
+      message: `Você está prestes a excluir a categoria "${segment.name}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
         
