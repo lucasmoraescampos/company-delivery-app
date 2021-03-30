@@ -36,6 +36,9 @@ export class AuthService {
     this.currentUserSubject.next(data);
   }
 
+
+  // firebase methods
+
   public signInWithFacebook() {
     const provider = new firebase.auth.FacebookAuthProvider();
     return this.angularFireAuth.signInWithPopup(provider);
@@ -48,6 +51,9 @@ export class AuthService {
     }
     return this.angularFireAuth.signInWithPopup(provider);
   }
+
+
+  // rest methods
 
   public auth() {
     return this.http.get<HttpResult>(`${this.url}/user/auth`)
@@ -106,4 +112,5 @@ export class AuthService {
         return res;
       }));
   }
+
 }

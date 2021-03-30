@@ -36,11 +36,11 @@
 
             <p>{{ company.city }} - {{ company.uf }}</p>
 
-            <ion-badge color="medium" *ngIf="company.status == 0">Em análise</ion-badge>
+            <ion-badge class="animate__animated animate__fadeIn" color="medium" *ngIf="company.status == 0">Em análise</ion-badge>
 
-            <ion-badge color="success" *ngIf="company.status == 1">Ativo</ion-badge>
+            <ion-badge class="animate__animated animate__fadeIn" color="success" *ngIf="company.status == 1">Ativo</ion-badge>
 
-            <ion-badge color="danger" *ngIf="company.status == 2">Suspenso</ion-badge>
+            <ion-badge class="animate__animated animate__fadeIn" color="danger" *ngIf="company.status == 2">Suspenso</ion-badge>
 
           </ion-card-content>
 

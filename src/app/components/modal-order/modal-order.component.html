@@ -1,24 +1,14 @@
-<ion-header>
+<ion-header class="ion-no-border" mode="ios">
 
   <ion-toolbar>
 
-    <ion-buttons slot="start">
-
-      <ion-button>
-
-        <ion-icon slot="icon-only" name="print-outline"></ion-icon>
-
-      </ion-button>
-
-    </ion-buttons>
-
-    <ion-title>Pedido 0001</ion-title>
+    <ion-title>Detalhes do pedido</ion-title>
 
     <ion-buttons slot="end">
 
-      <ion-button class="close" (click)="dismiss()">
+      <ion-button fill="clear" (click)="dismiss()">
 
-        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+        <ion-icon slot="icon-only" color="medium" name="close"></ion-icon>
 
       </ion-button>
 
@@ -28,47 +18,332 @@
 
 </ion-header>
 
-<ion-content customScroll>
+<ion-content>
 
-  <ion-list>
+  <div class="ion-scroll">
 
-    <ion-item lines="full">
+    <ion-list>
 
-      <ion-label class="ion-text-wrap">
+      <ion-item lines="none">
 
-        <span>1x</span>
+        <ion-label class="ion-no-margin">
 
-        <b>Açai premium duplo 500ml</b>
+          <h5>Pedido {{ order.number }}</h5>
 
-      </ion-label>
+          <h6>{{ order.user.name }}</h6>
 
-    </ion-item>
+          <ion-progress-bar type="indeterminate" *ngIf="order.status < 4"></ion-progress-bar>
 
-    <ion-item lines="full">
+          <ion-progress-bar value="1" *ngIf="order.status == 4"></ion-progress-bar>
 
-      <ion-label class="ion-text-wrap">
+          <p *ngIf="order.status == 0">Aguardando confirmação</p>
 
-        <span>1x</span>
+          <p *ngIf="order.status == 1">Preparando o pedido</p>
 
-        <b>Açai premium duplo 500ml</b>
+          <p *ngIf="order.status == 2">Aguardando o entregador</p>
 
-      </ion-label>
+          <p *ngIf="order.status == 3">Entregando o pedido</p>
 
-    </ion-item>
+          <p *ngIf="order.status == 4">Pedido finalizado</p>
 
-  </ion-list>
+        </ion-label>
+
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+
+      <ion-item class="products" lines="full" *ngFor="let product of order.products">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="9">
+
+              <h6>{{ product.qty }}x {{ product.name }}</h6>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="3">
+
+              <h6 class="ion-text-end">{{ product.price - product.rebate | money }}</h6>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row class="complements" *ngFor="let complement of product.complements">
+
+            <ng-container *ngFor="let subcomplement of complement.subcomplements">
+
+              <ion-col class="ion-no-padding" size="9">
+
+                <p>{{ subcomplement.qty }}x {{ subcomplement.description }}</p>
+
+              </ion-col>
+
+              <ion-col class="ion-no-padding" size="3">
+
+                <p class="ion-text-end">{{ subcomplement.price | money }}</p>
+
+              </ion-col>
+
+            </ng-container>
+
+          </ion-row>
+
+          <ion-row *ngIf="product.note">
+
+            <p>Observação: {{ product.note }}</p>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+
+      <ion-item lines="full">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p>Subtotal</p>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p class="ion-text-end">{{ order.price | money }}</p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row *ngIf="order.delivery_type == 1">
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p>Taxa de entrega</p>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p class="ion-text-end">{{ order.delivery_price | money }}</p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <h5>Total</h5>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <h5 class="ion-text-end">{{ order.total_price | money }}</h5>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+
+      <ion-item lines="full" *ngIf="order.type == 1">
+
+        <ion-icon src="../../../assets/icon/map.svg" slot="start"></ion-icon>
+
+        <ion-label class="ion-no-margin ion-text-wrap">
+
+          <h6>Endereço de entrega</h6>
+
+          <p>{{ order.delivery_location.street_name }}, {{ order.delivery_location.street_number }}, {{
+            order.delivery_location.district }}, {{ order.delivery_location.city }} - {{ order.delivery_location.uf }}
+          </p>
+
+          <p *ngIf="order.delivery_location.complement">{{ order.delivery_location.complement }}</p>
+
+        </ion-label>
+
+      </ion-item>
+
+      <ion-item lines="full" *ngIf="order.type == 2">
+
+        <ion-icon src="../../../assets/icon/store-location.svg" slot="start"></ion-icon>
+
+        <ion-label class="ion-no-margin ion-text-wrap">Retirada no local</ion-label>
+
+      </ion-item>
+
+      <ion-item lines="full">
+
+        <img slot="start" [src]="order.payment_method.icon" width="27px">
+
+        <ion-label class="ion-no-margin ion-text-wrap">
+
+          <h6 *ngIf="order.payment_type == 1">Pagamento online</h6>
+
+          <h6 *ngIf="order.payment_type == 2">Pagamento na entrega</h6>
+
+          <p>{{ order.payment_method.name }}</p>
+
+          <p *ngIf="order.change_money">Troco para {{ (order.total_price + order.change_money) | money }}</p>
+
+        </ion-label>
+
+      </ion-item>
+
+    </ion-list>
+
+    <ion-list>
+
+      <ion-item lines="full">
+
+        <ion-grid class="ion-no-padding">
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="12">
+
+              <h6>Mais informações</h6>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p>Data do pedido:</p>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p class="ion-text-end date">{{ (order.created_at | date).replace('.', '') }} às {{ order.created_at |
+                date:'H:mm' }}</p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p *ngIf="order.status < 4">Previsão de entrega:</p>
+
+              <p *ngIf="order.status == 4">Previsão de entrega:</p>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p class="ion-text-end" *ngIf="order.status < 4">{{ (order.delivery_forecast | date).replace('.', '') }} às {{ order.created_at | date:'H:mm' }}</p>
+
+              <p class="ion-text-end" *ngIf="order.status == 4">{{ (order.delivered_at | date).replace('.', '') }} às {{ order.created_at | date:'H:mm' }}</p>
+
+            </ion-col>
+
+          </ion-row>
+
+          <ion-row *ngIf="order?.company_deliveryman">
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p>Entregador:</p>
+
+            </ion-col>
+
+            <ion-col class="ion-no-padding" size="6">
+
+              <p class="ion-text-end">{{ order.company_deliveryman.name }}</p>
+
+            </ion-col>
+
+          </ion-row>
+
+        </ion-grid>
+
+      </ion-item>
+
+    </ion-list>
+
+  </div>
 
 </ion-content>
 
-<!-- <ion-footer class="ion-no-border">
+<ion-footer>
 
   <ion-grid>
 
-    <ion-row>
+    <ion-row class="animate__animated animate__fadeIn" *ngIf="order.status == 0">
+
+      <ion-col size="6">
+
+        <ion-button color="danger" expand="block" (click)="refuse()">
+
+          <ion-icon slot="start" name="close-circle-outline"></ion-icon> Recusar
+
+        </ion-button>
+
+      </ion-col>
+
+      <ion-col size="6">
+
+        <ion-button color="primary" expand="block" (click)="accept()">
+
+          <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon> Aceitar
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="animate__animated animate__fadeIn" *ngIf="order.status == 1">
 
       <ion-col size="12">
 
-        <ion-button expand="block">Salvar</ion-button>
+        <ion-button color="primary" expand="block" (click)="chooseDeliveryman()">
+
+          <ion-icon slot="start" name="arrow-redo-circle-outline"></ion-icon> Encaminhar entrega
+
+        </ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row class="animate__animated animate__fadeIn" *ngIf="order.status == 2">
+
+      <ion-col size="12">
+
+        <ion-button color="primary" expand="block" (click)="chooseDeliveryman()">
+
+          <ion-icon slot="start" name="create-outline"></ion-icon> Alterar entregador
+
+        </ion-button>
 
       </ion-col>
 
@@ -76,4 +351,6 @@
 
   </ion-grid>
 
-</ion-footer> -->
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

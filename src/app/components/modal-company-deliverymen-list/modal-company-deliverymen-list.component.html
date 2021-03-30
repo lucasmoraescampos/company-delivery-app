@@ -1,0 +1,181 @@
+<ion-header mode="ios">
+
+  <ion-toolbar>
+
+    <ion-buttons class="animate__animated animate__fadeIn" slot="start" *ngIf="slideActiveIndex == 1">
+
+      <ion-button (click)="back()">
+
+        <ion-icon slot="icon-only" color="primary" name="chevron-back-outline"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+    <ion-title class="animate__animated animate__fadeIn" *ngIf="slideActiveIndex == 0">Entregadores</ion-title>
+
+    <ion-title class="animate__animated animate__fadeIn" *ngIf="slideActiveIndex == 1">Entregador</ion-title>
+
+    <ion-buttons class="animate__animated animate__fadeIn" slot="end" *ngIf="slideActiveIndex == 0">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" color="medium" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-slides class="swiper-no-swiping">
+
+    <ion-slide>
+
+      <ion-list>
+
+        <ion-radio-group [(ngModel)]="selectedDeliverymanIndex">
+
+          <ion-item lines="full" button="true" detail="true" (click)="add()">
+
+            <ion-icon slot="start" name="person-add-outline"></ion-icon>
+
+            <ion-label>
+
+              <h6>Novo Entregador</h6>
+
+              <p>Adicione um entregador aos seus contatos</p>
+
+            </ion-label>
+
+          </ion-item>
+
+          <ion-item lines="full" color="light" *ngIf="deliverymen?.length > 0">
+
+            <ion-label class="ion-text-center">Contatos</ion-label>
+
+          </ion-item>
+
+          <ion-item lines="full" *ngFor="let deliveryman of deliverymen; let i=index">
+
+            <ion-radio slot="start" mode="md" [value]="i"></ion-radio>
+
+            <ion-label>
+
+              <h6>{{ deliveryman.name }}</h6>
+
+              <p>
+
+                ({{ deliveryman.phone | slice:0:2 }}) {{ deliveryman.phone | slice:2:7 }}-{{ deliveryman.phone | slice:7
+                }}
+
+              </p>
+
+            </ion-label>
+
+            <ion-label class="button" (click)="$event.stopPropagation(); delete(i)">
+
+              <ion-icon name="trash-outline" color="primary"></ion-icon>
+
+            </ion-label>
+
+          </ion-item>
+
+        </ion-radio-group>
+
+      </ion-list>
+
+    </ion-slide>
+
+    <ion-slide>
+
+      <ion-grid [formGroup]="formGroup">
+
+        <ion-row>
+
+          <ion-col size="12">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.name.errors" class="stacked">Nome do entregador
+            </ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.name.errors" maxLength="100" enterkeyhint="go"
+              formControlName="name" (keyup.enter)="phone.setFocus()"></ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.name.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe o nome do entregador.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size="12">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.phone.errors" class="stacked">Número de celular
+            </ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.phone.errors" inputmode="tel"
+              formControlName="phone" [brmasker]="{ phone: true }" maxlength="15" enterkeyhint="done"
+              (keyup.enter)="save()" #phone></ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.phone.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe um número de celular.
+
+            </ion-note>
+
+            <ion-note class="validation-error"
+              *ngIf="submitAttempt && formControl.phone.errors?.minLength !== null && formControl.phone.errors?.required == undefined">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Número de celular inválido.
+
+            </ion-note>
+
+          </ion-col>
+
+        </ion-row>
+
+      </ion-grid>
+
+    </ion-slide>
+
+  </ion-slides>
+
+</ion-content>
+
+<ion-footer class="animate__animated animate__fadeIn"
+  *ngIf="selectedDeliverymanIndex !== undefined || slideActiveIndex == 1">
+
+  <ion-grid>
+
+    <ion-row>
+
+      <ion-col size="12" *ngIf="selectedDeliverymanIndex !== undefined">
+
+        <ion-button expand="block" (click)="confirm()">Confirmar entregador</ion-button>
+
+      </ion-col>
+
+      <ion-col size="12" *ngIf="slideActiveIndex == 1">
+
+        <ion-button expand="block" (click)="save()">Salvar</ion-button>
+
+      </ion-col>
+
+    </ion-row>
+
+  </ion-grid>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

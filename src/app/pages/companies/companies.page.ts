@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
 import { ModalCompanyComponent } from '../../components/modal-company/modal-company.component';
 import { CompanyService } from 'src/app/services/company.service';
@@ -30,7 +30,8 @@ export class CompaniesPage implements OnInit, OnDestroy {
     private companySrv: CompanyService,
     private alertSrv: AlertService,
     private loadingSrv: LoadingService,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    public ngZone: NgZone
   ) { }
 
   ngOnInit() {
@@ -192,7 +193,9 @@ export class CompaniesPage implements OnInit, OnDestroy {
   private initUser() {
     this.authSrv.currentUser.pipe(takeUntil(this.unsubscribe))
       .subscribe(user => {
-        this.user = user;
+        this.ngZone.run(() => {
+          this.user = user
+        });
       });
   }
 

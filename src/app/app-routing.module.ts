@@ -47,11 +47,6 @@ const routes: Routes = [
     path: 'settings',
     loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule),
     canActivate: [AuthGuard, CompanyGuard]
-  },
-  {
-    path: 'delivery-persons',
-    loadChildren: () => import('./pages/delivery-persons/delivery-persons.module').then( m => m.DeliveryPersonsPageModule),
-    canActivate: [AuthGuard, CompanyGuard]
   }
 ];
 

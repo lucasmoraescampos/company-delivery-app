@@ -7,12 +7,13 @@ ion-menu ion-header {
 
   h6 {
     margin: 0;
-    font-size: 16px;
+    font-weight: 400;
+    font-size: 1rem;
   }
 
   p {
     margin: 5px;
-    font-size: 12.5px;
+    font-size: 0.8rem;
     color: var(--ion-color-medium-shade);
   }
 }
@@ -23,13 +24,13 @@ ion-menu ion-content {
   --padding-bottom: 20px;
 
   ion-item {
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --min-height: 50px;
-
     ion-icon {
-      font-size: 24px;
-      color: var(--ion-color-dark-tint);
+      font-size: 20px;
+      color: var(--ion-color-dark);
+    }
+
+    ion-label {
+      font-size: 1rem;
     }
 
     &.selected {

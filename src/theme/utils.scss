@@ -1,6 +1,27 @@
+div.ion-scroll {
+    overflow-y: auto;
+    height: 100%;
+}
+
 ion-item {
+    --padding-top: 8px;
+    --padding-bottom: 8px;
     --padding-start: 16px;
     --inner-padding-end: 16px;
+    --min-height: 0;
+    --border-color: var(--ion-color-light-shade);
+
+    &:not([lines="none"]) {
+        --border-width: 0 0 1px;
+    }
+
+    ion-label {
+        margin: 0;
+    }
+}
+
+ion-toolbar {
+    --border-color: var(--ion-color-light-shade) !important;
 }
 
 ion-segment {
@@ -10,17 +31,22 @@ ion-segment {
 ion-segment-button {
     text-transform: capitalize;
     letter-spacing: normal;
-    font-size: 16px;
+    font-size: 0.95rem;
+    font-weight: 400;
 }
 
 ion-searchbar {
     --border-radius: 5px !important;
 }
 
+ion-radio {
+    --border-width: 0.55px;
+}
+
 ion-button {
     &.close {
         margin-right: 6px !important;
-        
+
         ion-icon {
             font-size: 18px !important;
         }
@@ -57,7 +83,6 @@ ion-note.note-center {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    color: var(--ion-color-medium-tint);
 
     ion-icon {
         font-size: 28px;
@@ -66,13 +91,21 @@ ion-note.note-center {
     p {
         margin: 5px 0 10px;
         font-size: 16px;
-        font-weight: 500;
     }
 }
 
-ion-grid,
-ion-col {
-    padding: 8px;
+ion-grid {
+    --ion-grid-padding: 8px;
+    --ion-grid-width: 100%;
+
+    ion-col {
+        --ion-grid-column-padding: 8px;
+        --ion-grid-column-padding-lg: 8px;
+        --ion-grid-column-padding-md: 8px;
+        --ion-grid-column-padding-sm: 8px;
+        --ion-grid-column-padding-xl: 8px;
+        --ion-grid-column-padding-xs: 8px;
+    }
 }
 
 ion-fab {
@@ -113,6 +146,18 @@ input[type="number"] {
 }
 
 @media (pointer: fine) {
+    div.ion-scroll {
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: var(--ion-color-light-shade);
+        }
+    }
+
     ion-content {
         ion-slides {
             ion-slide {

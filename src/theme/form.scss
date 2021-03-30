@@ -45,9 +45,9 @@ ion-label.stacked {
     color: var(--ion-color-medium-tint);
     background: #fff;
     padding: 0 1px !important;
-    position: relative !important;
-    top: 9px !important;
-    left: 12px !important;
+    position: absolute;
+    top: 2px !important;
+    left: 17px !important;
     z-index: 99 !important;
     font-size: 12px;
     font-weight: 500;

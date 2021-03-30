@@ -10,6 +10,33 @@
     zoom: 0.75;
 }
 
+.swal2-image {
+    margin: 0 auto !important;
+}
+
+.swal2-content {
+    ion-item {
+        --padding-start: 0;
+        --inner-padding-end: 0;
+        cursor: pointer;
+        
+        ion-thumbnail {
+            --border-radius: 100%;
+        }
+
+        h6 {
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #595756 !important;
+        }
+
+        p {
+            font-size: 0.9rem !important;
+            color: #595756 !important;
+        }
+    }
+}
+
 .alert-custom-close-button {
     box-shadow: none !important;
 
@@ -20,7 +47,7 @@
 
 .alert-custom-cancel-button {
     background: transparent !important;
-    color: var(--ion-color-medium-tint) !important;
+    color: var(--ion-color-primary) !important;
     font-weight: 500 !important;
     box-shadow: none !important;
 }

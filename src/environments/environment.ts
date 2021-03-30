@@ -8,6 +8,8 @@ export const environment = {
 
   apiUrl: 'http://api.meupedido.localhost',
 
+  socketUrl: 'http://socket.meupedido.localhost',
+
   imagesUrl: 'http://images.meupedido.localhost',
 
   siteUrl: 'https://localhost:8101',

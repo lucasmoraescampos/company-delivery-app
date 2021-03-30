@@ -1,5 +1,26 @@
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { Howl } from 'howler';
+
+interface AlertOptions {
+  title?: string;
+  imageUrl?: string;
+  message?: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
+  showCancelButton?: boolean;
+  onConfirm?: Function;
+  onCancel?: Function;
+  duration?: number;
+  icon?: SweetAlertIcon;
+  buttons?: Array<{
+    icon?: string;
+    color?: string;
+    fill?: string; 
+    text: string;
+    callback: Function
+  }>
+}
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +86,52 @@ export class AlertService {
       icon: options.icon,
       title: options.message
     });
+  }
+
+  public notification(options: AlertOptions) {
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: options.duration ? options.duration : 4500,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+
+        new Howl({
+          src: ['assets/audio/notify.mp3', 'assets/audio/notify.m4r', 'assets/audio/notify.ogg'],
+          autoplay: true,
+        });
+
+        if (options.onConfirm) {
+
+          toast.addEventListener('click', () => {
+            options.onConfirm();
+            Swal.close();
+          });
+
+        }
+
+      }
+    })
+
+    Toast.fire({
+      html: `
+        <ion-item lines="none">
+          <ion-thumbnail slot="start">
+            <img src="${options.imageUrl}">
+          </ion-thumbnail>
+          <ion-label>
+            <h6>${options.title}</h6>
+            <p>${options.message}</p>
+          </ion-label>
+        </ion-item>
+      `,
+    });
+    
   }
 
   public options(options: AlertOptions) {
@@ -136,23 +203,4 @@ export class AlertService {
     });
   }
 
-}
-
-interface AlertOptions {
-  title?: string;
-  message?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
-  showCancelButton?: boolean;
-  onConfirm?: Function;
-  onCancel?: Function;
-  duration?: number;
-  icon?: SweetAlertIcon;
-  buttons?: Array<{
-    icon?: string;
-    color?: string;
-    fill?: string; 
-    text: string;
-    callback: Function
-  }>
 }

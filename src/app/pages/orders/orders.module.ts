@@ -7,6 +7,10 @@ import { OrdersPage } from './orders.page';
 import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
 import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 import { ModalOrderModule } from 'src/app/components/modal-order/modal-order.module';
+import { MoneyModule } from 'src/app/pipes/money/money.module';
+import { FilterModule } from 'src/app/pipes/filter/filter.module';
+import { BrMaskerModule } from 'br-mask';
+import { FilterByFieldModule } from 'src/app/pipes/filter-by-field/filter-by-field.module';
 
 @NgModule({
   imports: [
@@ -16,7 +20,11 @@ import { ModalOrderModule } from 'src/app/components/modal-order/modal-order.mod
     OrdersPageRoutingModule,
     ChooseCompanyModule,
     CustomScrollModule,
-    ModalOrderModule
+    ModalOrderModule,
+    MoneyModule,
+    FilterModule,
+    FilterByFieldModule,
+    BrMaskerModule
   ],
   declarations: [OrdersPage]
 })

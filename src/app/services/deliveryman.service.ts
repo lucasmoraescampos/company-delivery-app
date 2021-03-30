@@ -7,7 +7,7 @@ import { HttpResult } from '../models/http-result.model';
 @Injectable({
   providedIn: 'root'
 })
-export class DeliveryPersonService {
+export class DeliverymanService {
 
   private url: string = environment.apiUrl;
 
@@ -21,20 +21,15 @@ export class DeliveryPersonService {
   }
 
   public getAll() {
-    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/delivery-person`);
+    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/deliveryman`);
   }
 
   public create(data: FormData) {
-    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/delivery-person`, data);
-  }
-
-  public update(id: number, data: FormData) {
-    data.append('_method', 'put');
-    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/delivery-person/${id}`, data);
+    return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/deliveryman`, data);
   }
 
   public delete(id: number) {
-    return this.http.delete<HttpResult>(`${this.url}/company/${this.companyId}/delivery-person/${id}`);
+    return this.http.delete<HttpResult>(`${this.url}/company/${this.companyId}/deliveryman/${id}`);
   }
   
 }

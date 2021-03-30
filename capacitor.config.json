@@ -1,12 +1,15 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "any-vendas2",
+  "appId": "org.meupedido.manager",
+  "appName": "Meu Pedido Admin",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "PushNotifications": {
+      "presentationOptions": ["badge", "sound", "alert"]
     }
   },
   "cordova": {}

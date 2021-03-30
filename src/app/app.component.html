@@ -29,11 +29,9 @@
           <ion-menu-toggle auto-hide="false">
 
             <ion-item lines="none" button="true" detail="false" [class.selected]="pageActiveIndex == i"
-              (click)="selectPage(i)" *ngFor="let p of pages; let i = index">
+              [disabled]="p.disabled" (click)="selectPage(i)" *ngFor="let p of pages; let i = index">
 
-              <ion-icon slot="start" [name]="p.icon" *ngIf="p.icon"></ion-icon>
-
-              <ion-icon slot="start" [src]="p.src" *ngIf="p.src"></ion-icon>
+              <ion-icon slot="start" [name]="p.icon" [src]="p.icon"></ion-icon>
 
               <ion-label>{{ p.title }}</ion-label>
 

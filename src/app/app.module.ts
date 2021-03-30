@@ -11,12 +11,14 @@ import { INgxLoadingConfig, NgxLoadingModule } from 'ngx-loading';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppInterceptor } from './app.interceptor';
 import { registerLocaleData } from '@angular/common';
-import localePt from '@angular/common/locales/pt';
 import { CustomScrollModule } from './directives/custom-scroll/custom-scroll.module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { environment } from 'src/environments/environment';
 import { IonicConfig } from '@ionic/core';
+import localePt from '@angular/common/locales/pt';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(localePt);
 
@@ -32,7 +34,7 @@ const loadingConfig: INgxLoadingConfig = {
 const ionicConfig: IonicConfig = {
   mode: 'ios',
   backButtonText: 'Voltar'
-}; 
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,9 +46,11 @@ const ionicConfig: IonicConfig = {
     HttpClientModule,
     CustomScrollModule,
     AngularFireAuthModule,
+    AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
     NgxLoadingModule.forRoot(loadingConfig),
-    IonicModule.forRoot(ionicConfig)
+    IonicModule.forRoot(ionicConfig),
+    ServiceWorkerModule.register('combined-sw.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,

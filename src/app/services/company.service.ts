@@ -12,7 +12,7 @@ export class CompanyService {
 
   public currentCompany: Observable<any>;
 
-  private currentCompanySubject: BehaviorSubject<any>;
+  private currentCompanySubject: BehaviorSubject<any>;s
 
   private url: string = environment.apiUrl;
 
@@ -27,7 +27,10 @@ export class CompanyService {
     localStorage.setItem(ConfigHelper.Storage.CurrentCompany, JSON.stringify(data));
     this.currentCompanySubject.next(data);
   }
-  
+
+
+  // rest methods
+
   public create(data: any) {
     return this.http.post<HttpResult>(`${this.url}/user/company`, data);
   }

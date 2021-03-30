@@ -40,6 +40,10 @@ export class OrderService {
     return this.http.post<HttpResult>(`${this.url}/company/${this.companyId}/order`, data);
   }
 
+  public update(id: number, data: any) {
+    return this.http.put<HttpResult>(`${this.url}/company/${this.companyId}/order/${id}`, data);
+  }
+
   public addProductCurrentOrder(product: any) {
     const order = this.currentOrderSubject.value;
     order.products.push(product);
