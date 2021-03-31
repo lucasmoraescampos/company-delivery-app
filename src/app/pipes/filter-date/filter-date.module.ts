@@ -8,6 +8,7 @@ import { FilterDatePipe } from './filter-date.pipe';
   declarations: [FilterDatePipe],
   imports: [
     CommonModule
-  ]
+  ],
+  exports: [FilterDatePipe]
 })
 export class FilterDateModule { }

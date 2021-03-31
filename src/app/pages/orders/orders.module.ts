@@ -10,7 +10,7 @@ import { ModalOrderModule } from 'src/app/components/modal-order/modal-order.mod
 import { MoneyModule } from 'src/app/pipes/money/money.module';
 import { FilterModule } from 'src/app/pipes/filter/filter.module';
 import { BrMaskerModule } from 'br-mask';
-import { FilterByFieldModule } from 'src/app/pipes/filter-by-field/filter-by-field.module';
+import { FilterDateModule } from 'src/app/pipes/filter-date/filter-date.module';
 
 @NgModule({
   imports: [
@@ -23,7 +23,7 @@ import { FilterByFieldModule } from 'src/app/pipes/filter-by-field/filter-by-fie
     ModalOrderModule,
     MoneyModule,
     FilterModule,
-    FilterByFieldModule,
+    FilterDateModule,
     BrMaskerModule
   ],
   declarations: [OrdersPage]

@@ -24,6 +24,8 @@ export class OrdersPage implements OnInit, OnDestroy {
 
   public search: string;
 
+  public date: string;
+
   private unsubscribe = new Subject();
 
   constructor(

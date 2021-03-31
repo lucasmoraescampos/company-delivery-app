@@ -9,7 +9,6 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ProductService } from 'src/app/services/product.service';
 import { ModalComplementsComponent } from '../../components/modal-complements/modal-complements.component';
 import { ModalProductComponent } from '../../components/modal-product/modal-product.component';
-import { ModalSearchProductComponent } from '../../components/modal-search-product/modal-search-product.component';
 
 @Component({
   selector: 'app-products',
@@ -22,8 +21,12 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   public products: any[];
 
+  public productSearch: string;
+
+  public segmentSearch: string;
+
   private unsubscribe: Subject<void> = new Subject();
-  
+
   constructor(
     private modalCtrl: ModalController,
     private segmentSrv: SegmentService,
@@ -64,21 +67,21 @@ export class ProductsPage implements OnInit, OnDestroy {
         {
           text: 'Complementos',
           icon: '../../../assets/icon/complement.svg',
-          callback: () =>  {
+          callback: () => {
             this.modalComplements(product);
           }
         },
         {
           text: product.status ? 'Pausar' : 'Ativar',
           icon: product.status ? 'pause-outline' : 'play-outline',
-          callback: () =>  {
+          callback: () => {
             this.updateStatus(product);
           }
         },
         {
           text: 'Excluir',
           icon: 'trash-outline',
-          callback: () =>  {
+          callback: () => {
             this.deleteProduct(product);
           }
         }
@@ -143,21 +146,6 @@ export class ProductsPage implements OnInit, OnDestroy {
 
   }
 
-  public async modalSearch() {
-
-    const modal = await this.modalCtrl.create({
-      component: ModalSearchProductComponent,
-      backdropDismiss: false,
-      cssClass: 'modal-xl',
-      componentProps: {
-        products: this.products
-      }
-    });
-
-    return await modal.present();
-
-  }
-
   public async modalComplements(product: any) {
 
     const modal = await this.modalCtrl.create({
@@ -170,7 +158,7 @@ export class ProductsPage implements OnInit, OnDestroy {
 
     modal.onWillDismiss()
       .then(res => {
-        
+
       });
 
     return await modal.present();
@@ -237,7 +225,7 @@ export class ProductsPage implements OnInit, OnDestroy {
       message: `Você esta prestes a excluir o produto "${product.name}"`,
       confirmButtonText: 'Excluir',
       onConfirm: () => {
-        
+
         this.loadingSrv.show();
 
         this.productSrv.delete(product.id)
@@ -249,7 +237,7 @@ export class ProductsPage implements OnInit, OnDestroy {
             if (res.success) {
 
               const index = ArrayHelper.getIndexByKey(this.products, 'id', product.id);
-              
+
               this.products = ArrayHelper.removeItem(this.products, index);
 
               this.alertSrv.toast({
@@ -263,7 +251,7 @@ export class ProductsPage implements OnInit, OnDestroy {
 
       }
     });
-    
+
   }
 
   private prepareProducts() {

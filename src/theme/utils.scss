@@ -37,6 +37,12 @@ ion-segment-button {
 
 ion-searchbar {
     --border-radius: 5px !important;
+    --color: var(--ion-color-dark-tint) !important;
+
+    input {
+        font-size: 0.9375rem !important;
+        font-weight: 500 !important;
+    }
 }
 
 ion-radio {
@@ -116,6 +122,31 @@ ion-backdrop {
     cursor: auto;
 }
 
+ion-popover.select-popover {
+    .popover-arrow.sc-ion-popover-ios {
+        display: none;
+    }
+
+    .popover-content.sc-ion-popover-ios {
+        margin-top: 10px;
+        border-radius: 3px;
+        box-shadow: 0 0 10px var(--ion-color-medium);
+
+        ion-item {
+            --border-width: 0;
+            --padding-top: 0;
+            --padding-bottom: 0;
+            --padding-start: 0;
+            --inner-padding-end: 0;
+
+            ion-label {
+                margin: 0 16px;
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -146,6 +177,18 @@ input[type="number"] {
 }
 
 @media (pointer: fine) {
+    .popover-content.sc-ion-popover-ios {
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: var(--ion-color-light-shade);
+        }
+    }
+
     div.ion-scroll {
         &::-webkit-scrollbar {
             width: 4px;

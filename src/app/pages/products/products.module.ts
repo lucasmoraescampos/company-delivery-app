@@ -11,8 +11,8 @@ import { ChooseImageModule } from 'src/app/components/choose-image/choose-image.
 import { BrMaskerModule } from 'br-mask';
 import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 import { ModalProductModule } from '../../components/modal-product/modal-product.module';
-import { ModalSearchProductModule } from 'src/app/components/modal-search-product/modal-search-product.module';
 import { ModalComplementsModule } from '../../components/modal-complements/modal-complements.module';
+import { FilterModule } from 'src/app/pipes/filter/filter.module';
 
 @NgModule({
   imports: [
@@ -28,8 +28,8 @@ import { ModalComplementsModule } from '../../components/modal-complements/modal
     BrMaskerModule,
     CustomScrollModule,
     ModalProductModule,
-    ModalSearchProductModule,
-    ModalComplementsModule
+    ModalComplementsModule,
+    FilterModule
   ],
   declarations: [ProductsPage]
 })

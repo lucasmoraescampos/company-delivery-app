@@ -1,4 +1,4 @@
-<ion-header class="ion-no-border">
+<ion-header>
 
   <ion-toolbar>
 
@@ -20,15 +20,11 @@
 
   <ion-toolbar class="search">
 
-    <ion-searchbar placeholder="Número ou cliente" [(ngModel)]="search" animated="true"></ion-searchbar>
+    <ion-searchbar placeholder="Número ou cliente" [(ngModel)]="search"></ion-searchbar>
 
-    <ion-searchbar inputmode="number" placeholder="Data" searchIcon="calendar-outline" animated="true" [brmasker]="{ mask: '00/00/0000', len: 10 }"></ion-searchbar>
+    <ion-searchbar inputmode="number" placeholder="Data" searchIcon="calendar-outline" [(ngModel)]="date" [brmasker]="{ mask: '00/00/0000', len: 10, type: 'num' }"></ion-searchbar>
 
   </ion-toolbar>
-
-</ion-header>
-
-<ion-header>
 
   <ion-toolbar mode="md">
 
@@ -36,31 +32,31 @@
 
       <ion-segment-button value="0">
 
-        <ion-label>Aguardando Confirmação ({{ (orders | filterByField:'status':0 | filter:search).length }})</ion-label>
+        <ion-label>Aguardando Confirmação ({{ (orders | filter:'status':0 | filter:'number,user.name':search | filterDate:'created_at':date).length }})</ion-label>
 
       </ion-segment-button>
 
       <ion-segment-button value="1">
 
-        <ion-label>Preparando ({{ (orders | filterByField:'status':1 | filter:search).length }})</ion-label>
+        <ion-label>Preparando ({{ (orders | filter:'status':1 | filter:'number,user.name':search | filterDate:'created_at':date).length }})</ion-label>
 
       </ion-segment-button>
 
       <ion-segment-button value="2">
 
-        <ion-label>Aguardando Entregador ({{ (orders | filterByField:'status':2 | filter:search).length }})</ion-label>
+        <ion-label>Aguardando Entregador ({{ (orders | filter:'status':2 | filter:'number,user.name':search | filterDate:'created_at':date).length }})</ion-label>
 
       </ion-segment-button>
 
       <ion-segment-button value="3">
 
-        <ion-label>Entregando ({{ (orders | filterByField:'status':3 | filter:search).length }})</ion-label>
+        <ion-label>Entregando ({{ (orders | filter:'status':3 | filter:'number,user.name':search | filterDate:'created_at':date).length }})</ion-label>
 
       </ion-segment-button>
 
       <ion-segment-button value="4">
 
-        <ion-label>Finalizado ({{ (orders | filterByField:'status':4 | filter:search).length }})</ion-label>
+        <ion-label>Finalizado ({{ (orders | filter:'status':4 | filter:'number,user.name':search | filterDate:'created_at':date).length }})</ion-label>
 
       </ion-segment-button>
 
@@ -80,9 +76,9 @@
 
         <ion-row>
 
-          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filterByField:'status':0 | filter:search; let i=index">
+          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filter:'status':0 | filter:'number,user.name':search | filterDate:'created_at':date; let i=index">
 
-            <ion-card button="true" (click)="modalOrder(order)">
+            <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalOrder(order)">
 
               <ion-item lines="none">
 
@@ -130,9 +126,9 @@
 
         <ion-row>
 
-          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filterByField:'status':1 | filter:search; let i=index">
+          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filter:'status':1 | filter:'number,user.name':search | filterDate:'created_at':date; let i=index">
 
-            <ion-card button="true" (click)="modalOrder(order)">
+            <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalOrder(order)">
 
               <ion-list lines="none">
 
@@ -184,9 +180,9 @@
 
         <ion-row>
 
-          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filterByField:'status':2 | filter:search; let i=index">
+          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filter:'status':2 | filter:'number,user.name':search | filterDate:'created_at':date; let i=index">
 
-            <ion-card button="true" (click)="modalOrder(order)">
+            <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalOrder(order)">
 
               <ion-list lines="none">
 
@@ -238,9 +234,9 @@
 
         <ion-row>
 
-          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filterByField:'status':3 | filter:search; let i=index">
+          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filter:'status':3 | filter:'number,user.name':search | filterDate:'created_at':date; let i=index">
 
-            <ion-card button="true" (click)="modalOrder(order)">
+            <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalOrder(order)">
 
               <ion-list lines="none">
 
@@ -292,9 +288,9 @@
 
         <ion-row>
 
-          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filterByField:'status':4 | filter:search; let i=index">
+          <ion-col size-xs="12" size-sm="6" *ngFor="let order of orders | filter:'status':4 | filter:'number,user.name':search | filterDate:'created_at':date; let i=index">
 
-            <ion-card button="true" (click)="modalOrder(order)">
+            <ion-card class="animate__animated animate__fadeIn" button="true" (click)="modalOrder(order)">
 
               <ion-list lines="none">
 
@@ -342,7 +338,7 @@
 
   </ion-slides>
 
-  <ion-note class="note-center" *ngIf="(orders | filterByField:'status':segment | filter:search).length == 0">
+  <ion-note class="note-center" *ngIf="orders && (orders | filter:'status':segment | filter:'number,user.name':search | filterDate:'created_at':date).length == 0">
 
 
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 0"></ion-icon>

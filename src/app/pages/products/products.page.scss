@@ -1,10 +1,16 @@
 ion-header {
     ion-toolbar.search {
-        padding: 0 calc(30% - 20px);
+        padding-top: 10px;
 
         ion-searchbar {
-            padding-bottom: 10px;
+            float: left;
             width: 100%;
+        }
+
+        ion-select {
+            background: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.07);
+            margin: 1px 12px 15px;
+            height: 36px;
         }
     }
 }
@@ -60,10 +66,47 @@ ion-content {
     }
 }
 
-@media (max-width: 600px) {
+@media (min-width: 576px) {
     ion-header {
         ion-toolbar.search {
-            padding: 10px;
+            padding-left: 7%;
+            padding-right: 7%;
+
+            ion-searchbar {
+                width: 50%;
+            }
+
+            ion-select {
+                width: calc(50% - 24px);
+                float: left;
+            }
+        }
+    }
+}
+
+@media (min-width: 768px) {
+    ion-header {
+        ion-toolbar.search {
+            padding-left: 13%;
+            padding-right: 13%;
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    ion-header {
+        ion-toolbar.search {
+            padding-left: 10%;
+            padding-right: 10%;
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    ion-header {
+        ion-toolbar.search {
+            padding-left: 20%;
+            padding-right: 20%;
         }
     }
 }

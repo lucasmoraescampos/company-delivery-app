@@ -58,12 +58,6 @@ export class AppComponent implements OnInit, OnDestroy {
       disabled: false
     },
     {
-      title: 'Entregadores',
-      url: '/delivery-persons',
-      icon: 'bicycle-outline',
-      disabled: true
-    },
-    {
       title: 'Relatórios',
       url: '/reports',
       icon: 'bar-chart-outline',

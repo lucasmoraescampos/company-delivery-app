@@ -6,7 +6,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipe implements PipeTransform {
 
-  transform(items: any[], value: string): any[] {
+  /*
+   * items: array to be filtered.
+   * fields: fields to be filtered. e.g: 'field1' for a single field or 'field1,field2,field3,...' for a multiple fields.
+   * value: value to be sought.
+  */
+  transform(items: any[], fields: string, value: string): any[] {
 
     if (!items) {
       return [];
@@ -17,11 +22,15 @@ export class FilterPipe implements PipeTransform {
     }
 
     return items.filter(item => {
+
       item = flatten(item);
-      const keys = Object.keys(item);
+
+      const keys = fields.split(',');
+
       return keys.some(key => {
         return normalize(item[key]).includes(normalize(value));
       });
+
     });
 
   }
@@ -69,7 +78,7 @@ function merge(objects: any) {
 }
 
 /*
- * The method flattens a multi-dimensional array into a single level array that uses "dot" notation to indicate depth:
+ * The method flattens a multi-dimensional array into a single level array that uses "dot" notation to indicate depth
  */
 function flatten(obj: any, name?: any, stem?: any) {
 
