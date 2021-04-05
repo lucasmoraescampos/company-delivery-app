@@ -1,9 +1,213 @@
 <ion-header>
+
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+
+    <ion-buttons slot="start">
+
+      <ion-menu-button></ion-menu-button>
+
+    </ion-buttons>
+    
+    <ion-title>Configurações</ion-title>
+
+    <ion-buttons slot="end">
+
+      <app-choose-company></app-choose-company>
+
+    </ion-buttons>
+
   </ion-toolbar>
+
 </ion-header>
 
-<ion-content customScroll>
+<ion-content color="light">
+
+  <div class="ion-scroll">
+
+    <ion-grid>
+
+      <ion-row>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalProfile()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="storefront-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Perfil</h6>
+
+                <p>Nome, categoria, telefone e CPF/CNPJ</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalShareLink()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="link-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Link</h6>
+
+                <p>Link de compartilhamento do site</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalLocation()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="location-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Local</h6>
+
+                <p>Localização e endereço</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalPlans()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="cellular-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Plano</h6>
+
+                <p>Taxas de serviços</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalPermissions()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="toggle-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Permissões</h6>
+
+                <p>Pagamento online, pagamento na entrega e retirada no local</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalVariables()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="options-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Variáveis</h6>
+
+                <p>Pedido mínimo, valor da entrega e tempo de espera</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="modalRadius()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="radio-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Raio</h6>
+
+                <p>Limitação da área de cobertura</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+        <ion-col size="12">
+
+          <ion-card button="true" (click)="deleteCompany()">
+
+            <ion-item lines="none">
+
+              <ion-icon slot="start" name="trash-outline"></ion-icon>
+
+              <ion-label>
+                
+                <h6>Excluir conta</h6>
+
+                <p>Deletar empresa permanentemente</p>
+              
+              </ion-label>
+
+            </ion-item>
+
+          </ion-card>
+
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+
+  </div>
 
 </ion-content>

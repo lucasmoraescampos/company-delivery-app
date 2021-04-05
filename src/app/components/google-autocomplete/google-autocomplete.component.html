@@ -1,0 +1,16 @@
+<div class="google-autocomplete">
+
+  <ion-searchbar placeholder="Endereço e número" [(ngModel)]="search" (ngModelChange)="searchChanged()"></ion-searchbar>
+
+  <ion-list [hidden]="addressList?.length == 0">
+
+    <ion-item lines="full" detail="false" button="true" *ngFor="let address of addressList"
+      (click)="selectAddress(address)">
+
+      <ion-label class="ion-text-wrap">{{ address }}</ion-label>
+
+    </ion-item>
+
+  </ion-list>
+
+</div>

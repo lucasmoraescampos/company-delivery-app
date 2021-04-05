@@ -1,0 +1,38 @@
+ion-content {
+    ion-list {
+        ion-item {
+            --border-width: 0.55px;
+            --border-radius: 5px;
+            margin-bottom: 16px;
+
+            &:last-child {
+                margin: 0;
+            }
+
+            ion-radio {
+                --border-width: 1px;
+            }
+
+            ion-label {
+                h6 {
+                    font-size: 1rem;
+                    line-height: 1.125rem;
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                }
+
+                p {
+                    font-size: 0.875rem;
+                    line-height: 1rem;
+                    margin-bottom: 8px;
+                    font-weight: 400;
+                    color: var(--ion-color-dark);
+
+                    &:last-child {
+                        margin: 0;
+                    }
+                }
+            }
+        }
+    }
+}

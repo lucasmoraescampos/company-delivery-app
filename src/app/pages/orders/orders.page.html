@@ -70,6 +70,7 @@
 
   <ion-slides class="swiper-no-swiping">
 
+    <!-- Waiting Confirmation -->
     <ion-slide>
 
       <ion-grid *ngIf="slideActiveIndex == 0">
@@ -120,6 +121,7 @@
 
     </ion-slide>
 
+    <!-- Preparing -->
     <ion-slide>
 
       <ion-grid *ngIf="slideActiveIndex == 1">
@@ -174,6 +176,7 @@
 
     </ion-slide>
 
+    <!-- Waiting Delivery -->
     <ion-slide>
 
       <ion-grid *ngIf="slideActiveIndex == 2">
@@ -228,6 +231,7 @@
 
     </ion-slide>
 
+    <!-- Delivering -->
     <ion-slide>
 
       <ion-grid *ngIf="slideActiveIndex == 3">
@@ -282,6 +286,7 @@
 
     </ion-slide>
 
+    <!-- Finished -->
     <ion-slide>
 
       <ion-grid *ngIf="slideActiveIndex == 4">
@@ -340,31 +345,30 @@
 
   <ion-note class="note-center" *ngIf="orders && (orders | filter:'status':segment | filter:'number,user.name':search | filterDate:'created_at':date).length == 0">
 
-
+    <!-- Waiting Confirmation -->
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 0"></ion-icon>
 
     <p class="animate__animated animate__fadeIn" *ngIf="segment == 0">Nenhum pedido aguardando confirmação</p>
 
-
+    <!-- Preparing -->
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 1"></ion-icon>
 
     <p class="animate__animated animate__fadeIn" *ngIf="segment == 1">Nenhum pedido sendo preparado</p>
 
-
+    <!-- Waiting Delivery -->
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 2"></ion-icon>
 
     <p class="animate__animated animate__fadeIn" *ngIf="segment == 2">Nenhum pedido aguardando entregador</p>
 
-
+    <!-- Delivering -->   
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 3"></ion-icon>
 
     <p class="animate__animated animate__fadeIn" *ngIf="segment == 3">Nenhum pedido em entrega</p>
 
-
+    <!-- Finished -->
     <ion-icon class="animate__animated animate__fadeIn" src="../../../assets/icon/order.svg" *ngIf="segment == 4"></ion-icon>
 
     <p class="animate__animated animate__fadeIn" *ngIf="segment == 4">Nenhum pedido finalizado</p>
-
 
   </ion-note>
 

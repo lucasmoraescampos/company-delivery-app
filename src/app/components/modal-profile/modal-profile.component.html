@@ -1,0 +1,168 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Perfil</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div class="ion-scroll">
+
+    <form [formGroup]="formGroup">
+
+      <ion-grid>
+
+        <ion-row>
+
+          <ion-col class="ion-text-center" size="12">
+
+            <app-choose-image style="width: 100%;" [aspectRatio]="10 / 2"
+              [image]="uploadedBanner ? uploadedBanner : company?.banner ? company.banner : bannerDefault"
+              (changeImage)="changeBanner($event)">
+            </app-choose-image>
+
+            <app-choose-image style="margin-top: -64px; background-color: #fff;"
+              [invalid]="submitAttempt && !uploadedImage && !company" [rounded]="true"
+              [image]="uploadedImage ? uploadedImage : company?.image" (changeImage)="changeImage($event)">
+            </app-choose-image>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && !uploadedImage && !company">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Selecione uma foto para o perfil da empresa.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size-xs="12" size-sm="6">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.name.errors" class="stacked">Nome da empresa
+            </ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.name.errors" formControlName="name" maxlength="150"
+              enterkeyhint="go" (keydown.Tab)="category.open()" (keyup.enter)="category.open()">
+            </ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.name.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe o nome do empresa.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size-xs="12" size-sm="6">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.category_id.errors" class="stacked">Categoria
+            </ion-label>
+
+            <ion-select [class.invalid]="submitAttempt && formControl.category_id.errors" interface="action-sheet"
+              formControlName="category_id" #category>
+
+              <ion-select-option [value]="category.id" *ngFor="let category of categories">{{ category.name }}
+              </ion-select-option>
+
+            </ion-select>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.category_id.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe a categoria.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size-xs="12" size-sm="6">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.phone.errors" class="stacked">Telefone/Celular
+            </ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.phone.errors" formControlName="phone"
+              [brmasker]="{ phone: true }" maxlength="15" enterkeyhint="go" (keyup.enter)="document_number.setFocus()"
+              #phone>
+            </ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.phone.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe um número de telefone/celular.
+
+            </ion-note>
+
+            <ion-note class="validation-error"
+              *ngIf="submitAttempt && formControl.phone.errors?.minLength !== null && formControl.phone.errors?.required == undefined">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Telefone/Celular inválido.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size-xs="12" size-sm="6">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.document_number.errors" class="stacked">
+              CPF/CNPJ</ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.document_number.errors"
+              formControlName="document_number" [brmasker]="{ person: true }" enterkeyhint="done"
+              (ionBlur)="checkDocumentNumber()" #document_number></ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.document_number.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe um CPF/CNPJ.
+
+            </ion-note>
+
+            <ion-note class="validation-error"
+              *ngIf="submitAttempt && formControl.document_number.errors?.document_number !== null && formControl.document_number.errors?.required == undefined">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              CPF/CNPJ inválido.
+
+            </ion-note>
+
+          </ion-col>
+
+        </ion-row>
+
+      </ion-grid>
+
+    </form>
+
+  </div>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+
+  <ion-button expand="block" (click)="save()">Salvar</ion-button>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

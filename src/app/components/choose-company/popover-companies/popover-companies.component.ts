@@ -31,7 +31,7 @@ export class PopoverCompaniesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.user = this.authSrv.user;
+    this.user = this.authSrv.getCurrentUser();
 
     this.user.companies.forEach((company: any) => {
       if (company.status == 1) {

@@ -52,12 +52,9 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
 
       this.alertSrv.show({
         icon: 'warning',
-        message: 'Você precisa selecionar algum método para permitir pagamentos na entrega. Deseja continuar?',
-        confirmButtonText: 'Continuar',
+        message: 'Nenhum método de pagamento foi selecionado. Deseja sair?',
+        confirmButtonText: 'Sair',
         onConfirm: () => {
-
-        },
-        onCancel: () => {
           this.modalCtrl.dismiss();
         }
       });
@@ -68,12 +65,9 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
 
       this.alertSrv.show({
         icon: 'warning',
-        message: 'Se cancelar você não poderá oferecer pagamentos na entrega. Deseja continuar?',
-        confirmButtonText: 'Continuar',
+        message: 'Se sair sem salvar seus métodos de pagamentos, você não poderá oferecer pagamentos na entrega. Deseja sair?',
+        confirmButtonText: 'Sair',
         onConfirm: () => {
-
-        },
-        onCancel: () => {
           this.modalCtrl.dismiss();
         }
       });
@@ -82,7 +76,7 @@ export class ModalPaymentMethodsComponent implements OnInit, OnDestroy {
 
   }
 
-  public confirm() {
+  public save() {
     
     if (this.selecteds.length == 0) {
 

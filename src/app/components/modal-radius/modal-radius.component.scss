@@ -1,0 +1,12 @@
+ion-content {
+    .map {
+        width: 100%;
+        height: calc(100% + 28px) !important;
+    }
+}
+
+ion-footer {
+    ion-range {
+        padding: 0 0 10px;
+    }
+}

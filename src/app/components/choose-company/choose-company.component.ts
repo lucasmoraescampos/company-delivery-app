@@ -18,7 +18,7 @@ export class ChooseCompanyComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.user = this.authSrv.user;
+    this.user = this.authSrv.getCurrentUser();
   }
 
   public async companies(ev: any) {

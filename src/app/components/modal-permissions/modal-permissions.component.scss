@@ -1,0 +1,36 @@
+ion-content {
+    ion-list.permissions {
+        ion-item {
+            --padding-top: 0;
+            --padding-bottom: 0;
+
+            ion-label {
+                font-size: 0.9rem;
+            }
+
+            ion-toggle {
+                padding-right: 0;
+            }
+        }
+    }
+
+    ion-list.payment-methods {
+        ion-list-header {
+            font-size: 16px;
+            font-weight: normal;
+            padding: 16px;
+        }
+
+        img {
+            width: 25px;
+        }
+
+        ion-label {
+            font-size: 0.9rem;
+        }
+
+        ion-checkbox {
+            margin: 0;
+        }
+    }
+}

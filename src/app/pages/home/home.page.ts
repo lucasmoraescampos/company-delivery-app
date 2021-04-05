@@ -7,7 +7,6 @@ import { AlertService } from 'src/app/services/alert.service';
 import { CompanyService } from 'src/app/services/company.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Plugins } from '@capacitor/core';
-import { ModalShareLinkComponent } from 'src/app/components/modal-share-link/modal-share-link.component';
 import { environment } from 'src/environments/environment';
 
 const { Browser, Clipboard  } = Plugins;
@@ -151,40 +150,11 @@ export class HomePage implements OnInit, OnDestroy {
               message: 'Link copiado com sucesso'
             });
           }
-        },
-        {
-          text: 'Editar link',
-          icon: 'create-outline',
-          callback: () =>  {
-            this.modalShareLink();
-          }
         }
       ]
     });
   }
-
-  private async modalShareLink() {
-
-    const modal = await this.modalCtrl.create({
-      component: ModalShareLinkComponent,
-      backdropDismiss: false,
-      componentProps: {
-        company: this.company
-      }
-    });
-
-    modal.onWillDismiss()
-      .then(res => {
-        if (res.data) {
-          this.company.slug = res.data;
-          this.companySrv.setCurrentCompany(this.company);
-        }
-      });
-
-    return await modal.present();
-
-  }
-
+  
   private initCompany() {
     this.companySrv.currentCompany.pipe(takeUntil(this.unsubscribe))
       .subscribe(company => {

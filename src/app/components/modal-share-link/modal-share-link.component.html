@@ -6,9 +6,9 @@
 
     <ion-buttons slot="end">
 
-      <ion-button class="close" color="medium" (click)="dismiss()">
+      <ion-button (click)="dismiss()">
 
-        <ion-icon slot="icon-only" src="../../../../assets/icon/close.svg"></ion-icon>
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
 
       </ion-button>
 
@@ -34,11 +34,15 @@
 
               <h6>Regras:</h6>
 
-              <p>Você pode usar letras, números e traços.</p>
+              <ul>
 
-              <p>O primeiro caractere deve ser uma letra (a - z) ou um número (0 - 9).</p>
+                <li>Você pode usar letras, números e traços.</li>
 
-              <p>O último caractere deve ser uma letra (a - z) ou um número (0 - 9).</p>
+                <li>O primeiro caractere deve ser uma letra (a - z) ou um número (0 - 9).</li>
+
+                <li>O último caractere deve ser uma letra (a - z) ou um número (0 - 9).</li>
+
+              </ul>
 
             </ion-label>
 

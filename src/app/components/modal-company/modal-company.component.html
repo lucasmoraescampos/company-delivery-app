@@ -51,15 +51,15 @@
             <ion-col class="ion-text-center" size="12">
 
               <app-choose-image style="width: 100%;" [aspectRatio]="10 / 2"
-                [image]="uploadedBanner ? uploadedBanner : company?.banner ? company.banner : bannerDefault"
+                [image]="uploadedBanner ? uploadedBanner : bannerDefault"
                 (changeImage)="changeBanner($event)">
               </app-choose-image>
 
               <app-choose-image style="margin-top: -64px; background-color: #fff;"
-                [invalid]="submitAttempt1 && !uploadedImage && !company" [rounded]="true"
-                [image]="uploadedImage ? uploadedImage : company?.image" (changeImage)="changeImage($event)"></app-choose-image>
+                [invalid]="submitAttempt1 && !uploadedImage" [rounded]="true"
+                [image]="uploadedImage" (changeImage)="changeImage($event)"></app-choose-image>
 
-              <ion-note class="validation-error" *ngIf="submitAttempt1 && !uploadedImage && !company">
+              <ion-note class="validation-error" *ngIf="submitAttempt1 && !uploadedImage">
 
                 <ion-icon name="information-circle-outline"></ion-icon>
 

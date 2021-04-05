@@ -1,5 +1,5 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, ModalController, NavParams } from '@ionic/angular';
+import { IonSlides, ModalController } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -27,13 +27,11 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
   @ViewChild(IonSlides) slides: IonSlides;
 
-  public bannerDefault: string;
+  readonly bannerDefault = environment.imagesUrl + '/banner.png';
 
   public slideActiveIndex: number = 0;
 
   public loading: boolean;
-
-  public company: any;
 
   public uploadedImage: string;
 
@@ -83,44 +81,39 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     private alertSrv: AlertService,
     private formBuilder: FormBuilder,
     private apiSrv: ApiService,
-    private companySrv: CompanyService,
-    private navParams: NavParams
+    private companySrv: CompanyService
   ) { }
 
   ngOnInit() {
 
-    this.company = this.navParams.get('company');
-
     this.formGroup1 = this.formBuilder.group({
-      name: [this.company?.name ?? '', Validators.required],
+      name: ['', Validators.required],
       category_id: [null, Validators.required],
-      phone: [this.company?.phone ?? '', [Validators.required, Validators.minLength(14)]],
-      document_number: [this.company?.document_number ?? '', Validators.required]
+      phone: ['', [Validators.required, Validators.minLength(14)]],
+      document_number: ['', Validators.required]
     });
 
     this.formGroup2 = this.formBuilder.group({
       postal_code: ['', Validators.required],
-      street_name: [this.company?.street_name ?? '', Validators.required],
-      street_number: [this.company?.street_number ?? '', Validators.required],
-      district: [this.company?.district ?? '', Validators.required],
+      street_name: ['', Validators.required],
+      street_number: ['', Validators.required],
+      district: ['', Validators.required],
       uf: ['', Validators.required],
       city: ['', Validators.required],
-      complement: [this.company?.complement ?? '']
+      complement: ['']
     });
 
     this.formGroup3 = this.formBuilder.group({
-      allow_payment_online: [this.company?.allow_payment_online ?? false, Validators.required],
-      allow_payment_delivery: [this.company?.allow_payment_delivery ?? false, Validators.required],
-      allow_withdrawal_local: [this.company?.allow_withdrawal_local ?? false, Validators.required],
-      min_order_value: [this.company ? UtilsHelper.numberToMoney(this.company.min_order_value) : '', Validators.required],
-      waiting_time: [String(this.company?.waiting_time) ?? '', Validators.required],
-      delivery_price: [this.company ? UtilsHelper.numberToMoney(this.company.delivery_price) : '' ?? '', Validators.required],
-      radius: [this.company ? String(this.company?.radius) : 0, Validators.required]
+      allow_payment_online: [false, Validators.required],
+      allow_payment_delivery: [false, Validators.required],
+      allow_withdrawal_local: [false, Validators.required],
+      min_order_value: ['', Validators.required],
+      waiting_time: ['', Validators.required],
+      delivery_price: ['', Validators.required],
+      radius: [0, Validators.required]
     });
 
     this.initCategories();
-
-    this.bannerDefault = environment.imagesUrl + '/banner.png';
 
   }
 
@@ -157,19 +150,8 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
     this.apiSrv.getPlans(this.formControl1.category_id.value)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
-
         this.loading = false;
-
         this.plans = res.data
-        
-        if (this.company && this.company.category_id == this.formControl1.category_id.value) {
-
-          const index = ArrayHelper.getIndexByKey(this.plans, 'id', this.company.plan_id);
-
-          this.selectedPlan = this.plans[index];
-
-        }
-
       });
   }
 
@@ -244,7 +226,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
       this.submitAttempt1 = true;
 
-      if (this.formGroup1.valid && (this.uploadedImage || this.company)) {
+      if (this.formGroup1.valid && this.uploadedImage) {
 
         if (this.map == undefined) {
           this.loadMap();
@@ -324,7 +306,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
         if (this.uploadedImage) {
           data.image = this.uploadedImage;
         }
-        
+
         if (this.uploadedBanner) {
           data.banner = this.uploadedBanner;
         }
@@ -337,53 +319,26 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
           data.payment_methods = this.paymentMethods;
         }
 
-        if (this.company) {
+        this.companySrv.create(data)
+          .pipe(takeUntil(this.unsubscribe))
+          .subscribe(res => {
 
-          this.companySrv.update(this.company.id, data)
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe(res => {
+            this.loading = false;
 
-              this.loading = false;
+            if (res.success) {
 
-              if (res.success) {
+              this.alertSrv.show({
+                icon: 'success',
+                message: 'Pronto! Sua empresa está sendo analisada por nossa equipe, e um de nossos consultores entrará em contato com você para finalizar o cadastro.',
+                showCancelButton: false,
+                confirmButtonText: 'Entendi'
+              });
 
-                this.alertSrv.toast({
-                  icon: 'success',
-                  message: res.message
-                });
+              this.modalCtrl.dismiss(res.data);
 
-                this.modalCtrl.dismiss(res.data);
+            }
 
-              }
-
-            });
-
-        }
-
-        else {
-
-          this.companySrv.create(data)
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe(res => {
-
-              this.loading = false;
-
-              if (res.success) {
-
-                this.alertSrv.show({
-                  icon: 'success',
-                  message: 'Pronto! Sua empresa está sendo analisada por nossa equipe, e um de nossos consultores entrará em contato com você para finalizar o cadastro.',
-                  showCancelButton: false,
-                  confirmButtonText: 'Entendi'
-                });
-
-                this.modalCtrl.dismiss(res.data);
-
-              }
-
-            });
-
-        }
+          });
 
       }
 
@@ -410,25 +365,12 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
 
     try {
 
-      if (this.company) {
+      const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
 
-        this.latLng = {
-          lat: Number(this.company.latitude),
-          lng: Number(this.company.longitude)
-        };
-
-      }
-
-      else {
-
-        const coordinates = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-
-        this.latLng = {
-          lat: coordinates.coords.latitude,
-          lng: coordinates.coords.longitude
-        };
-
-      }
+      this.latLng = {
+        lat: coordinates.coords.latitude,
+        lng: coordinates.coords.longitude
+      };
 
       const mapOptions = {
         center: this.latLng,
@@ -551,10 +493,7 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       const modal = await this.modalCtrl.create({
         component: ModalPaymentMethodsComponent,
         backdropDismiss: false,
-        cssClass: 'modal-sm',
-        componentProps: {
-          company: this.company
-        }
+        cssClass: 'modal-sm'
       });
 
       modal.onWillDismiss()
@@ -628,63 +567,26 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
   }
 
   private serializeAddress(address_components: any[]) {
-
     address_components.forEach((component: any) => {
-
       if (component.types.indexOf('street_number') != -1) {
-
-        if (!this.company) {
-
-          this.formGroup2.patchValue({ street_number: component.long_name });
-
-        }
-
+        this.formGroup2.patchValue({ street_number: component.long_name });
       }
-
       else if (component.types.indexOf('route') != -1) {
-
-        if (!this.company) {
-
-          this.formGroup2.patchValue({ street_name: component.long_name });
-
-        }
-
+        this.formGroup2.patchValue({ street_name: component.long_name });
       }
-
       else if (component.types.indexOf('sublocality_level_1') != -1) {
-
-        if (!this.company) {
-
-          this.formGroup2.patchValue({ district: component.long_name });
-
-        }
-
+        this.formGroup2.patchValue({ district: component.long_name });
       }
-
       else if (component.types.indexOf('administrative_area_level_2') != -1) {
-
         this.formGroup2.patchValue({ city: component.long_name });
-
       }
-
       else if (component.types.indexOf('administrative_area_level_1') != -1) {
-
         this.formGroup2.patchValue({ uf: component.short_name });
-
       }
-
-      else if (component.types.indexOf('country') != -1) {
-
-      }
-
       else if (component.types.indexOf('postal_code') != -1) {
-
         this.formGroup2.patchValue({ postal_code: component.short_name });
-
       }
-
     });
-
   }
 
   private initCategories() {
@@ -694,9 +596,6 @@ export class ModalCompanyComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.loading = false;
         this.categories = res.data
-        if (this.company) {
-          this.formGroup1.patchValue({ category_id: this.company.category_id});
-        }
       });
   }
 

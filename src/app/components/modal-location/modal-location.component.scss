@@ -1,0 +1,26 @@
+ion-content {
+    ion-slides {
+        height: 100%;
+
+        ion-slide {
+            text-align: left;
+            display: block;
+
+            .map {
+                width: 100%;
+                height: calc(100% + 28px) !important;
+            }
+
+            ion-fab {
+                bottom: 70px;
+            }
+
+            ion-button {
+                position: absolute;
+                left: 16px;
+                bottom: 16px;
+                width: calc(100% - 32px);
+            }
+        }
+    }
+}

@@ -1,0 +1,74 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Planos</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <div class="ion-scroll">
+
+    <ion-grid>
+
+      <ion-row>
+
+        <ion-col size="12">
+
+          <ion-list>
+
+            <ion-radio-group [(ngModel)]="selected">
+
+              <ion-item lines="full" *ngFor="let plan of plans">
+
+                <ion-radio slot="start" mode="md" [value]="plan.id"></ion-radio>
+
+                <ion-label class="ion-text-wrap">
+
+                  <h6>{{ plan.name }}</h6>
+
+                  <p *ngIf="plan.delivery_person">Entrega feita por entregadores parceiros do Meu Pedido</p>
+
+                  <p *ngIf="!plan.delivery_person">Entrega feita por sua empresa</p>
+
+                  <p>Comissão de {{ plan.fee }}% sobre o valor de todos os pedidos e mais {{ plan.online_payment_fee }}%
+                    em pedidos com pagamento online</p>
+
+                </ion-label>
+
+              </ion-item>
+
+            </ion-radio-group>
+
+          </ion-list>
+
+        </ion-col>
+
+      </ion-row>
+
+    </ion-grid>
+
+  </div>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+
+  <ion-button expand="block" (click)="save()" [disabled]="selected == company.plan_id">Salvar</ion-button>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

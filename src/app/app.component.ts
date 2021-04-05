@@ -57,17 +57,17 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: 'bag-handle-outline',
       disabled: false
     },
-    {
-      title: 'Relatórios',
-      url: '/reports',
-      icon: 'bar-chart-outline',
-      disabled: true
-    },
+    // {
+    //   title: 'Relatórios',
+    //   url: '/reports',
+    //   icon: 'bar-chart-outline',
+    //   disabled: true
+    // },
     {
       title: 'Configurações',
       url: '/settings',
       icon: 'settings-outline',
-      disabled: true
+      disabled: false
     }
   ];
 

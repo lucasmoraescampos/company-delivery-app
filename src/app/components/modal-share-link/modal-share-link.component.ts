@@ -29,7 +29,11 @@ export class ModalShareLinkComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.slug = this.company.slug
+
+    this.company = this.companySrv.getCurrentCompany();
+
+    this.slug = this.company.slug;
+    
   }
 
   ngOnDestroy() {

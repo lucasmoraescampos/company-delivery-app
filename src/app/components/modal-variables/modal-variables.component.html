@@ -1,0 +1,117 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar>
+
+    <ion-title>Variáveis</ion-title>
+
+    <ion-buttons slot="end">
+
+      <ion-button (click)="dismiss()">
+
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+
+      </ion-button>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content scrollY="false">
+
+  <div class="ion-scroll">
+
+    <form [formGroup]="formGroup">
+
+      <ion-grid>
+
+        <ion-row>
+
+          <ion-col size="12">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.min_order_value.errors" class="stacked">Pedido
+              mínimo</ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.min_order_value.errors" inputmode="numeric"
+              formControlName="min_order_value" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
+              (keyup.enter)="waiting_time.setFocus()"></ion-input>
+
+            <ion-note class="validation-error"
+              *ngIf="submitAttempt && formControl.min_order_value.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe o preço mínimo.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size="12">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.delivery_price.errors" class="stacked">Valor da
+              entrega</ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.delivery_price.errors" inputmode="numeric"
+              formControlName="delivery_price" [brmasker]="{ money: true, thousand: '.' }" enterkeyhint="go"
+              #delivery_price></ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.delivery_price.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe o valor da entrega.
+
+            </ion-note>
+
+          </ion-col>
+
+          <ion-col size="12">
+
+            <ion-label [class.invalid]="submitAttempt && formControl.waiting_time.errors" class="stacked">Tempo de
+              espera</ion-label>
+
+            <ion-input [class.invalid]="submitAttempt && formControl.waiting_time.errors" inputmode="numeric"
+              formControlName="waiting_time" maxlength="3" [brmasker]="{ type: 'num' }" enterkeyhint="go"
+              (ionBlur)="checkWaitingTime()" (keyup.enter)="delivery_price.setFocus()" #waiting_time>
+
+              <span>minutos</span>
+
+            </ion-input>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.waiting_time.errors?.required">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe o tempo de espera.
+
+            </ion-note>
+
+            <ion-note class="validation-error" *ngIf="submitAttempt && formControl.waiting_time.errors?.zero">
+
+              <ion-icon name="information-circle-outline"></ion-icon>
+
+              Informe um valor maior que zero.
+
+            </ion-note>
+
+          </ion-col>
+
+        </ion-row>
+
+      </ion-grid>
+
+    </form>
+
+  </div>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+
+  <ion-button expand="block" (click)="save()">Salvar</ion-button>
+
+</ion-footer>
+
+<ngx-loading [show]="loading"></ngx-loading>

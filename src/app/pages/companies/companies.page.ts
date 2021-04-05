@@ -1,5 +1,5 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { MenuController, ModalController, NavController } from '@ionic/angular';
+import { ActionSheetController, MenuController, ModalController, NavController } from '@ionic/angular';
 import { ModalCompanyComponent } from '../../components/modal-company/modal-company.component';
 import { CompanyService } from 'src/app/services/company.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -31,6 +31,7 @@ export class CompaniesPage implements OnInit, OnDestroy {
     private alertSrv: AlertService,
     private loadingSrv: LoadingService,
     private menuCtrl: MenuController,
+    public actionSheetCtrl: ActionSheetController,
     public ngZone: NgZone
   ) { }
 
@@ -53,9 +54,7 @@ export class CompaniesPage implements OnInit, OnDestroy {
     this.menuCtrl.enable(false);
   }
 
-  public options(index: number) {
-
-    const company = this.user.companies[index];
+  public async open(company: any) {
 
     if (company.status == 0) {
 
@@ -70,33 +69,9 @@ export class CompaniesPage implements OnInit, OnDestroy {
 
     else if (company.status == 1) {
 
-      this.alertSrv.options({
-        title: company.name,
-        buttons: [
-          {
-            text: 'Entrar',
-            icon: 'open-outline',
-            callback: () => {
-              this.companySrv.setCurrentCompany(company);
-              this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
-            }
-          },
-          {
-            text: 'Editar',
-            icon: 'create-outline',
-            callback: () =>  {
-              this.modalCompany(index);
-            }
-          },
-          {
-            text: 'Excluir',
-            icon: 'trash-outline',
-            callback: () =>  {
-              this.deleteCompany(index);
-            }
-          }
-        ]
-      });
+      this.companySrv.setCurrentCompany(company);
+
+      this.navCtrl.navigateRoot('/home', { animationDirection: 'forward' });
 
     }
 
@@ -112,70 +87,25 @@ export class CompaniesPage implements OnInit, OnDestroy {
 
   }
 
-  public async modalCompany(index?: number) {
+  public async modalCompany() {
 
     const modal = await this.modalCtrl.create({
       component: ModalCompanyComponent,
-      backdropDismiss: false,
-      componentProps: {
-        company: this.user.companies[index]
-      }
+      backdropDismiss: false
     });
 
     modal.onWillDismiss()
       .then(res => {
         if (res.data) {
-          if (index !== undefined) {
-            this.user.companies[index] = res.data;
-            this.authSrv.setCurrentUser(this.user);
-          }
-          else {
-            this.user.companies.unshift(res.data);
-            this.authSrv.setCurrentUser(this.user);
-          }
+          this.user.companies.unshift(res.data);
+          this.authSrv.setCurrentUser(this.user);
         }
       });
 
     return await modal.present();
 
   }
-
-  private deleteCompany(index: number) {
-
-    const company = this.user.companies[index];
-
-    this.alertSrv.show({
-      icon: 'warning',
-      message: `Voce está prestes a excluir a empresa "${company.name}"`,
-      onConfirm: () => {
-
-        this.loadingSrv.show();
-
-        this.companySrv.delete(company.id)
-          .pipe(takeUntil(this.unsubscribe))
-          .subscribe(res => {
-
-            this.loadingSrv.hide();
-
-            if (res.success) {
-
-              this.user.companies = ArrayHelper.removeItem(this.user.companies, index);
-
-              this.authSrv.setCurrentUser(this.user);
-
-              this.alertSrv.toast({
-                icon: 'success',
-                message: res.message
-              });
-
-            }
-
-          });
-
-      }
-    });
-  }
-
+  
   private checkCompanies() {
     if (this.user.companies?.length == 0) {
       this.alertSrv.show({

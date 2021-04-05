@@ -23,11 +23,19 @@ export class CompanyService {
     this.currentCompany = this.currentCompanySubject.asObservable();
   }
 
+  public getCurrentCompany() {
+    return this.currentCompanySubject.value;
+  }
+
   public setCurrentCompany(data: any) {
     localStorage.setItem(ConfigHelper.Storage.CurrentCompany, JSON.stringify(data));
     this.currentCompanySubject.next(data);
   }
 
+  public clearCurrentCompany() {
+    localStorage.removeItem(ConfigHelper.Storage.CurrentCompany);
+    this.currentCompanySubject.next(undefined);
+  }
 
   // rest methods
 
