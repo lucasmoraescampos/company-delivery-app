@@ -2,14 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { mergeMapTo, takeUntil } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { CompanyService } from 'src/app/services/company.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import { Plugins } from '@capacitor/core';
+import { PermissionType, Plugins } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { FcmTokenService } from 'src/app/services/fcm-token.service';
 
-const { Browser, Clipboard  } = Plugins;
+const { Browser, Clipboard, Permissions } = Plugins;
 
 @Component({
   selector: 'app-home',
@@ -69,11 +71,15 @@ export class HomePage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private companySrv: CompanyService,
     private loadingSrv: LoadingService,
-    private alertSrv: AlertService
+    private alertSrv: AlertService,
+    private afMessaging: AngularFireMessaging,
+    private fcmTokenSrv: FcmTokenService
   ) { }
 
   ngOnInit() {
+
     this.initCompany();
+
   }
 
   ngOnDestroy() {
@@ -86,9 +92,11 @@ export class HomePage implements OnInit, OnDestroy {
     const chart: any = document.querySelector('.chart');
 
     this.view = [chart.offsetWidth - 32, 185];
-    
+
+    this.requestNotificationPermission();
+
   }
-  
+
   public onSelect(event) {
     console.log(event);
   }
@@ -133,14 +141,14 @@ export class HomePage implements OnInit, OnDestroy {
         {
           text: 'Abrir link',
           icon: 'open-outline',
-          callback: () =>  {
+          callback: () => {
             Browser.open({ url: this.siteUrl + '/' + this.company.slug });
           }
         },
         {
           text: 'Copiar link',
           icon: 'copy-outline',
-          callback: () =>  {
+          callback: () => {
             Clipboard.write({
               string: this.siteUrl + '/' + this.company.slug
             });
@@ -154,7 +162,76 @@ export class HomePage implements OnInit, OnDestroy {
       ]
     });
   }
-  
+
+  private requestNotificationPermission() {
+
+    Permissions.query({ name: PermissionType.Notifications })
+      .then(res => {
+
+        if (res.state == 'prompt') {
+
+          this.alertSrv.custom({
+            imageUrl: './assets/icon/push-notification.svg',
+            title: 'Notificações',
+            message: 'Você deve permitir que enviemos notificações para o seu dispositivo.',
+            confirmButtonText: 'Ok, Permitir',
+            onConfirm: () => {
+
+              this.afMessaging.requestPermission
+                .pipe(takeUntil(this.unsubscribe))
+                .pipe(mergeMapTo(this.afMessaging.tokenChanges))
+                .subscribe(
+                  (token) => {
+
+                    this.fcmTokenSrv.checkInFcmTokenWithAuth(token)
+                      .pipe(takeUntil(this.unsubscribe))
+                      .subscribe();
+
+                  },
+                  (error) => {
+
+                    this.alertSrv.custom({
+                      imageUrl: './assets/icon/denied.svg',
+                      message: 'Não obtemos permissão para enviar notificações ao seu dispositivo. Vá em configurações e permita que enviemos nnotificações para que você tenha todas as informações necessárias em tempo real.',
+                      confirmButtonText: 'Ok, Entendi'
+                    });
+
+                  }
+                );
+
+            }
+          });
+
+        }
+
+        else if (res.state == 'denied') {
+
+          this.alertSrv.custom({
+            imageUrl: './assets/icon/denied.svg',
+            message: 'Não obtemos permissão para enviar notificações ao seu dispositivo. Vá em configurações e permita que enviemos nnotificações para que você tenha todas as informações necessárias em tempo real.',
+            confirmButtonText: 'Ok, Entendi'
+          });
+
+        }
+
+        else {
+
+          this.afMessaging.getToken
+            .pipe(takeUntil(this.unsubscribe))
+            .subscribe((token) => {
+
+              this.fcmTokenSrv.checkInFcmTokenWithAuth(token)
+                .pipe(takeUntil(this.unsubscribe))
+                .subscribe();
+
+            });
+
+        }
+
+      });
+
+  }
+
   private initCompany() {
     this.companySrv.currentCompany.pipe(takeUntil(this.unsubscribe))
       .subscribe(company => {
