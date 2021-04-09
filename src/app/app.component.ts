@@ -165,8 +165,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
               this.alertSrv.notification({
                 imageUrl: this.user.companies[index].image,
-                title: 'Pedido',
-                message: 'Você tem um novo pedido',
+                title: 'Pedidos',
+                message: 'Você recebeu um novo pedido',
                 duration: 10000,
                 onConfirm: () => {
 

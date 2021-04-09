@@ -7,7 +7,7 @@ ion-content {
         }
 
         &.chart {
-            padding: 16px;
+            padding: 28px 16px;
         }
 
         ion-card-header {
@@ -17,57 +17,91 @@ ion-content {
                 font-size: 1rem;
                 font-weight: 600;
             }
+
+            ion-button.all-orders {
+                position: absolute;
+                top: 50%;
+                right: 8px;
+                transform: translateY(-50%);
+            }
         }
 
         ion-card-content {
             &:not(.ion-no-padding) {
                 padding: 16px;
             }
-            
+
+            ion-list {
+                overflow-x: auto;
+            }
+
             ion-item {
-                &[lines="full"]  {
+                &[lines="full"] {
                     --border-width: 0.55px 0 0;
+                }
+
+                &.status {
+                    --min-height: 96px;
+
+                    ion-label {
+                        font-size: 1rem;
+                        font-weight: 600;
+                        max-width: 71px;
+                    }
+
+                    img {
+                        width: 80px;
+                    }
+
+                    ion-badge {
+                        font-size: 1rem;
+                        font-weight: 500;
+                        margin-bottom: -4px;
+                    }
                 }
 
                 &.balance {
                     --min-height: 60px;
-                    
+
                     h6 {
                         font-size: 1.5rem;
                     }
 
                     p {
-                        font-weight: 500;
-                    }
-                }
-
-                &.see-all {
-                    text-align: center;
-                    font-weight: 500;
-                    font-size: 1rem;
-                }
-
-                ion-label {
-                    h6 {
-                        font-size: 20px;
-                        font-weight: 500;
-                    }
-                }
-
-                ion-badge {
-                    font-size: 11px;
-                    font-weight: 500;
-                    margin-top: 2px;
-
-                    &.status {
                         font-size: 1rem;
+                        font-weight: 500;
                     }
                 }
 
-                ion-toggle {
-                    --handle-height: 22px;
-                    --handle-width: 22px;
-                    height: 26px;
+                &.order {
+                    min-width: 424px;
+
+                    ion-icon {
+                        font-size: 22px;
+                    }
+
+                    h6 {
+                        font-size: 1rem;
+                        margin: 0;
+
+                        ion-icon {
+                            font-size: 0.95rem;
+                            margin-bottom: -2px;
+                        }
+                    }
+
+                    p {
+                        font-size: 0.9rem;
+                    }
+
+                    ion-badge {
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                    }
+
+                    ion-label:first-child {
+                        min-width: 180px;
+                    }
                 }
             }
 

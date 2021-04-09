@@ -26,27 +26,21 @@
 
     <ion-row>
 
-      <ion-col size-xs="12" size-sm="4" *ngIf="company">
+      <ion-col size-xs="12" size-sm="4">
 
-        <ion-card class="animate__animated animate__fadeIn">
+        <ion-card class="animate__animated animate__fadeIn animate__slow" *ngIf="company">
 
           <ion-card-content class="ion-no-padding">
 
             <ion-list>
 
-              <ion-item lines="none">
+              <ion-item class="status" lines="none">
 
-                <ion-label>
+                <img class="animate__animated animate__flipInY" src="../../../assets/image/opened.png" *ngIf="company.open">
 
-                  <p>Status:</p>
+                <img class="animate__animated animate__flipInY" src="../../../assets/image/closed.png" *ngIf="!company.open">
 
-                  <ion-badge class="status" color="primary" *ngIf="company.open">Aberto</ion-badge>
-
-                  <ion-badge class="status" color="medium" *ngIf="!company.open">Fechado</ion-badge>
-                
-                </ion-label>
-
-                <ion-toggle [checked]="company.open" (ionChange)="changeOpen($event)"></ion-toggle>
+                <ion-toggle slot="end" [checked]="company.open" (ionChange)="changeOpen($event)"></ion-toggle>
 
               </ion-item>
 
@@ -56,7 +50,7 @@
 
         </ion-card>
 
-        <ion-card class="animate__animated animate__fadeIn" button="true" color="primary">
+        <ion-card class="animate__animated animate__fadeIn animate__slow" button="true" color="primary" *ngIf="company">
 
           <ion-card-header>
 
@@ -86,7 +80,7 @@
 
         </ion-card>
 
-        <ion-card class="chart">
+        <ion-card class="animate__animated animate__fadeIn animate__slow chart">
 
           <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="single" [roundEdges]="false"
             [xAxis]="true" [yAxis]="false" (select)="onSelect($event)" *ngIf="view?.length > 0">
@@ -94,7 +88,7 @@
 
         </ion-card>
 
-        <ion-card button="true" (click)="share()">
+        <ion-card class="animate__animated animate__fadeIn animate__slow" button="true" (click)="share()" *ngIf="company">
 
           <ion-card-header>
 
@@ -114,11 +108,19 @@
 
       <ion-col size-xs="12" size-sm="8">
 
-        <ion-card>
+        <ion-card class="animate__animated animate__fadeIn animate__slow">
 
           <ion-card-header>
 
-            <ion-card-title class="ion-text-center">Últimos pedidos</ion-card-title>
+            <ion-card-title>Últimos pedidos</ion-card-title>
+
+            <ion-button class="all-orders" fill="clear" size="small" (click)="orders()">
+
+              <ion-icon slot="start" name="list-outline"></ion-icon>
+              
+              Ver tudo
+
+            </ion-button>
 
           </ion-card-header>
 
@@ -126,142 +128,58 @@
 
             <ion-list>
 
-              <!-- <ion-item lines="full" detail="true" button="true">
+              <ion-item class="animate__animated animate__fadeIn animate__slow order" lines="full" detail="true" button="true" *ngFor="let order of lastOrders" (click)="openOrder(order)">
 
                 <ion-icon slot="start" src="../../../assets/icon/order.svg"></ion-icon>
 
                 <ion-label>
 
-                  <h6>Pedido 0019</h6>
+                  <h6>
+                    
+                    {{ order.number }}
 
-                  <p>Lucas Moraes Campos</p>
+                    <ion-icon name="remove-outline"></ion-icon>
 
-                  <ion-badge color="medium">Aguardando aprovação</ion-badge>
+                    {{ order.delivery_forecast | date:'HH:mm' }}
+
+                  </h6>
+
+                  <p>{{ order.user.name }}</p>
+
+                  <ion-badge color="medium" *ngIf="order.status == 0">Aguardando confirmação</ion-badge>
+
+                  <ion-badge color="primary" *ngIf="order.status == 1">Preparando</ion-badge>
+
+                  <ion-badge color="medium" *ngIf="order.status == 2">Aguardando entregador</ion-badge>
+
+                  <ion-badge color="dark" *ngIf="order.status == 3">Entregando</ion-badge>
+
+                  <ion-badge color="primary" *ngIf="order.status == 4">Finalizado</ion-badge>
+
+                  <ion-badge color="danger" *ngIf="order.status == 5">Cancelado</ion-badge>
 
                 </ion-label>
 
                 <ion-label class="ion-text-center">
 
-                  <h6>R$ 10,00</h6>
+                  <h6>{{ order.price | money }}</h6>
 
-                  <p>Hoje às 20:00</p>
+                  <p>{{ order.created_at | dateCustom }}</p>
 
                 </ion-label>
 
               </ion-item>
-
-              <ion-item lines="full" detail="true" button="true">
-
-                <ion-icon slot="start" src="../../../assets/icon/order.svg"></ion-icon>
-
-                <ion-label>
-
-                  <h6>Pedido 0018</h6>
-
-                  <p>Pedro Pacheco Costa</p>
-
-                  <ion-badge color="primary">Em andamento</ion-badge>
-
-                </ion-label>
+              
+              <ion-item  class="animate__animated animate__fadeIn animate__slow ion-padding-bottom" lines="none" *ngIf="lastOrders?.length == 0">
 
                 <ion-label class="ion-text-center">
 
-                  <h6>R$ 102,00</h6>
-
-                  <p>Hoje às 19:00</p>
-
-                </ion-label>
-
-              </ion-item>
-
-              <ion-item lines="full" detail="true" button="true">
-
-                <ion-icon slot="start" src="../../../assets/icon/order.svg"></ion-icon>
-
-                <ion-label>
-
-                  <h6>Pedido 0017</h6>
-
-                  <p>Mateus Moraes Marim</p>
-
-                  <ion-badge color="danger">Recusado</ion-badge>
-
-                </ion-label>
-
-                <ion-label class="ion-text-center">
-
-                  <h6>R$ 12,00</h6>
-
-                  <p>Hoje às 18:00</p>
-
-                </ion-label>
-
-              </ion-item>
-
-              <ion-item lines="full" detail="true" button="true">
-
-                <ion-icon slot="start" src="../../../assets/icon/order.svg"></ion-icon>
-
-                <ion-label>
-
-                  <h6>Pedido 0017</h6>
-
-                  <p>Mateus Moraes Marim</p>
-
-                  <ion-badge color="danger">Recusado</ion-badge>
-
-                </ion-label>
-
-                <ion-label class="ion-text-center">
-
-                  <h6>R$ 12,00</h6>
-
-                  <p>Hoje às 18:00</p>
-
-                </ion-label>
-
-              </ion-item>
-
-              <ion-item lines="full" detail="true" button="true">
-
-                <ion-icon slot="start" src="../../../assets/icon/order.svg"></ion-icon>
-
-                <ion-label>
-
-                  <h6>Pedido 0017</h6>
-
-                  <p>Mateus Moraes Marim</p>
-
-                  <ion-badge color="danger">Recusado</ion-badge>
-
-                </ion-label>
-
-                <ion-label class="ion-text-center">
-
-                  <h6>R$ 12,00</h6>
-
-                  <p>Hoje às 18:00</p>
-
-                </ion-label>
-
-              </ion-item>
-
-              <ion-item class="see-all" lines="full" detail="false" button="true">
-
-                <ion-label color="primary">Ver todos os pedidos</ion-label>
-
-              </ion-item> -->
-
-              <ion-item class="ion-padding-bottom" lines="none">
-
-                <ion-label class="ion-text-center">
-                  
                   <ion-icon src="../../../assets/icon/order.svg"></ion-icon>
 
                   <p>Nenhum pedido recebido</p>
-                
+
                 </ion-label>
-  
+
               </ion-item>
 
             </ion-list>

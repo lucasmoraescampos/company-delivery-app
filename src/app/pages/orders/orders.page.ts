@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,10 +32,15 @@ export class OrdersPage implements OnInit, OnDestroy {
   constructor(
     private modalCtrl: ModalController,
     private orderSrv: OrderService,
-    private loadingSrv: LoadingService
+    private loadingSrv: LoadingService,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+
+    const status = this.route.snapshot.queryParamMap.get('status');
+
+    this.segment = status ? Number(status) : 0;
 
     this.initOrders();
 
@@ -82,13 +88,29 @@ export class OrdersPage implements OnInit, OnDestroy {
   }
 
   private initOrders() {
+
     this.loadingSrv.show();
+
     this.orderSrv.getAll()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe(res => {
+
         this.loadingSrv.hide();
+
         this.orders = res.data;
+
+        const id = this.route.snapshot.queryParamMap.get('id');
+
+        if (id) {
+
+          const index = ArrayHelper.getIndexByKey(this.orders, 'id', id);
+
+          this.modalOrder(this.orders[index]);
+
+        }
+
       });
+      
   }
 
 }

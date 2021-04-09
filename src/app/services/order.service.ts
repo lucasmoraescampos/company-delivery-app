@@ -32,8 +32,9 @@ export class OrderService {
     return this.currentOrderSubject.value;
   }
 
-  public getAll() {
-    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/order`);
+  public getAll(limit?: number) {
+    const query = limit ? `?limit=${limit}` : '';
+    return this.http.get<HttpResult>(`${this.url}/company/${this.companyId}/order${query}`);
   }
 
   public create(data: any) {

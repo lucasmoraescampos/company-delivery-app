@@ -96,6 +96,5 @@ export class InputCodeComponent implements OnInit {
 
   public emit() {
     this.result.emit(this.code);
-    console.log(this.code)
   }
 }

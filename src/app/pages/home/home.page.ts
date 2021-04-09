@@ -10,8 +10,9 @@ import { PermissionType, Plugins } from '@capacitor/core';
 import { environment } from 'src/environments/environment';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { FcmTokenService } from 'src/app/services/fcm-token.service';
+import { OrderService } from 'src/app/services/order.service';
 
-const { Browser, Clipboard, Permissions } = Plugins;
+const { Browser, Clipboard, Permissions, Device } = Plugins;
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   public company: any;
 
+  public lastOrders: any[];
+
   public siteUrl: string = environment.siteUrl;
+
+  public platform: string;
 
   private unsubscribe = new Subject();
 
@@ -73,12 +78,17 @@ export class HomePage implements OnInit, OnDestroy {
     private loadingSrv: LoadingService,
     private alertSrv: AlertService,
     private afMessaging: AngularFireMessaging,
-    private fcmTokenSrv: FcmTokenService
+    private fcmTokenSrv: FcmTokenService,
+    private orderSrv: OrderService
   ) { }
 
   ngOnInit() {
 
+    Device.getInfo().then(device => this.platform = device.platform);
+
     this.initCompany();
+
+    this.initOrders();
 
   }
 
@@ -91,7 +101,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     const chart: any = document.querySelector('.chart');
 
-    this.view = [chart.offsetWidth - 32, 185];
+    this.view = [chart.offsetWidth - 32, 232];
 
     this.requestNotificationPermission();
 
@@ -115,10 +125,6 @@ export class HomePage implements OnInit, OnDestroy {
           this.loadingSrv.hide();
           this.company = res.data;
           this.companySrv.setCurrentCompany(this.company);
-          this.alertSrv.toast({
-            icon: 'success',
-            message: this.company.open ? 'Empresa aberta com sucesso' : 'Empresa fechada com sucesso'
-          });
         });
 
     }
@@ -163,6 +169,14 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
+  public orders() {
+    this.navCtrl.navigateForward('/orders');
+  }
+  
+  public openOrder(order: any) {
+    this.navCtrl.navigateForward(`/orders?id=${order.id}&status=${order.status}`);
+  }
+
   private requestNotificationPermission() {
 
     Permissions.query({ name: PermissionType.Notifications })
@@ -183,7 +197,7 @@ export class HomePage implements OnInit, OnDestroy {
                 .subscribe(
                   (token) => {
 
-                    this.fcmTokenSrv.checkInFcmTokenWithAuth(token)
+                    this.fcmTokenSrv.checkInFcmTokenWithAuth(token, this.platform)
                       .pipe(takeUntil(this.unsubscribe))
                       .subscribe();
 
@@ -220,7 +234,7 @@ export class HomePage implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe))
             .subscribe((token) => {
 
-              this.fcmTokenSrv.checkInFcmTokenWithAuth(token)
+              this.fcmTokenSrv.checkInFcmTokenWithAuth(token, this.platform)
                 .pipe(takeUntil(this.unsubscribe))
                 .subscribe();
 
@@ -236,6 +250,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.companySrv.currentCompany.pipe(takeUntil(this.unsubscribe))
       .subscribe(company => {
         this.company = company
+      });
+  }
+
+  private initOrders() {
+    this.loadingSrv.show();
+    this.orderSrv.getAll(4)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(res => {
+        this.loadingSrv.hide();
+        this.lastOrders = res.data;
       });
   }
 }

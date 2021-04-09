@@ -8,6 +8,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ChooseCompanyModule } from 'src/app/components/choose-company/choose-company.module';
 import { CustomScrollModule } from 'src/app/directives/custom-scroll/custom-scroll.module';
 import { MoneyModule } from 'src/app/pipes/money/money.module';
+import { DateCustomModule } from 'src/app/pipes/date-custom/date-custom.module';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { MoneyModule } from 'src/app/pipes/money/money.module';
     NgxChartsModule,
     ChooseCompanyModule,
     CustomScrollModule,
-    MoneyModule
+    MoneyModule,
+    DateCustomModule
   ],
   declarations: [HomePage]
 })

@@ -12,7 +12,11 @@
 
     <p>{{ user.email }}</p>
 
-    <ion-button size="small" fill="outline" shape="round" (click)="managerCompanies()">Empresas</ion-button>
+    <ion-button size="small" fill="outline" shape="round" (click)="managerCompanies()">
+      
+      <ion-icon slot="start" name="storefront-outline"></ion-icon> Empresas
+    
+    </ion-button>
 
     <ion-button class="logout" size="small" fill="clear" (click)="logout()">
 
